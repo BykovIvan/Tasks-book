@@ -1,3 +1,7 @@
+package tracker.controllers;
+
+import tracker.model.*;
+import tracker.util.Status;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,13 +11,11 @@ public class Manager {
     HashMap<Integer, Epic> epics;
     HashMap<Integer, Subtask> subtasks;
 
-
     public Manager() {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
     }
-
 
     //Получение списка всех задач SubTask
     public HashMap<Integer, Subtask> getSubtasks() {
@@ -43,19 +45,18 @@ public class Manager {
         subtasks.put(subtask.getIdTask(), subtask);
         if (epics.containsKey(idEpic)) {
             Epic epic = epics.get(idEpic);
-            epic.subtasksOfEpic.add(subtask);
+            epic.getSubtasksOfEpic().add(subtask);
         } else {
             System.out.println("No no no");
         }
         updateStatusEpic();
-
     }
 
     //Обновление задачи
     public void updateSubtask(int id, Subtask subtask, int idEpic) {
         if (subtasks.containsKey(id)) {
             subtasks.put(id, subtask);
-            subtasks.get(id).idEpic = idEpic;
+            subtasks.get(id).setIdEpic(idEpic);
         } else {
             System.out.println("Нет такого!");
         }
@@ -79,26 +80,25 @@ public class Manager {
         int tempCount = 0;                  //счетчика статуса DONE
         ArrayList<Subtask> list;
         for (Integer num : epics.keySet()) {
-            if (epics.get(num).idTask != tempId) {
-                tempId = epics.get(num).idTask;
+            if (epics.get(num).getIdTask() != tempId) {
+                tempId = epics.get(num).getIdTask();
                 Epic epic = epics.get(tempId);
                 list = epic.getSubtasksOfEpic();  //Записали АррайЛист от эпика NUM в переменную и с ней работаем
                 tempSizeList = list.size();
                 for (Subtask task : list) {
-                    if (task.status == Status.IN_PROGRESS) {
-                        epics.get(num).status = Status.IN_PROGRESS;
-                    } else if (task.status == Status.DONE) {
-                        epics.get(num).status = Status.IN_PROGRESS;
+                    if (task.getStatus() == Status.IN_PROGRESS) {
+                        epics.get(num).setStatus(Status.IN_PROGRESS);
+                    } else if (task.getStatus() == Status.DONE) {
+                        epics.get(num).setStatus(Status.IN_PROGRESS);
                         tempCount++;
                         if (tempCount == tempSizeList) {
-                            epics.get(num).status = Status.DONE;
+                            epics.get(num).setStatus(Status.DONE);
                         }
                     }
                 }
             }
         }
     }
-
 
     //Получение списка всех задач Epic
     public HashMap<Integer, Epic> getEpics() {
@@ -108,7 +108,7 @@ public class Manager {
     //Удаление всех задач
     public void deleteAllEpics() {
         for (Integer num : epics.keySet()) {
-            epics.get(num).subtasksOfEpic.clear();
+            epics.get(num).getSubtasksOfEpic().clear();
         }
         epics.clear();
         updateStatusEpic();
@@ -135,7 +135,7 @@ public class Manager {
     public void updateEpic(int id, Epic epic, ArrayList<Subtask> subtasks) {
         if (epics.containsKey(id)) {
             epics.put(id, epic);
-            epic.subtasksOfEpic = subtasks;
+            epic.setSubtasksOfEpic(subtasks);
         } else {
             System.out.println("Нет такого!");
         }
@@ -145,7 +145,7 @@ public class Manager {
     //Удаление по идентификатору
     public void deleteEpic(int id) {
         if (epics.containsKey(id)) {
-            epics.get(id).subtasksOfEpic.clear();
+            epics.get(id).getSubtasksOfEpic().clear();
             epics.remove(id);
         } else {
             System.out.println("Нет такого!");
@@ -155,9 +155,8 @@ public class Manager {
 
     //Получение задач по id эпика
     public ArrayList<Subtask> getSubtasksByEpicId(int idEpic) {
-        return epics.get(idEpic).subtasksOfEpic;
+        return epics.get(idEpic).getSubtasksOfEpic();
     }
-
 
     //Получение списка всех задач Task
     public HashMap<Integer, Task> getTasks() {
@@ -202,6 +201,4 @@ public class Manager {
             System.out.println("Нет такого!");
         }
     }
-
-
 }
