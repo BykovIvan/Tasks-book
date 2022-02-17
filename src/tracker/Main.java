@@ -1,5 +1,5 @@
 package tracker;
-import tracker.controllers.Manager;
+import tracker.controllers.InMemoryTaskManager;
 import tracker.model.*;
 import tracker.util.Status;
 
@@ -15,12 +15,12 @@ public class Main {
         Subtask subtask2 = new Subtask("Бегать2", "Бежать прямой2", Status.IN_PROGRESS);
         Subtask subtask3 = new Subtask("Бегать3", "Бежать прямой3", Status.NEW);
 
-        Subtask subtask4 = new Subtask("Бегать4", "Бежать прямой4", Status.IN_PROGRESS);
+        Subtask subtask4 = new Subtask("Бегать4", "Бежать прямой4", Status.DONE);
         Subtask subtask5 = new Subtask("Бегать5", "Бежать прямой5", Status.DONE);
         Subtask subtask6 = new Subtask("Бегать6", "Бежать прямой6", Status.DONE);
         Subtask subtask7 = new Subtask("Бегать7", "Бежать прямой7", Status.DONE);
 
-        Manager manager = new Manager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         manager.createNewTask(task);
         manager.createNewTask(task2);
@@ -31,10 +31,30 @@ public class Main {
         manager.createNewSubTask(subtask3, 2);
         manager.createNewSubTask(subtask4, 3);
         manager.createNewSubTask(subtask5, 3);
-        manager.createNewSubTask(subtask6, 3);
         manager.createNewSubTask(subtask7, 3);
 
-        System.out.println("");
-        System.out.println(manager.getEpics());
+        manager.createNewSubTask(subtask6, 3);
+//        System.out.println(manager.getTasks());
+
+        manager.getEpic(2);
+        manager.getSubtask(6);
+        manager.getSubtask(6);
+        manager.getSubtask(6);
+        manager.getSubtask(7);
+        manager.getSubtask(7);
+        manager.getSubtask(5);
+        manager.getSubtask(5);
+        manager.getSubtask(5);
+        manager.getTask(0);
+        manager.getTask(0);
+        manager.getTask(1);
+        manager.getTask(1);
+        manager.getTask(1);
+        manager.getTask(1);
+        manager.getEpic(2);
+        manager.getEpic(2);
+        System.out.println("EFEE");
+        System.out.println(manager.history());
+
     }
 }

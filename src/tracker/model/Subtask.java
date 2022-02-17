@@ -20,12 +20,12 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "\n Subtask{" +
+        return "Subtask {" +
                 "name='" + getName() + '\'' +
                 ", discription='" + getDiscription() + '\'' +
                 ", idTask=" + getIdTask() +
                 ", status=" + getStatus() +
-                '}';
+                '}' + "\n ";
     }
 
     @Override
