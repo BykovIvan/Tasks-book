@@ -2,6 +2,7 @@ package tracker;
 
 import tracker.controllers.InMemoryTaskManager;
 import tracker.controllers.Managers;
+import tracker.controllers.TaskManager;
 import tracker.model.*;
 import tracker.util.Status;
 
@@ -22,7 +23,7 @@ public class Main {
         Subtask subtask6 = new Subtask("Бегать6", "Бежать прямой6", Status.DONE);
         Subtask subtask7 = new Subtask("Бегать7", "Бежать прямой7", Status.DONE);
 
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        TaskManager manager = new InMemoryTaskManager();
 
         manager.createNewTask(task);
         manager.createNewTask(task2);
