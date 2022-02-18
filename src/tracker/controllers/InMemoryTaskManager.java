@@ -12,13 +12,15 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> tasks;
     HashMap<Integer, Epic> epics;
     HashMap<Integer, Subtask> subtasks;
-    List<Task> historyList;
+    InMemoryHistoryManager historyList;
+
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
-        historyList = new ArrayList<>();
+        historyList = new InMemoryHistoryManager();
+
     }
 
     @Override
@@ -35,12 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int id) {
         if (subtasks.containsKey(id)) {
-            if (historyList.size() < 10){
-                historyList.add(subtasks.get(id)); // добавление задачи в лист истории
-            }else{
-                historyList.remove(0);
-                historyList.add(9, subtasks.get(id)); // добавление задачи в лист истории
-            }
+            historyList.add(subtasks.get(id));             // добавление задачи в лист истории
             return subtasks.get(id);
         } else {
             return null;
@@ -84,7 +81,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-
     @Override
     public HashMap<Integer, Epic> getEpics() {
         return epics;
@@ -102,12 +98,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) {
         if (epics.containsKey(id)) {
-            if (historyList.size() < 10){
-                historyList.add(epics.get(id)); // добавление задачи в лист истории
-            }else{
-                historyList.remove(0);
-                historyList.add(9, epics.get(id)); // добавление задачи в лист истории
-            }
+            historyList.add(epics.get(id));          // добавление задачи в лист истории
             return epics.get(id);
         } else {
             return null;
@@ -150,7 +141,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-
     @Override
     public HashMap<Integer, Task> getTasks() {
         return tasks;
@@ -164,12 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {
         if (tasks.containsKey(id)) {
-            if (historyList.size() < 10){
-                historyList.add(9, tasks.get(id)); // добавление задачи в лист истории
-            }else{
-                historyList.remove(0);
-                historyList.add(tasks.get(id)); // добавление задачи в лист истории
-            }
+            historyList.add(tasks.get(id));             // добавление задачи в лист истории
             return tasks.get(id);
         } else {
             return null;
@@ -229,7 +214,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public List<Task> history(){
-        return historyList;
+    public List<Task> history() {
+        return historyList.getHistory();
     }
 }

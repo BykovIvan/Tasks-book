@@ -1,6 +1,7 @@
 package tracker.model;
 
 import tracker.util.Status;
+
 import java.util.Objects;
 
 public class Subtask extends Task {

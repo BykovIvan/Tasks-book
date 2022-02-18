@@ -1,9 +1,15 @@
 package tracker.controllers;
 
-public abstract class Managers {
-    public abstract TaskManager getDefault();
+public class Managers{
 
-    public static HistoryManager getDefaultHistory() {
-        return null;
+    private static TaskManager taskManager;
+    private static InMemoryHistoryManager inMemoryHistoryManager;
+
+    public static TaskManager getDefault(){
+        return taskManager;
+    }
+
+    public static InMemoryHistoryManager getDefaultHistory() {
+        return inMemoryHistoryManager;
     }
 }
