@@ -4,6 +4,7 @@ import tracker.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -18,7 +19,6 @@ public interface TaskManager {
     void updateSubtask(int id, Subtask subtask, int idEpic);
 
     void deleteSubtask(int id);
-
 
     HashMap<Integer, Epic> getEpics();
 
@@ -48,6 +48,5 @@ public interface TaskManager {
     void updateTask(int id, Task task);
 
     void deleteTask(int id);
-
 
 }

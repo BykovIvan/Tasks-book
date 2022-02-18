@@ -12,14 +12,15 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> tasks;
     HashMap<Integer, Epic> epics;
     HashMap<Integer, Subtask> subtasks;
-    InMemoryHistoryManager historyList;
+    HistoryManager historyList;
+
 
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
-        historyList = new InMemoryHistoryManager();
+        historyList = Managers.getDefaultHistory();
 
     }
 
@@ -134,6 +135,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         updateStatusEpic();
     }
+
 
     @Override
     public ArrayList<Subtask> getSubtasksByEpicId(int idEpic) {

@@ -23,7 +23,8 @@ public class Main {
         Subtask subtask6 = new Subtask("Бегать6", "Бежать прямой6", Status.DONE);
         Subtask subtask7 = new Subtask("Бегать7", "Бежать прямой7", Status.DONE);
 
-        TaskManager manager = new InMemoryTaskManager();
+//        TaskManager manager = Managers.getDefault();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         manager.createNewTask(task);
         manager.createNewTask(task2);
