@@ -1,6 +1,8 @@
 package tracker.controllers;
 
-import tracker.model.*;
+import tracker.model.Epic;
+import tracker.model.Subtask;
+import tracker.model.Task;
 import tracker.util.Status;
 
 import java.util.ArrayList;
@@ -13,7 +15,6 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Epic> epics;
     HashMap<Integer, Subtask> subtasks;
     HistoryManager historyList;
-
 
 
     public InMemoryTaskManager() {
@@ -54,10 +55,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(idEpic)) {
             Epic epic = epics.get(idEpic);
             epic.getSubtasksOfEpic().add(subtask);
-        } else {
-            System.out.println("No no no");
+            updateStatusEpic();
         }
-        updateStatusEpic();
+
     }
 
     @Override
@@ -65,19 +65,24 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.containsKey(id)) {
             subtasks.put(id, subtask);
             subtasks.get(id).setIdEpic(idEpic);
-        } else {
-            System.out.println("Нет такого!");
+            updateStatusEpic();
         }
-        updateStatusEpic();
+
     }
 
     @Override
     public void deleteSubtask(int id) {
         if (subtasks.containsKey(id)) {
+            int idEpicTemp = subtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
+            ArrayList<Subtask> tempSubtasksOfEpic = epics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
+            for (int i = 0; i < tempSubtasksOfEpic.size(); i++) {       //Пробегаем по списку и находим
+                if (tempSubtasksOfEpic.get(i).equals(subtasks.get(id))) {
+                    tempSubtasksOfEpic.remove(i);                           //удаляем
+                }
+            }
             subtasks.remove(id);
+            historyList.remove(subtasks.get(id));             // удаление задачи из листа истории
             updateStatusEpic();
-        } else {
-            System.out.println("Нет такого!");
         }
     }
 
@@ -119,21 +124,21 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             epics.put(id, epic);
             epic.setSubtasksOfEpic(subtasks);
-        } else {
-            System.out.println("Нет такого!");
+            updateStatusEpic();
         }
-        updateStatusEpic();
+
     }
 
     @Override
     public void deleteEpic(int id) {
         if (epics.containsKey(id)) {
             epics.get(id).getSubtasksOfEpic().clear();
+            historyList.remove(epics.get(id));             // удаление задачи из листа истории
             epics.remove(id);
-        } else {
-            System.out.println("Нет такого!");
+            updateStatusEpic();
+
         }
-        updateStatusEpic();
+
     }
 
 
@@ -174,17 +179,14 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(int id, Task task) {
         if (tasks.containsKey(id)) {
             tasks.put(id, task);
-        } else {
-            System.out.println("Нет такого!");
         }
     }
 
     @Override
     public void deleteTask(int id) {
         if (tasks.containsKey(id)) {
+            historyList.remove(tasks.get(id));             // удаление задачи из листа истории
             tasks.remove(id);
-        } else {
-            System.out.println("Нет такого!");
         }
     }
 
@@ -192,10 +194,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateStatusEpic() {
         int tempId = -1;                    //Переменная для хранения ID эпика
-        int tempSizeList = 0;              //Переменная для временного хранения размера Аррайлиста эписка с подзадачами
-        int tempCount = 0;                  //счетчика статуса DONE
+        int tempSizeList;              //Переменная для временного хранения размера Аррайлиста эписка с подзадачами
+        int tempCount;                  //счетчика статуса DONE
         ArrayList<Subtask> list;
         for (Integer num : epics.keySet()) {
+            tempSizeList = 0;
+            tempCount = 0;
             if (epics.get(num).getIdTask() != tempId) {
                 tempId = epics.get(num).getIdTask();
                 Epic epic = epics.get(tempId);
