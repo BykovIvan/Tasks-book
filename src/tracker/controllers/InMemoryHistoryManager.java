@@ -1,6 +1,5 @@
 package tracker.controllers;
 
-import tracker.model.Subtask;
 import tracker.model.Task;
 
 import java.util.ArrayList;

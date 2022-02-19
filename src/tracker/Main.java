@@ -1,9 +1,7 @@
 package tracker;
 
 import tracker.controllers.InMemoryTaskManager;
-import tracker.model.Epic;
-import tracker.model.Subtask;
-import tracker.model.Task;
+import tracker.model.*;
 import tracker.util.Status;
 
 public class Main {
