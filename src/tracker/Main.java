@@ -35,17 +35,17 @@ public class Main {
         manager.createNewTask(task5);
         manager.createNewTask(task6);
 
-        manager.createNewEpic(epic1);
-        manager.createNewEpic(epic2);
-
-        manager.createNewSubTask(subtask1, 6);
-        manager.createNewSubTask(subtask2, 6);
-        manager.createNewSubTask(subtask3, 6);
-
-        manager.createNewSubTask(subtask4, 7);
-        manager.createNewSubTask(subtask5, 7);
-        manager.createNewSubTask(subtask6, 7);
-        manager.createNewSubTask(subtask7, 7);
+//        manager.createNewEpic(epic1);
+//        manager.createNewEpic(epic2);
+//
+//        manager.createNewSubTask(subtask1, 6);
+//        manager.createNewSubTask(subtask2, 6);
+//        manager.createNewSubTask(subtask3, 6);
+//
+//        manager.createNewSubTask(subtask4, 7);
+//        manager.createNewSubTask(subtask5, 7);
+//        manager.createNewSubTask(subtask6, 7);
+//        manager.createNewSubTask(subtask7, 7);
 
         manager.getTask(0);
         manager.getTask(1);
@@ -54,21 +54,21 @@ public class Main {
         manager.getTask(4);
         manager.getTask(5);
 
-        manager.getEpic(6);
-        manager.getEpic(7);
+//        manager.getEpic(6);
+//        manager.getEpic(7);
+//
+//        manager.getSubtask(8);
+//        manager.getSubtask(9);
+//        manager.getSubtask(10);
+//
+//        manager.getSubtask(11);
+//        manager.getSubtask(12);
+//        manager.getSubtask(13);
+//        manager.getSubtask(14);
 
-        manager.getSubtask(8);
-        manager.getSubtask(9);
-        manager.getSubtask(10);
-
-        manager.getSubtask(11);
-        manager.getSubtask(12);
-        manager.getSubtask(13);
-        manager.getSubtask(14);
-
-        manager.deleteTask(5);
-        manager.deleteSubtask(14);
-        manager.deleteEpic(6);
+//        manager.deleteTask(5);
+//        manager.deleteSubtask(14);
+//        manager.deleteEpic(6);
         System.out.println("История:");
         System.out.println(manager.history());
 

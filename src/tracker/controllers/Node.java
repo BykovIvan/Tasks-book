@@ -1,11 +1,11 @@
 package tracker.controllers;
 
-public class Node<E> {
-    public E data;
-    public Node<E> next;
-    public Node<E> previous;
+public class Node<Task> {
+    public Task data;
+    public Node<Task> next;
+    public Node<Task> previous;
 
-    public Node(Node<E> previous, E data, Node<E> next) {
+    public Node(Node<Task> previous, Task data, Node<Task> next) {
         this.previous = previous;
         this.data = data;
         this.next = next;
