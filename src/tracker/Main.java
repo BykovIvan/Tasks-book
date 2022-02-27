@@ -1,7 +1,9 @@
 package tracker;
 
 import tracker.controllers.InMemoryTaskManager;
-import tracker.model.*;
+import tracker.model.Epic;
+import tracker.model.Subtask;
+import tracker.model.Task;
 import tracker.util.Status;
 
 public class Main {
@@ -18,9 +20,9 @@ public class Main {
 
         Subtask subtask1 = new Subtask("Бегать8", "Бежать прямой1", Status.DONE);
         Subtask subtask2 = new Subtask("Бегать9", "Бежать прямой2", Status.DONE);
-        Subtask subtask3 = new Subtask("Бегать10", "Бежать прямой3", Status.DONE);
+        Subtask subtask3 = new Subtask("Бегать10", "Бежать прямой3", Status.NEW);
 
-        Subtask subtask4 = new Subtask("Бегать11", "Бежать прямой4", Status.DONE);
+        Subtask subtask4 = new Subtask("Бегать11", "Бежать прямой4", Status.NEW);
         Subtask subtask5 = new Subtask("Бегать12", "Бежать прямой5", Status.DONE);
         Subtask subtask6 = new Subtask("Бегать13", "Бежать прямой6", Status.DONE);
         Subtask subtask7 = new Subtask("Бегать14", "Бежать прямой7", Status.NEW);
@@ -35,40 +37,44 @@ public class Main {
         manager.createNewTask(task5);
         manager.createNewTask(task6);
 
-//        manager.createNewEpic(epic1);
-//        manager.createNewEpic(epic2);
+        manager.createNewEpic(epic1);
+        manager.createNewEpic(epic2);
 //
-//        manager.createNewSubTask(subtask1, 6);
-//        manager.createNewSubTask(subtask2, 6);
-//        manager.createNewSubTask(subtask3, 6);
-//
-//        manager.createNewSubTask(subtask4, 7);
-//        manager.createNewSubTask(subtask5, 7);
-//        manager.createNewSubTask(subtask6, 7);
-//        manager.createNewSubTask(subtask7, 7);
+        manager.createNewSubTask(subtask1, 6);
+        manager.createNewSubTask(subtask2, 6);
+        manager.createNewSubTask(subtask3, 6);
+
+        manager.createNewSubTask(subtask4, 7);
+        manager.createNewSubTask(subtask5, 7);
+        manager.createNewSubTask(subtask6, 7);
+        manager.createNewSubTask(subtask7, 7);
 
         manager.getTask(0);
         manager.getTask(1);
         manager.getTask(2);
-        manager.getTask(3);
+        manager.getTask(0);
         manager.getTask(4);
         manager.getTask(5);
 
-//        manager.getEpic(6);
-//        manager.getEpic(7);
-//
-//        manager.getSubtask(8);
-//        manager.getSubtask(9);
-//        manager.getSubtask(10);
-//
-//        manager.getSubtask(11);
-//        manager.getSubtask(12);
-//        manager.getSubtask(13);
-//        manager.getSubtask(14);
 
-//        manager.deleteTask(5);
-//        manager.deleteSubtask(14);
-//        manager.deleteEpic(6);
+        manager.getEpic(6);
+        manager.getEpic(7);
+
+        manager.getSubtask(8);
+        manager.getSubtask(9);
+        manager.getSubtask(10);
+
+        manager.getSubtask(11);
+        manager.getSubtask(12);
+        manager.getSubtask(13);
+        manager.getSubtask(14);
+
+        manager.deleteTask(5);
+        manager.deleteSubtask(14);
+        manager.deleteEpic(6);
+
+        manager.getEpic(7);
+        manager.getTask(3);
         System.out.println("История:");
         System.out.println(manager.history());
 

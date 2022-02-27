@@ -1,6 +1,8 @@
 package tracker.controllers;
 
-import tracker.model.*;
+import tracker.model.Epic;
+import tracker.model.Subtask;
+import tracker.model.Task;
 import tracker.util.Status;
 
 import java.util.ArrayList;
@@ -12,15 +14,13 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> tasks;
     HashMap<Integer, Epic> epics;
     HashMap<Integer, Subtask> subtasks;
-    HistoryManager historyList;
-
+    HistoryManager<Task> historyList;
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subtasks = new HashMap<>();
         historyList = Managers.getDefaultHistory();
-
     }
 
     @Override
@@ -55,7 +55,6 @@ public class InMemoryTaskManager implements TaskManager {
             epic.getSubtasksOfEpic().add(subtask);
             updateStatusEpic();
         }
-
     }
 
     @Override
@@ -79,11 +78,10 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
             subtasks.remove(id);
-//            historyList.remove(subtasks.get(id));             // удаление задачи из листа истории
+            historyList.remove(id);             // удаление задачи из листа истории
             updateStatusEpic();
         }
     }
-
 
     @Override
     public HashMap<Integer, Epic> getEpics() {
@@ -131,14 +129,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpic(int id) {
         if (epics.containsKey(id)) {
             epics.get(id).getSubtasksOfEpic().clear();
-//            historyList.remove(epics.get(id));             // удаление задачи из листа истории
+            historyList.remove(id);             // удаление задачи из листа истории
             epics.remove(id);
             updateStatusEpic();
-
         }
-
     }
-
 
     @Override
     public ArrayList<Subtask> getSubtasksByEpicId(int idEpic) {
@@ -183,7 +178,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTask(int id) {
         if (tasks.containsKey(id)) {
-//            historyList.remove(tasks.get(id));             // удаление задачи из листа истории
+            historyList.remove(id);             // удаление задачи из листа истории
             tasks.remove(id);
         }
     }

@@ -1,14 +1,12 @@
 package tracker.controllers;
 
-import tracker.model.Task;
-
 import java.util.List;
 
-public interface HistoryManager {
+public interface HistoryManager<T> {
 
-    void add(Task task);
+    void add(T task);
 
-    List<Task> getHistory();
+    List<T> getHistory();
 
     void remove(int Id);
 }
