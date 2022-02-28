@@ -23,8 +23,8 @@ public class Main {
         Subtask subtask3 = new Subtask("Бегать10", "Бежать прямой3", Status.NEW);
 
         Subtask subtask4 = new Subtask("Бегать11", "Бежать прямой4", Status.NEW);
-        Subtask subtask5 = new Subtask("Бегать12", "Бежать прямой5", Status.DONE);
-        Subtask subtask6 = new Subtask("Бегать13", "Бежать прямой6", Status.DONE);
+        Subtask subtask5 = new Subtask("Бегать12", "Бежать прямой5", Status.NEW);
+        Subtask subtask6 = new Subtask("Бегать13", "Бежать прямой6", Status.NEW);
         Subtask subtask7 = new Subtask("Бегать14", "Бежать прямой7", Status.NEW);
 
 //        TaskManager manager = Managers.getDefault();
@@ -39,7 +39,7 @@ public class Main {
 
         manager.createNewEpic(epic1);
         manager.createNewEpic(epic2);
-//
+
         manager.createNewSubTask(subtask1, 6);
         manager.createNewSubTask(subtask2, 6);
         manager.createNewSubTask(subtask3, 6);
@@ -52,9 +52,9 @@ public class Main {
         manager.getTask(0);
         manager.getTask(1);
         manager.getTask(2);
-        manager.getTask(0);
-        manager.getTask(4);
         manager.getTask(5);
+        manager.getTask(4);
+        manager.getTask(3);
 
 
         manager.getEpic(6);

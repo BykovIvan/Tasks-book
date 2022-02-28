@@ -30,9 +30,6 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
     private final Map<Integer, Node<T>> mapList = new HashMap<>();  //Для хранения нод у собственного списка и получения по id
     private final List<T> historyArrayList = new ArrayList<>();                   //Лист для формирования списка на выход
 
-    public InMemoryHistoryManager() {
-    }
-
     @Override
     public void add(T task) {
         int id = task.getIdTask();
@@ -74,6 +71,7 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
     }
 
     private List<T> getTasks() {                        //метод собирания всех задач в обычный ArrayList
+        historyArrayList.clear();
         Node<T> cur = this.first;
         while (cur != null) {
             historyArrayList.add(cur.value);
