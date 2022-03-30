@@ -20,6 +20,7 @@ public interface TaskManager {
 
     void deleteSubtask(int id);
 
+
     HashMap<Integer, Epic> getEpics();
 
     void deleteAllEpics();
@@ -37,15 +38,16 @@ public interface TaskManager {
     ArrayList<Subtask> getSubtasksByEpicId(int idEpic);
 
 
+
     void deleteAllTasks();
 
-    HashMap<Integer, Task> getTasks();
+    ArrayList<Task> getTasks();
 
     Task getTask(int id);
 
     void createNewTask(Task task);
 
-    void updateTask(int id, Task task);
+    void updateTask(Task task);
 
     void deleteTask(int id);
 

@@ -1,6 +1,7 @@
 package tracker.model;
 
 import tracker.util.Status;
+import tracker.util.TypeOfTasks;
 
 import java.util.Objects;
 
@@ -9,17 +10,21 @@ public class Task {
     private String discription;
     private int idTask;
     private Status status;
+    private int idEpic;
 
-    public Task(String name, String discription) {
-        this.name = name;
-        this.discription = discription;
-        this.status = Status.NEW;
-    }
+//    public Task(String name, String discription) {
+//        this.name = name;
+//        this.discription = discription;
+//        this.status = Status.NEW;
+//        epic = this.epic;
+//    }
 
-    public Task(String name, String discription, Status status) {
+    public Task(int idTask, String name, Status status, String discription, int idEpic) {
         this.name = name;
         this.discription = discription;
         this.status = status;
+        this.idTask = idTask;
+        this.idEpic = idEpic;
     }
 
     public String getName() {
@@ -56,12 +61,19 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task {" +
-                "name='" + name + '\'' +
-                ", discription='" + discription + '\'' +
-                ", idTask=" + idTask +
-                ", status=" + status +
-                '}' + "\n ";
+        return  "\n" + idTask +
+                "," + TypeOfTasks.TASK +
+                "," + name +
+                "," + status +
+                "," + discription +
+                "," + name + " ";
+
+//                "Task {" +
+//                "name='" + name + '\'' +
+//                ", discription='" + discription + '\'' +
+//                ", idTask=" + idTask +
+//                ", status=" + status +
+//                '}' + "\n";
     }
 
     @Override

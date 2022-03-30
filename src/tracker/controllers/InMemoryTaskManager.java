@@ -75,12 +75,6 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<Subtask> tempSubtasksOfEpic = epics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
             tempSubtasksOfEpic.remove(subtasks.get(id));                                       //удаляем из списка пр объекту
             updateStatusEpic();
-
-//            for (int i = 0; i < tempSubtasksOfEpic.size(); i++) {       //Пробегаем по списку и находим
-//                if (tempSubtasksOfEpic.get(i).equals(subtasks.get(id))) {
-//                    tempSubtasksOfEpic.remove(i);                           //удаляем
-//                }
-//            }
             subtasks.remove(id);
             historyList.remove(id);             // удаление задачи из листа истории
         }
@@ -152,9 +146,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
+
+
+
+
+
+
     @Override
-    public HashMap<Integer, Task> getTasks() {
-        return tasks;
+    public ArrayList<Task> getTasks() {
+        //добавить в историю если я вызываю получение всех методов (но сначала посмотреть есть ли в тз4 это правило
+        return new ArrayList<>(tasks.values());
     }
 
     @Override
@@ -180,10 +181,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(int id, Task task) {
-        if (tasks.containsKey(id)) {
-            tasks.put(id, task);
-        }
+    public void updateTask(Task task) {
+        int idTemp = task.getIdTask();
+        tasks.put(idTemp, task);
     }
 
     @Override
@@ -193,6 +193,11 @@ public class InMemoryTaskManager implements TaskManager {
             tasks.remove(id);
         }
     }
+
+
+
+
+
 
 
     @Override

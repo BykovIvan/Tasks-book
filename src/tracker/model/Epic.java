@@ -1,14 +1,16 @@
 package tracker.model;
 
+import tracker.util.Status;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasksOfEpic;
 
-    public Epic(String name, String discription) {
-        super(name, discription);
-        subtasksOfEpic = new ArrayList<>();
+    public Epic(int idTask, String name, Status status, String discription, int idEpic, ArrayList<Subtask> subtasksOfEpic) {
+        super(idTask, name, status, discription, idEpic);
+        this.subtasksOfEpic = subtasksOfEpic;
     }
 
     public ArrayList<Subtask> getSubtasksOfEpic() {

@@ -1,4 +1,4 @@
 package tracker.controllers;
 
-public class FileBackedTasksManager {
+public class FileBackedTasksManager extends InMemoryTaskManager {
 }
