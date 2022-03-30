@@ -44,6 +44,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
     public void createNewTask(Task task) {
         super.createNewTask(task);
+        save();
     }
 
     @Override
@@ -58,10 +59,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     /**
      * Метод сохранения информации о задачах в файл *.csv
+     * должен сохранять по порядку по id задачи
      */
-    public void save(){
+    private void save(){
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("id,type,name,status,description,epic");
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8, true))) {
+            bw.write("id,type,name,status,description,epic");
+            bw.write();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         ArrayList<Task> listTask = getTasks();
         for (Task task : listTask) {
             stringBuilder.append(task);
@@ -70,11 +78,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         stringBuilder.append("\n"); //Пустая строка перед историей
 
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8))) {
-            bw.write(stringBuilder.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
     }
 
