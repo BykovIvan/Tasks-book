@@ -67,6 +67,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             stringBuilder.append(task);
         }
         stringBuilder.append("\n"); //Пустая строка перед историей
+        stringBuilder.append("\n"); //Пустая строка перед историей
 
 
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8))) {
