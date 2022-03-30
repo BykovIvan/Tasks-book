@@ -1,15 +1,15 @@
 package tracker.model;
 
 import tracker.util.Status;
-
+import tracker.util.TypeOfTasks;
 import java.util.Objects;
 
 public class Subtask extends Task {
     private int idEpic;
 
-    public Subtask(int idTask, String name, Status status, String discription, int idEpic, int idEpic1) {
-        super(idTask, name, status, discription, idEpic);
-        this.idEpic = idEpic1;
+    public Subtask(int idTask, String name, Status status, String discription, int idEpic) {
+        super(idTask, name, status, discription);
+        this.idEpic = idEpic;
     }
 
     public int getIdEpic() {
@@ -22,12 +22,20 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask {" +
-                "name='" + getName() + '\'' +
-                ", discription='" + getDiscription() + '\'' +
-                ", idTask=" + getIdTask() +
-                ", status=" + getStatus() +
-                '}' + "\n ";
+        return "\n" + getIdTask() +
+                "," + TypeOfTasks.SUBTASK +
+                "," + getName() +
+                "," + getStatus() +
+                "," + getDiscription() +
+                "," + idEpic + " ";
+
+
+//                "Subtask {" +
+//                "name='" + getName() + '\'' +
+//                ", discription='" + getDiscription() + '\'' +
+//                ", idTask=" + getIdTask() +
+//                ", status=" + getStatus() +
+//                '}' + "\n ";
     }
 
     @Override

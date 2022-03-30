@@ -10,103 +10,112 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Класс менеджера для работы только с историей
+ */
+
 public class InMemoryTaskManager implements TaskManager {
     int id = 0;
-    HashMap<Integer, Task> tasks;
-    HashMap<Integer, Epic> epics;
-    HashMap<Integer, Subtask> subtasks;
+    HashMap<Integer, Task> mapTasks;
+    HashMap<Integer, Epic> mapEpics;
+    HashMap<Integer, Subtask> mapSubtasks;
+
     HistoryManager<Task> historyList;
 
     public InMemoryTaskManager() {
-        tasks = new HashMap<>();
-        epics = new HashMap<>();
-        subtasks = new HashMap<>();
+        mapTasks = new HashMap<>();
+        mapEpics = new HashMap<>();
+        mapSubtasks = new HashMap<>();
         historyList = Managers.getDefaultHistory();
     }
 
     @Override
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return subtasks;
+    public ArrayList<Subtask> getMapSubtasks() {
+        return new ArrayList<>(mapSubtasks.values());
     }
 
     @Override
     public void deleteAllSubtasks() {
-        subtasks.clear();
+        mapSubtasks.clear();
         updateStatusEpic();
     }
 
     @Override
+    public ArrayList<Subtask> getSubtasks() {
+        return new ArrayList<>(mapSubtasks.values());
+    }
+
+    @Override
     public Subtask getSubtask(int id) {
-        if (subtasks.containsKey(id)) {
-            historyList.add(subtasks.get(id));             // добавление задачи в лист истории
-            return subtasks.get(id);
+        if (mapSubtasks.containsKey(id)) {
+            historyList.add(mapSubtasks.get(id));             // добавление задачи в лист истории
+            return mapSubtasks.get(id);
         } else {
             return null;
         }
     }
 
     @Override
-    public void createNewSubTask(Subtask subtask, int idEpic) {
+    public void createNewSubTask(Subtask subtask) {
         subtask.setIdTask(id);
-        subtask.setIdEpic(idEpic);
         id++;
-        subtasks.put(subtask.getIdTask(), subtask);
-        if (epics.containsKey(idEpic)) {
-            Epic epic = epics.get(idEpic);
+        mapSubtasks.put(subtask.getIdTask(), subtask);
+        int idEpicTemp = subtask.getIdEpic();
+        if (mapEpics.containsKey(idEpicTemp)){                  //добавдяем в список подзадач эпика свою задачу
+            Epic epic = mapEpics.get(idEpicTemp);
             epic.getSubtasksOfEpic().add(subtask);
-            updateStatusEpic();
         }
+        updateStatusEpic();
     }
 
     @Override
-    public void updateSubtask(int id, Subtask subtask, int idEpic) {
-        if (subtasks.containsKey(id)) {
-            subtasks.put(id, subtask);
-            subtasks.get(id).setIdEpic(idEpic);
-            updateStatusEpic();
+    public void updateSubtask(Subtask subtask) {
+        int idTemp = subtask.getIdTask();
+        if (mapSubtasks.containsKey(idTemp)) {
+            mapSubtasks.put(idTemp, subtask);
         }
-
+        updateStatusEpic();
     }
 
     @Override
     public void deleteSubtask(int id) {
-        if (subtasks.containsKey(id)) {
-            int idEpicTemp = subtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
-            ArrayList<Subtask> tempSubtasksOfEpic = epics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
-            tempSubtasksOfEpic.remove(subtasks.get(id));                                       //удаляем из списка пр объекту
+        if (mapSubtasks.containsKey(id)) {
+            int idEpicTemp = mapSubtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
+            ArrayList<Subtask> tempSubtasksOfEpic = mapEpics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
+            tempSubtasksOfEpic.remove(mapSubtasks.get(id));                                       //удаляем из списка пр объекту
             updateStatusEpic();
-            subtasks.remove(id);
+            mapSubtasks.remove(id);
             historyList.remove(id);             // удаление задачи из листа истории
         }
     }
     public void deleteSubtaskWithOutHistory(int id) {
-        if (subtasks.containsKey(id)) {
-            int idEpicTemp = subtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
-            ArrayList<Subtask> tempSubtasksOfEpic = epics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
-            tempSubtasksOfEpic.remove(subtasks.get(id));                                       //удаляем из списка пр объекту
+        if (mapSubtasks.containsKey(id)) {
+            int idEpicTemp = mapSubtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
+            ArrayList<Subtask> tempSubtasksOfEpic = mapEpics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
+            tempSubtasksOfEpic.remove(mapSubtasks.get(id));                                       //удаляем из списка пр объекту
             updateStatusEpic();
         }
     }
 
     @Override
-    public HashMap<Integer, Epic> getEpics() {
-        return epics;
+    public ArrayList<Epic> getMapEpics() {
+        return new ArrayList<>(mapEpics.values());
     }
 
     @Override
     public void deleteAllEpics() {
-        for (Integer num : epics.keySet()) {
-            epics.get(num).getSubtasksOfEpic().clear();
+        for (Integer num : mapEpics.keySet()) {
+            mapEpics.get(num).getSubtasksOfEpic().clear();
         }
-        epics.clear();
+        mapEpics.clear();
         updateStatusEpic();
     }
 
     @Override
     public Epic getEpic(int id) {
-        if (epics.containsKey(id)) {
-            historyList.add(epics.get(id));          // добавление задачи в лист истории
-            return epics.get(id);
+        if (mapEpics.containsKey(id)) {
+            historyList.add(mapEpics.get(id));          // добавление задачи в лист истории
+            return mapEpics.get(id);
         } else {
             return null;
         }
@@ -116,33 +125,37 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewEpic(Epic epic) {
         epic.setIdTask(id);
         id++;
-        epics.put(epic.getIdTask(), epic);
+        mapEpics.put(epic.getIdTask(), epic);
         updateStatusEpic();
     }
 
     @Override
-    public void updateEpic(int id, Epic epic, ArrayList<Subtask> subtasks) {
-        if (epics.containsKey(id)) {
-            epics.put(id, epic);
-            epic.setSubtasksOfEpic(subtasks);
-            updateStatusEpic();
-        }
+    public void updateEpic(Epic epic) {
+        int idTemp = epic.getIdTask();
+        mapEpics.put(idTemp, epic);
+        updateStatusEpic();
+
 
     }
 
     @Override
     public void deleteEpic(int id) {
-        if (epics.containsKey(id)) {
-            epics.get(id).getSubtasksOfEpic().clear();
+        if (mapEpics.containsKey(id)) {
+            mapEpics.get(id).getSubtasksOfEpic().clear();
             historyList.remove(id);             // удаление задачи из листа истории
-            epics.remove(id);
+            mapEpics.remove(id);
             updateStatusEpic();
         }
     }
 
+    /**
+     * Получение списка подзадач у эпика по его ид
+     * @param idEpic
+     * @return
+     */
     @Override
     public ArrayList<Subtask> getSubtasksByEpicId(int idEpic) {
-        return epics.get(idEpic).getSubtasksOfEpic();
+        return mapEpics.get(idEpic).getSubtasksOfEpic();
     }
 
 
@@ -153,21 +166,21 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public ArrayList<Task> getTasks() {
+    public ArrayList<Task> getMapTasks() {
         //добавить в историю если я вызываю получение всех методов (но сначала посмотреть есть ли в тз4 это правило
-        return new ArrayList<>(tasks.values());
+        return new ArrayList<>(mapTasks.values());
     }
 
     @Override
     public void deleteAllTasks() {
-        tasks.clear();
+        mapTasks.clear();
     }
 
     @Override
     public Task getTask(int id) {
-        if (tasks.containsKey(id)) {
-            historyList.add(tasks.get(id));             // добавление задачи в лист истории
-            return tasks.get(id);
+        if (mapTasks.containsKey(id)) {
+            historyList.add(mapTasks.get(id));             // добавление задачи в лист истории
+            return mapTasks.get(id);
         } else {
             return null;
         }
@@ -177,20 +190,20 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewTask(Task task) {
         task.setIdTask(id);
         id++;
-        tasks.put(task.getIdTask(), task);
+        mapTasks.put(task.getIdTask(), task);
     }
 
     @Override
     public void updateTask(Task task) {
         int idTemp = task.getIdTask();
-        tasks.put(idTemp, task);
+        mapTasks.put(idTemp, task);
     }
 
     @Override
     public void deleteTask(int id) {
-        if (tasks.containsKey(id)) {
+        if (mapTasks.containsKey(id)) {
             historyList.remove(id);             // удаление задачи из листа истории
-            tasks.remove(id);
+            mapTasks.remove(id);
         }
     }
 
@@ -206,23 +219,23 @@ public class InMemoryTaskManager implements TaskManager {
         int tempSizeList;              //Переменная для временного хранения размера Аррайлиста эписка с подзадачами
         int tempCount;                  //счетчика статуса DONE
         ArrayList<Subtask> list;
-        for (Integer num : epics.keySet()) {
+        for (Integer num : mapEpics.keySet()) {
             tempSizeList = 0;
             tempCount = 0;
-            if (epics.get(num).getIdTask() != tempId) {
-                epics.get(num).setStatus(Status.NEW);
-                tempId = epics.get(num).getIdTask();
-                Epic epic = epics.get(tempId);
+            if (mapEpics.get(num).getIdTask() != tempId) {
+                mapEpics.get(num).setStatus(Status.NEW);
+                tempId = mapEpics.get(num).getIdTask();
+                Epic epic = mapEpics.get(tempId);
                 list = epic.getSubtasksOfEpic();  //Записали АррайЛист от эпика NUM в переменную и с ней работаем
                 tempSizeList = list.size();
                 for (Subtask task : list) {
                     if (task.getStatus() == Status.IN_PROGRESS) {
-                        epics.get(num).setStatus(Status.IN_PROGRESS);
+                        mapEpics.get(num).setStatus(Status.IN_PROGRESS);
                     } else if (task.getStatus() == Status.DONE) {
-                        epics.get(num).setStatus(Status.IN_PROGRESS);
+                        mapEpics.get(num).setStatus(Status.IN_PROGRESS);
                         tempCount++;
                         if (tempCount == tempSizeList) {
-                            epics.get(num).setStatus(Status.DONE);
+                            mapEpics.get(num).setStatus(Status.DONE);
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 package tracker.model;
 
 import tracker.util.Status;
+import tracker.util.TypeOfTasks;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -8,9 +9,9 @@ import java.util.Objects;
 public class Epic extends Task {
     private ArrayList<Subtask> subtasksOfEpic;
 
-    public Epic(int idTask, String name, Status status, String discription, int idEpic, ArrayList<Subtask> subtasksOfEpic) {
-        super(idTask, name, status, discription, idEpic);
-        this.subtasksOfEpic = subtasksOfEpic;
+    public Epic(int idTask, String name, Status status, String discription) {
+        super(idTask, name, status, discription);
+        subtasksOfEpic = new ArrayList<>();
     }
 
     public ArrayList<Subtask> getSubtasksOfEpic() {
@@ -23,13 +24,19 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic {" +
-                "\n name='" + getName() + '\'' +
-                ", discription='" + getDiscription() + '\'' +
-                ", idTask=" + getIdTask() +
-                ", status=" + getStatus() +
-                ",\n subtask=" + "\n " + subtasksOfEpic +
-                '}' + "\n ";
+        return "\n" + getIdTask() +
+                "," + TypeOfTasks.EPIC +
+                "," + getName() +
+                "," + getStatus() +
+                "," + getDiscription();
+
+//                "Epic {" +
+//                "\n name='" + getName() + '\'' +
+//                ", discription='" + getDiscription() + '\'' +
+//                ", idTask=" + getIdTask() +
+//                ", status=" + getStatus() +
+//                ",\n subtask=" + "\n " + subtasksOfEpic +
+//                '}' + "\n ";
     }
 
     @Override

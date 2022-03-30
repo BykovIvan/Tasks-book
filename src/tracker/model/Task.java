@@ -19,12 +19,11 @@ public class Task {
 //        epic = this.epic;
 //    }
 
-    public Task(int idTask, String name, Status status, String discription, int idEpic) {
+    public Task(int idTask, String name, Status status, String discription) {
         this.name = name;
         this.discription = discription;
         this.status = status;
         this.idTask = idTask;
-        this.idEpic = idEpic;
     }
 
     public String getName() {
@@ -65,8 +64,7 @@ public class Task {
                 "," + TypeOfTasks.TASK +
                 "," + name +
                 "," + status +
-                "," + discription +
-                "," + name + " ";
+                "," + discription;
 
 //                "Task {" +
 //                "name='" + name + '\'' +
@@ -74,6 +72,7 @@ public class Task {
 //                ", idTask=" + idTask +
 //                ", status=" + status +
 //                '}' + "\n";
+
     }
 
     @Override

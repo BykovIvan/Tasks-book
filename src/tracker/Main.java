@@ -1,5 +1,6 @@
 package tracker;
 
+import tracker.controllers.FileBackedTasksManager;
 import tracker.controllers.InMemoryTaskManager;
 import tracker.model.Epic;
 import tracker.model.Subtask;
@@ -8,13 +9,13 @@ import tracker.util.Status;
 
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        FileBackedTasksManager manager = new FileBackedTasksManager("nameFile");
 
-        manager.createNewTask(new Task(0, "Имя1", Status.NEW, "Что купить1", 1));
-        manager.createNewTask(new Task(0, "Имя2", Status.NEW, "Что купить2", 1));
-        manager.createNewTask(new Task(0, "Имя3", Status.NEW, "Что купить3", 1));
-        manager.createNewTask(new Task(0, "Имя4", Status.NEW, "Что купить4", 1));
-        manager.createNewTask(new Task(0, "Имя5", Status.NEW, "Что купить5", 1));
+        manager.createNewTask(new Task(0, "Имя1", Status.NEW, "Что купить1"));
+        manager.createNewTask(new Task(0, "Имя2", Status.NEW, "Что купить2"));
+        manager.createNewTask(new Task(0, "Имя3", Status.NEW, "Что купить3"));
+        manager.createNewTask(new Task(0, "Имя4", Status.NEW, "Что купить4"));
+        manager.createNewTask(new Task(0, "Имя5", Status.NEW, "Что купить5"));
 
 //        System.out.println(manager.getTasks());
 
