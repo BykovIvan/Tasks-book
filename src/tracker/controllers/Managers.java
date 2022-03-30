@@ -1,5 +1,7 @@
 package tracker.controllers;
 
+import tracker.history.HistoryManager;
+import tracker.history.InMemoryHistoryManager;
 import tracker.model.Task;
 
 public class Managers {

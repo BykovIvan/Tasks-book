@@ -1,5 +1,6 @@
 package tracker.controllers;
 
+import tracker.history.HistoryManager;
 import tracker.model.Epic;
 import tracker.model.Subtask;
 import tracker.model.Task;
@@ -72,13 +73,23 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.containsKey(id)) {
             int idEpicTemp = subtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
             ArrayList<Subtask> tempSubtasksOfEpic = epics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
-            for (int i = 0; i < tempSubtasksOfEpic.size(); i++) {       //Пробегаем по списку и находим
-                if (tempSubtasksOfEpic.get(i).equals(subtasks.get(id))) {
-                    tempSubtasksOfEpic.remove(i);                           //удаляем
-                }
-            }
+            tempSubtasksOfEpic.remove(subtasks.get(id));                                       //удаляем из списка пр объекту
+            updateStatusEpic();
+
+//            for (int i = 0; i < tempSubtasksOfEpic.size(); i++) {       //Пробегаем по списку и находим
+//                if (tempSubtasksOfEpic.get(i).equals(subtasks.get(id))) {
+//                    tempSubtasksOfEpic.remove(i);                           //удаляем
+//                }
+//            }
             subtasks.remove(id);
             historyList.remove(id);             // удаление задачи из листа истории
+        }
+    }
+    public void deleteSubtaskWithOutHistory(int id) {
+        if (subtasks.containsKey(id)) {
+            int idEpicTemp = subtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
+            ArrayList<Subtask> tempSubtasksOfEpic = epics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
+            tempSubtasksOfEpic.remove(subtasks.get(id));                                       //удаляем из списка пр объекту
             updateStatusEpic();
         }
     }
@@ -194,6 +205,7 @@ public class InMemoryTaskManager implements TaskManager {
             tempSizeList = 0;
             tempCount = 0;
             if (epics.get(num).getIdTask() != tempId) {
+                epics.get(num).setStatus(Status.NEW);
                 tempId = epics.get(num).getIdTask();
                 Epic epic = epics.get(tempId);
                 list = epic.getSubtasksOfEpic();  //Записали АррайЛист от эпика NUM в переменную и с ней работаем
