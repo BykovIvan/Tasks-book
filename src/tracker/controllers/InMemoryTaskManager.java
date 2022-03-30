@@ -15,10 +15,10 @@ import java.util.List;
  */
 
 public class InMemoryTaskManager implements TaskManager {
-    int id = 0;
-    HashMap<Integer, Task> mapTasks;
-    HashMap<Integer, Epic> mapEpics;
-    HashMap<Integer, Subtask> mapSubtasks;
+    private int id = 0;
+    private HashMap<Integer, Task> mapTasks;
+    private HashMap<Integer, Epic> mapEpics;
+    private HashMap<Integer, Subtask> mapSubtasks;
 
     HistoryManager<Task> historyList;
 
@@ -29,10 +29,8 @@ public class InMemoryTaskManager implements TaskManager {
         historyList = Managers.getDefaultHistory();
     }
 
-    @Override
-    public ArrayList<Subtask> getMapSubtasks() {
-        return new ArrayList<>(mapSubtasks.values());
-    }
+
+
 
     @Override
     public void deleteAllSubtasks() {
@@ -98,7 +96,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Epic> getMapEpics() {
+    public ArrayList<Epic> getEpics() {
         return new ArrayList<>(mapEpics.values());
     }
 
@@ -166,7 +164,7 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public ArrayList<Task> getMapTasks() {
+    public ArrayList<Task> getTasks() {
         //добавить в историю если я вызываю получение всех методов (но сначала посмотреть есть ли в тз4 это правило
         return new ArrayList<>(mapTasks.values());
     }

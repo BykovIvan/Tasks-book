@@ -2,6 +2,12 @@ package tracker.controllers;
 
 import tracker.model.Task;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -9,6 +15,8 @@ import java.util.ArrayList;
  */
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final String nameFile;                  // файл для автосохранения
+    private final String nameTestFile = "D://test/history.csv";                  // файл для автосохранения
+    Path path = Paths.get(nameTestFile);
 
     public FileBackedTasksManager(String nameFile) {
         this.nameFile = nameFile;
@@ -19,8 +27,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public ArrayList<Task> getMapTasks() {
-        return super.getMapTasks();
+    public ArrayList<Task> getTasks() {
+        return super.getTasks();
     }
 
     @Override
@@ -48,9 +56,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.deleteTask(id);
     }
 
-
-    private void save(){
+    /**
+     * Метод сохранения информации о задачах в файл *.csv
+     */
+    public void save(){
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("id,type,name,status,description,epic");
+        ArrayList<Task> listTask = getTasks();
+        for (Task task : listTask) {
+            stringBuilder.append(task);
+        }
+        stringBuilder.append("\n"); //Пустая строка перед историей
+
+
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8))) {
+            bw.write(stringBuilder.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

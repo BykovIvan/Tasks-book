@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-    ArrayList<Subtask> getMapSubtasks();
 
     void deleteAllSubtasks();
     ArrayList<Subtask> getSubtasks();
@@ -18,7 +17,7 @@ public interface TaskManager {
     void deleteSubtask(int id);
 
     void deleteAllEpics();
-    ArrayList<Epic> getMapEpics();
+    ArrayList<Epic> getEpics();
     Epic getEpic(int id);
     void createNewEpic(Epic epic);
     void updateEpic(Epic epic);
@@ -29,7 +28,7 @@ public interface TaskManager {
 
 
     void deleteAllTasks();
-    ArrayList<Task> getMapTasks();
+    ArrayList<Task> getTasks();
     Task getTask(int id);
     void createNewTask(Task task);
     void updateTask(Task task);

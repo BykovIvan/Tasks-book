@@ -17,6 +17,7 @@ public class Main {
         manager.createNewTask(new Task(0, "Имя4", Status.NEW, "Что купить4"));
         manager.createNewTask(new Task(0, "Имя5", Status.NEW, "Что купить5"));
 
+        manager.save();
 //        System.out.println(manager.getTasks());
 
 //        manager.getTask(0);
