@@ -15,12 +15,13 @@ import java.util.List;
  */
 
 public class InMemoryTaskManager implements TaskManager {
-    private int id = 0;
-    private HashMap<Integer, Task> mapTasks;
-    private HashMap<Integer, Epic> mapEpics;
-    private HashMap<Integer, Subtask> mapSubtasks;
 
-    HistoryManager<Task> historyList;
+    private int id = 0;
+    protected HashMap<Integer, Task> mapTasks;
+    protected HashMap<Integer, Epic> mapEpics;
+    protected HashMap<Integer, Subtask> mapSubtasks;
+
+    protected HistoryManager<Task> historyList;
 
     public InMemoryTaskManager() {
         mapTasks = new HashMap<>();
@@ -28,9 +29,6 @@ public class InMemoryTaskManager implements TaskManager {
         mapSubtasks = new HashMap<>();
         historyList = Managers.getDefaultHistory();
     }
-
-
-
 
     @Override
     public void deleteAllSubtasks() {
@@ -204,11 +202,6 @@ public class InMemoryTaskManager implements TaskManager {
             mapTasks.remove(id);
         }
     }
-
-
-
-
-
 
 
     @Override

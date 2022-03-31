@@ -12,19 +12,32 @@ public class Main {
         FileBackedTasksManager manager = new FileBackedTasksManager("nameFile");
 
         manager.createNewTask(new Task(0, "Имя1", Status.NEW, "Что купить1"));
-        manager.createNewTask(new Task(0, "Имя2", Status.NEW, "Что купить2"));
-        manager.createNewTask(new Task(0, "Имя3", Status.NEW, "Что купить3"));
-        manager.createNewTask(new Task(0, "Имя4", Status.NEW, "Что купить4"));
-        manager.createNewTask(new Task(0, "Имя5", Status.NEW, "Что купить5"));
+        manager.createNewTask(new Task(1, "Имя2", Status.NEW, "Что купить2"));
+
+        manager.createNewEpic(new Epic(2, "Имя1", Status.NEW, "Где купить1"));
+
+        manager.createNewSubTask(new Subtask(3, "Саб1", Status.NEW, "Где взять", 2));
+        manager.createNewSubTask(new Subtask(4, "Саб2", Status.NEW, "Где взять", 2));
+
+        manager.createNewTask(new Task(5, "Имя3", Status.NEW, "Что купить3"));
+        manager.createNewTask(new Task(6, "Имя4", Status.NEW, "Что купить4"));
+        manager.createNewTask(new Task(7, "Имя5", Status.NEW, "Что купить5"));
+
+
 
 //        manager.save();
 //        System.out.println(manager.getTasks());
 
 //        manager.getTask(0);
 //        manager.getTask(1);
-        manager.getTask(2);
-        manager.getTask(3);
-        manager.getTask(4);
+        manager.getTask(5);
+        manager.getTask(6);
+        manager.getTask(7);
+        manager.getEpic(2);
+        manager.getSubtask(4);
+        manager.getSubtask(3);
+        manager.getTask(0);
+
 //
         System.out.println("История:");
         System.out.println(manager.history());
