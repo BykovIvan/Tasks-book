@@ -11,6 +11,7 @@ public class Task {
     private int idTask;
     private Status status;
     private int idEpic;
+    private TypeOfTasks typeOfTask = TypeOfTasks.TASK;
 
 //    public Task(String name, String discription) {
 //        this.name = name;
@@ -56,6 +57,14 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public TypeOfTasks getTypeOfTask() {
+        return typeOfTask;
+    }
+
+    public int getIdEpic() {
+        return idEpic;
     }
 
     @Override
