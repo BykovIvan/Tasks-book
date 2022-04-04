@@ -41,7 +41,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println(manager.history());
 
         File file = new File("E:/testDir/history.csv");
-        FileBackedTasksManager fileManeger = loadFromFile(file);
+        FileBackedTasksManager fileManeger = loadFromFile(file); //должен восстанавливаться только сам объект
+//        fileManeger.historyList = fromStringHistory();  //должна восстановаться история
 
         System.out.println("История2:");
         System.out.println(fileManeger.getTasks());
