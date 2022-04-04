@@ -42,6 +42,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         File file = new File("E:/testDir/history.csv");
         FileBackedTasksManager fileManeger = loadFromFile(file); //должен восстанавливаться только сам объект
+
 //        fileManeger.historyList = fromStringHistory();  //должна восстановаться история
 
         System.out.println("История2:");
@@ -202,7 +203,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 line = br.readLine();
             }
             String lineHistory = br.readLine();
-            List<Integer> listHist = fileManagerFromFile.fromStringHistory(lineHistory);
+            List<Integer> listHist = fromStringHistory(lineHistory);
             for (Integer integer : listHist) {
                 if (fileManagerFromFile.mapTasks.containsKey(integer)){
                     fileManagerFromFile.historyList.add(fileManagerFromFile.getTask(integer));
@@ -251,8 +252,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private Task fromString(String value){
         String[] arrayList = value.split(",");
         Task task = null;
-//        TypeOfTasks typeTask = TypeOfTasks.valueOf(arrayList[1]);
-//        Status statusTask = Status.valueOf(arrayList[3]);
 
         if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.TASK)){
             if (Status.valueOf(arrayList[3]).equals(Status.NEW)){
@@ -289,7 +288,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * @param manager
      * @return
      */
-    private String toStringHistory(HistoryManager manager){
+    private static String toStringHistory(HistoryManager manager){
         StringBuilder stringBuilder = new StringBuilder();
         List<Task> list = manager.getHistory();
         for (int i = 0; i < list.size(); i++) {
@@ -307,7 +306,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * @param value
      * @return
      */
-    private List<Integer> fromStringHistory(String value){
+    private static List<Integer> fromStringHistory(String value){
         String[] array = value.split(",");
         List<Integer> listTaskHistory = new ArrayList<>();
         for (int i = 0; i < array.length; i++) {
