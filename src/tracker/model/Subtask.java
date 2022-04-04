@@ -21,21 +21,18 @@ public class Subtask extends Task {
     }
 
     @Override
+    public TypeOfTasks getTypeOfTask() {
+        return TypeOfTasks.SUBTASK;
+    }
+
+    @Override
     public String toString() {
-        return "\n" + getIdTask() +
-                "," + TypeOfTasks.SUBTASK +
-                "," + getName() +
-                "," + getStatus() +
-                "," + getDiscription() +
-                "," + idEpic + " ";
-
-
-//                "Subtask {" +
-//                "name='" + getName() + '\'' +
-//                ", discription='" + getDiscription() + '\'' +
-//                ", idTask=" + getIdTask() +
-//                ", status=" + getStatus() +
-//                '}' + "\n ";
+        return "Subtask {" +
+                "name='" + getName() + '\'' +
+                ", discription='" + getDiscription() + '\'' +
+                ", idTask=" + getIdTask() +
+                ", status=" + getStatus() +
+                '}' + "\n ";
     }
 
     @Override

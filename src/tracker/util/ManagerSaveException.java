@@ -1,4 +1,6 @@
 package tracker.util;
 
-public class ManagerSaveException extends Exception {
+import java.io.IOException;
+
+public class ManagerSaveException extends IOException {
 }

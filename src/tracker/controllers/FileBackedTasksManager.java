@@ -4,13 +4,11 @@ import tracker.history.HistoryManager;
 import tracker.model.Epic;
 import tracker.model.Subtask;
 import tracker.model.Task;
-import tracker.util.ManagerSaveException;
 import tracker.util.Status;
 import tracker.util.TypeOfTasks;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -42,6 +40,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println("История:");
         System.out.println(manager.history());
 
+        File file = new File("E:/testDir/history.csv");
+        FileBackedTasksManager fileManeger = loadFromFile(file);
+
+        System.out.println("История2:");
+        System.out.println(fileManeger.getTasks());
+        System.out.println(fileManeger.getSubtasks());
+        System.out.println(fileManeger.getEpics());
 
 
     }
@@ -151,82 +156,67 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    //    @Override
-//    public List<Task> history() {
-//        save();
-//        return historyList.getHistory();
-//    }
-
     /**
      * Метод сохранения информации о задачах в файл *.csv
      * должен сохранять по порядку по id задачи
      */
-    private void save(){
+    private void save() {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8))) {
-            bw.write("id,type,name,status,description,epic");
+            bw.write("id,type,name,status,description,epic\n");
             int fullSize = mapTasks.size() + mapEpics.size() + mapSubtasks.size();      //получение всех задач в порядке возрастания ID
             for (int i = 0; i < fullSize; i++) {
                 if (mapTasks.containsKey(i)) {
-                    bw.write(mapTasks.get(i).toString());
+                    bw.write(toString(mapTasks.get(i)) + "\n");
                 }else if (mapEpics.containsKey(i)) {
-                    bw.write(mapEpics.get(i).toString());
+                    bw.write(toString(mapEpics.get(i)) + "\n");
                 }else if (mapSubtasks.containsKey(i)){
-                    bw.write(mapSubtasks.get(i).toString());
+                    bw.write(toString(mapSubtasks.get(i)) + "\n");
                 }
             }
-            bw.write("\n\n");                           //пустая строка
-//            bw.write(toString(historyList));                //получение истории
+            bw.write("\n");                           //пустая строка
+            bw.write(toStringHistory(historyList));                //получение истории
+
         } catch (IOException e) {
-            e.printStackTrace();
+//            throw new ManagerSaveException();
         }
 
     }
 
-//    private static FileBackedTasksManager loadFromFile(File file){
-//        FileBackedTasksManager manager = new FileBackedTasksManager();
-//        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-//            while(br.ready()){
-//                if (br.readLine() != null){
-//                    String line = br.readLine();
-//                    FileBackedTasksManager.fromStringTask(line);
-//                }else {
-//                    String line = br.readLine();
-//                    String line2 = br.readLine();
-//                    fromString(line2);
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    private static FileBackedTasksManager loadFromFile(File file){
 
-//    public void loadAllTasks(){
-////        try {
-////            String line = Files.readString(Path.of(nameTestFile));
-////            if (line != null){
-////                fromStringTask(line);
-////            }
-////            save();
-////
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//        try (BufferedReader br = new BufferedReader(new FileReader(nameTestFile, StandardCharsets.UTF_8))) {
-//            while(br.ready()){
-//                if (br.readLine() != null){
-//                    String line = br.readLine();
-//                    fromStringTask(line);
-//                }else {
-//                    String line = br.readLine();
-//                    String line2 = br.readLine();
-//                    fromString(line2);
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+        FileBackedTasksManager fileManagerFromFile = new FileBackedTasksManager(file.getName());
+        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+            String firstline = br.readLine();
+            String line = br.readLine();
+            while (!line.equals("")){
+                Task tempTask = fileManagerFromFile.fromString(line);
+                if (tempTask.getTypeOfTask() == TypeOfTasks.TASK){
+                    fileManagerFromFile.mapTasks.put(tempTask.getIdTask(), tempTask);
+                }else if (tempTask.getTypeOfTask() == TypeOfTasks.SUBTASK){
+                    fileManagerFromFile.mapSubtasks.put(tempTask.getIdTask(), (Subtask) tempTask);
+                }else if (tempTask.getTypeOfTask() == TypeOfTasks.EPIC){
+                    fileManagerFromFile.mapEpics.put(tempTask.getIdTask(), (Epic) tempTask);
+                }
+
+                line = br.readLine();
+            }
+            String lineHistory = br.readLine();
+            List<Integer> listHist = fileManagerFromFile.fromStringHistory(lineHistory);
+            for (Integer integer : listHist) {
+                if (fileManagerFromFile.mapTasks.containsKey(integer)){
+                    fileManagerFromFile.historyList.add(fileManagerFromFile.getTask(integer));
+                }else if (fileManagerFromFile.mapSubtasks.containsKey(integer)){
+                    fileManagerFromFile.historyList.add(fileManagerFromFile.getSubtask(integer));
+                }else if (fileManagerFromFile.mapEpics.containsKey(integer)){
+                    fileManagerFromFile.historyList.add(fileManagerFromFile.getEpic(integer));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileManagerFromFile;
+    }
+
 
 
     /**
@@ -260,65 +250,96 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private Task fromString(String value){
         String[] arrayList = value.split(",");
         Task task = null;
+//        TypeOfTasks typeTask = TypeOfTasks.valueOf(arrayList[1]);
+//        Status statusTask = Status.valueOf(arrayList[3]);
 
-        if (arrayList[1].equals(TypeOfTasks.TASK)){
-            if (arrayList[3].equals(Status.NEW)){
+        if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.TASK)){
+            if (Status.valueOf(arrayList[3]).equals(Status.NEW)){
                 task = new Task(Integer.parseInt(arrayList[0]), arrayList[2], Status.NEW, arrayList[4]);
-            }else if (arrayList[3].equals(Status.IN_PROGRESS)){
+            }else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)){
                 task = new Task(Integer.parseInt(arrayList[0]), arrayList[2], Status.IN_PROGRESS, arrayList[4]);
-            }else if (arrayList[3].equals(Status.DONE)){
+            }else if (Status.valueOf(arrayList[3]).equals(Status.DONE)){
                 task = new Task(Integer.parseInt(arrayList[0]), arrayList[2], Status.DONE, arrayList[4]);
             }
-        }else if (arrayList[1].equals(TypeOfTasks.SUBTASK)){
-            if (arrayList[3].equals(Status.NEW)){
+        }else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.SUBTASK)){
+            if (Status.valueOf(arrayList[3]).equals(Status.NEW)){
                 task = new Subtask(Integer.parseInt(arrayList[0]), arrayList[2], Status.NEW, arrayList[4], Integer.parseInt(arrayList[5]));
-            }else if (arrayList[3].equals(Status.IN_PROGRESS)){
+            }else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)){
                 task = new Subtask(Integer.parseInt(arrayList[0]), arrayList[2], Status.IN_PROGRESS, arrayList[4], Integer.parseInt(arrayList[5]));
-            }else if (arrayList[3].equals(Status.DONE)){
+            }else if (Status.valueOf(arrayList[3]).equals(Status.DONE)){
                 task = new Subtask(Integer.parseInt(arrayList[0]), arrayList[2], Status.DONE, arrayList[4], Integer.parseInt(arrayList[5]));
             }
 
-        }else if (arrayList[1].equals(TypeOfTasks.EPIC)){
-            if (arrayList[3].equals(Status.NEW)){
+        }else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.EPIC)){
+            if (Status.valueOf(arrayList[3]).equals(Status.NEW)){
                 task = new Epic(Integer.parseInt(arrayList[0]), arrayList[2], Status.NEW, arrayList[4]);
-            }else if (arrayList[3].equals(Status.IN_PROGRESS)){
+            }else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)){
                 task = new Epic(Integer.parseInt(arrayList[0]), arrayList[2], Status.IN_PROGRESS, arrayList[4]);
-            }else if (arrayList[3].equals(Status.DONE)){
+            }else if (Status.valueOf(arrayList[3]).equals(Status.DONE)){
                 task = new Epic(Integer.parseInt(arrayList[0]), arrayList[2], Status.DONE, arrayList[4]);
             }
         }
         return task;
     }
 
-//
-//    /**
-//     * логичнее перенести его в класс хистори
-//     * @param manager
-//     * @return
-//     */
-//    private static String toString(HistoryManager manager){
-//        StringBuilder stringBuilder = new StringBuilder();
-//        List<Task> list = manager.getHistory();
-//        for (int i = 0; i < list.size(); i++) {
-//            if (i == list.size() - 1){
-//                stringBuilder.append(list.get(i).getIdTask());
-//            }else {
-//                stringBuilder.append(list.get(i).getIdTask()).append(",");
-//            }
-//        }
-////        for (Task task : list) {
+
+    /**
+     * метод создание строки из истроии
+     * @param manager
+     * @return
+     */
+    private String toStringHistory(HistoryManager manager){
+        StringBuilder stringBuilder = new StringBuilder();
+        List<Task> list = manager.getHistory();
+        for (int i = 0; i < list.size(); i++) {
+            if (i == list.size() - 1){
+                stringBuilder.append(list.get(i).getIdTask());
+            }else {
+                stringBuilder.append(list.get(i).getIdTask()).append(",");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Метод создание истроии из строки
+     * @param value
+     * @return
+     */
+    private List<Integer> fromStringHistory(String value){
+        String[] array = value.split(",");
+        List<Integer> listTaskHistory = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+            listTaskHistory.add(Integer.parseInt(array[i]));
+        }
+        return listTaskHistory;
+    }
+
+//старый метод восстановления
+//    public void loadAllTasks(){
+////        try {
+////            String line = Files.readString(Path.of(nameTestFile));
+////            if (line != null){
+////                fromStringTask(line);
+////            }
+////            save();
+////
+////        } catch (IOException e) {
+////            e.printStackTrace();
 ////        }
-//        return stringBuilder.toString();
-//    }
-//
-//    private static List<Integer> fromString(String value){
-//        String[] array = value.split(",");
-//        List<Integer> listTaskHistory = new ArrayList<>();
-//        for (int i = 0; i < array.length; i++) {
-//            listTaskHistory.add(Integer.parseInt(array[i]));
+//        try (BufferedReader br = new BufferedReader(new FileReader(nameTestFile, StandardCharsets.UTF_8))) {
+//            while(br.ready()){
+//                if (br.readLine() != null){
+//                    String line = br.readLine();
+//                    fromStringTask(line);
+//                }else {
+//                    String line = br.readLine();
+//                    String line2 = br.readLine();
+//                    fromString(line2);
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-//        return listTaskHistory;
 //    }
-
-
 }

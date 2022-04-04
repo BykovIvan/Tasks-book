@@ -69,19 +69,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return  "\n" + idTask +
-                "," + TypeOfTasks.TASK +
-                "," + name +
-                "," + status +
-                "," + discription;
-
-//                "Task {" +
-//                "name='" + name + '\'' +
-//                ", discription='" + discription + '\'' +
-//                ", idTask=" + idTask +
-//                ", status=" + status +
-//                '}' + "\n";
-
+        return "Task {" +
+                "name='" + name + '\'' +
+                ", discription='" + discription + '\'' +
+                ", idTask=" + idTask +
+                ", status=" + status +
+                '}' + "\n";
     }
 
     @Override
