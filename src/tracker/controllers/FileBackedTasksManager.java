@@ -316,31 +316,4 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return listTaskHistory;
     }
 
-//старый метод восстановления
-//    public void loadAllTasks(){
-////        try {
-////            String line = Files.readString(Path.of(nameTestFile));
-////            if (line != null){
-////                fromStringTask(line);
-////            }
-////            save();
-////
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//        try (BufferedReader br = new BufferedReader(new FileReader(nameTestFile, StandardCharsets.UTF_8))) {
-//            while(br.ready()){
-//                if (br.readLine() != null){
-//                    String line = br.readLine();
-//                    fromStringTask(line);
-//                }else {
-//                    String line = br.readLine();
-//                    String line2 = br.readLine();
-//                    fromString(line2);
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
