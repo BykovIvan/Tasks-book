@@ -4,6 +4,7 @@ import tracker.history.HistoryManager;
 import tracker.model.Epic;
 import tracker.model.Subtask;
 import tracker.model.Task;
+import tracker.util.ManagerSaveException;
 import tracker.util.Status;
 import tracker.util.TypeOfTasks;
 
@@ -40,16 +41,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println("История:");
         System.out.println(manager.history());
 
-        File file = new File("E:/testDir/history.csv");
-        FileBackedTasksManager fileManeger = loadFromFile(file); //должен восстанавливаться только сам объект
 
-//        fileManeger.historyList = fromStringHistory();  //должна восстановаться история
+        File file = new File("E:/testDir/history.csv");
+        FileBackedTasksManager fileManager = loadFromFile(file); //должен восстанавливаться только сам объект
 
         System.out.println("История2:");
-        System.out.println(fileManeger.getTasks());
-        System.out.println(fileManeger.getSubtasks());
-        System.out.println(fileManeger.getEpics());
-
+        System.out.println(fileManager.history());
 
     }
 
@@ -178,17 +175,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             bw.write("\n");                           //пустая строка
             bw.write(toStringHistory(historyList));                //получение истории
 
-        } catch (IOException e) {
-//            throw new ManagerSaveException();
+        } catch (IOException exception) {
+            throw new ManagerSaveException();
         }
 
     }
 
+    /**
+     * Метод загрузки из файла в новый менеджер, на вход имя файла
+     * @param file
+     * @return
+     */
     private static FileBackedTasksManager loadFromFile(File file){
 
         FileBackedTasksManager fileManagerFromFile = new FileBackedTasksManager(file.getName());
         try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            String firstline = br.readLine();
+            String firstline = br.readLine();               //Первая строка, без изменений
             String line = br.readLine();
             while (!line.equals("")){
                 Task tempTask = fileManagerFromFile.fromString(line);
@@ -202,6 +204,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
                 line = br.readLine();
             }
+            fileManagerFromFile.addSubtaskInListEpic(); //восстановление сабов у эпиков
+            //следующая строка за пустой строчкой
             String lineHistory = br.readLine();
             List<Integer> listHist = fromStringHistory(lineHistory);
             for (Integer integer : listHist) {
@@ -313,6 +317,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             listTaskHistory.add(Integer.parseInt(array[i]));
         }
         return listTaskHistory;
+    }
+
+    //метод для восстановления subtask у Epic
+    private void addSubtaskInListEpic(){
+        for (Subtask value : mapSubtasks.values()) {        //пробегаемся по всему списку подзадач
+            int tempIdOfEpic = value.getIdEpic();               //находим id эпика
+            List<Subtask> list = mapEpics.get(tempIdOfEpic).getSubtasksOfEpic(); //получаем список по id
+            list.add(value);                                //добавляем подзадачу в этот список
+        }
     }
 
 }
