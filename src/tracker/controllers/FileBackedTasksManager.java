@@ -21,7 +21,7 @@ import java.util.List;
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
-        FileBackedTasksManager manager = new FileBackedTasksManager("E:/testDir/history.csv");
+        FileBackedTasksManager manager = new FileBackedTasksManager("history.csv");
 
         manager.createNewTask(new Task(0, "Имя1", Status.NEW, "Что купить1"));
         manager.createNewTask(new Task(1, "Имя2", Status.NEW, "Что купить2"));
@@ -42,7 +42,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println("История:");
         System.out.println(manager.history());
 
-        File file = new File("E:/testDir/history.csv");
+        File file = new File("history.csv");
         FileBackedTasksManager fileManager = loadFromFile(file); //должен восстанавливаться только сам объект
 
         System.out.println("История2:");
