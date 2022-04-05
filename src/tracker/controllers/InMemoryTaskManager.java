@@ -57,7 +57,7 @@ public class InMemoryTaskManager implements TaskManager {
         id++;
         mapSubtasks.put(subtask.getIdTask(), subtask);
         int idEpicTemp = subtask.getIdEpic();
-        if (mapEpics.containsKey(idEpicTemp)){                  //добавдяем в список подзадач эпика свою задачу
+        if (mapEpics.containsKey(idEpicTemp)) {                  //добавдяем в список подзадач эпика свою задачу
             Epic epic = mapEpics.get(idEpicTemp);
             epic.getSubtasksOfEpic().add(subtask);
         }
@@ -84,6 +84,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyList.remove(id);             // удаление задачи из листа истории
         }
     }
+
     public void deleteSubtaskWithOutHistory(int id) {
         if (mapSubtasks.containsKey(id)) {
             int idEpicTemp = mapSubtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
@@ -146,6 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     /**
      * Получение списка подзадач у эпика по его ид
+     *
      * @param idEpic
      * @return
      */
@@ -153,12 +155,6 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Subtask> getSubtasksByEpicId(int idEpic) {
         return mapEpics.get(idEpic).getSubtasksOfEpic();
     }
-
-
-
-
-
-
 
 
     @Override

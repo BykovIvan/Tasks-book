@@ -106,7 +106,6 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
     }
 
 
-
 }
 
 
