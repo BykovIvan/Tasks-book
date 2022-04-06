@@ -11,20 +11,14 @@ public class Task {
     private int idTask;
     private Status status;
     private int idEpic;
-    private TypeOfTasks typeOfTask = TypeOfTasks.TASK;
-
-//    public Task(String name, String discription) {
-//        this.name = name;
-//        this.discription = discription;
-//        this.status = Status.NEW;
-//        epic = this.epic;
-//    }
+    private TypeOfTasks typeOfTask;
 
     public Task(int idTask, String name, Status status, String discription) {
         this.name = name;
         this.discription = discription;
         this.status = status;
         this.idTask = idTask;
+        typeOfTask = TypeOfTasks.TASK;
     }
 
     public String getName() {
