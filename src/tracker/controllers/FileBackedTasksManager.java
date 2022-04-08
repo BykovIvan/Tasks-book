@@ -50,7 +50,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-    //    private final String nameFile;                  // файл для автосохранения
     private final String nameTestFile;                  // файл для автосохранения
     private final Path path;
 
@@ -214,7 +213,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
                 line = br.readLine();
             }
-            fileManagerFromFile.addSubtaskInListEpic(); //восстановление сабов у эпиков
+            fileManagerFromFile.addSubtaskInListEpic(); //восстановление подзадач у эпиков
             String lineHistory = br.readLine();
             List<Integer> listHist = fromStringHistory(lineHistory);
             for (Integer integer : listHist) {
