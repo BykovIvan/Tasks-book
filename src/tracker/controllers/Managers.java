@@ -4,6 +4,10 @@ import tracker.history.HistoryManager;
 import tracker.history.InMemoryHistoryManager;
 import tracker.model.Task;
 
+/**
+ * Утилитарный класс для метод создания объектов
+ */
+
 public class Managers {
 
     private static final TaskManager taskManager = new InMemoryTaskManager();

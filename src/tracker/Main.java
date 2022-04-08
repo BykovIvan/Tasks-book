@@ -37,8 +37,8 @@ public class Main {
 //        manager.getSubtask(4);
 //        manager.getSubtask(3);
 //        manager.getTask(0);
-//
-////
+
+
 //        System.out.println("История:");
 //        System.out.println(manager.history());
 
