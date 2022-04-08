@@ -159,7 +159,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getTasks() {
-        //добавить в историю если я вызываю получение всех методов (но сначала посмотреть есть ли в тз4 это правило
         return new ArrayList<>(mapTasks.values());
     }
 
