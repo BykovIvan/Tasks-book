@@ -6,12 +6,12 @@ import tracker.util.TypeOfTasks;
 import java.util.Objects;
 
 public class Task {
-    private String name;
-    private String discription;
-    private int idTask;
-    private Status status;
-    private int idEpic;
-    private TypeOfTasks typeOfTask;
+    private String name;                //Имя задачи
+    private String discription;         //Описание задачи
+    private int idTask;                 //ID задачи (создается автоматически при методе создания
+    private Status status;              //Статус задачи
+    private int idEpic;                 //ID эпика задачи (Если требуется)
+    private TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
     public Task(int idTask, String name, Status status, String discription) {
         this.name = name;
