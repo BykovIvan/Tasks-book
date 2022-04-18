@@ -35,6 +35,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
 
+        //Для метода Update
         Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", Status.NEW);
         final int taskId2 = manager.createNewTask(task);
         manager.updateTask(task, task2);
@@ -43,9 +44,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(task2, savedTask2, "Задачи не совпадают.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
 
+        final Task savedTask3 = manager.getTask(5);
+
         manager.deleteAllTasks();
-        final Task savedTask3 = manager.getTask(taskId2);
-        assertNull(savedTask3, "Задача возвращается.");
+        final Task savedTask4 = manager.getTask(taskId2);
+        assertNull(savedTask4, "Задача возвращается.");
         assertEquals(0, tasks.size(), "Неверное количество задач.");
 
 
