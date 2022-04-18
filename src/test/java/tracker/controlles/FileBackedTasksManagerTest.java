@@ -13,8 +13,32 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
     @Test
     @Override
-    protected void createNewTask() {
-        super.createNewTask();
+    protected void testCreateNewTask() {
+        super.testCreateNewTask();
+    }
+
+    @Test
+    @Override
+    protected void testUpdateTask() {
+        super.testUpdateTask();
+    }
+
+    @Test
+    @Override
+    protected void testDeleteTask() {
+        super.testDeleteTask();
+    }
+
+    @Test
+    @Override
+    protected void testGetTask() {
+        super.testGetTask();
+    }
+
+    @Test
+    @Override
+    protected void testGetTasks() {
+        super.testGetTasks();
     }
 }
 

@@ -135,7 +135,7 @@ public interface TaskManager {
      *
      * @param task
      */
-    void updateTask(Task task);
+    void updateTask(Task oldTask, Task newTask);
 
     /**
      * Удаление задачи по его ID

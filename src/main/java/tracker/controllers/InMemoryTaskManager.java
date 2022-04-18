@@ -193,9 +193,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
-        int idTemp = task.getIdTask();
-        mapTasks.put(idTemp, task);
+    public void updateTask(Task oldTask, Task newTask) {
+        if (mapTasks.containsKey(oldTask.getIdTask())){
+            int idTemp = oldTask.getIdTask();
+            mapTasks.put(idTemp, newTask);
+        }
+
     }
 
     @Override
