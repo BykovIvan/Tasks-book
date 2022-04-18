@@ -1,9 +1,13 @@
 package tracker.controlles;
 
+import main.java.tracker.controllers.Managers;
 import main.java.tracker.controllers.TaskManager;
+import main.java.tracker.history.HistoryManager;
+import main.java.tracker.history.InMemoryHistoryManager;
 import main.java.tracker.model.Task;
 import main.java.tracker.util.Status;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.List;
 
@@ -30,6 +34,21 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNotNull(tasks, "Задачи на возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
+
+        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", Status.NEW);
+        final int taskId2 = manager.createNewTask(task);
+        manager.updateTask(task, task2);
+        final Task savedTask2 = manager.getTask(taskId2);
+
+        assertEquals(task2, savedTask2, "Задачи не совпадают.");
+        assertEquals(1, tasks.size(), "Неверное количество задач.");
+
+        manager.deleteAllTasks();
+        final Task savedTask3 = manager.getTask(taskId2);
+        assertNull(savedTask3, "Задача возвращается.");
+        assertEquals(0, tasks.size(), "Неверное количество задач.");
+
+
     }
 
     //Тест обновления задачи
@@ -40,8 +59,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         //Стандартное поведение задачи
         int idTask1 = manager.createNewTask(task1);
         manager.createNewTask(task2);
-
         manager.updateTask(task1, task2);
+
         final Task savedTask = manager.getTask(idTask1);
         assertNotNull(savedTask, "Задача на возвращаются.");
         assertEquals(task2, savedTask, "Задачи не совпадают.");
@@ -63,13 +82,42 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     protected void testDeleteTask(){
         Task task1 = new Task("Test1 addNewTask", "Test1 addNewTask description", Status.NEW);
+        //Стандартное поведение
         int id = manager.createNewTask(task1);
+
         manager.deleteTask(id);
+        assertTrue(manager.getTasks().isEmpty(), "Список не пустой.");
+        //С пустым списком задач
+        manager.deleteAllTasks();
+        manager.deleteTask(id);
+        assertTrue(manager.getTasks().isEmpty(), "Список не пустой.");
+
+        //С неверным идентификатором
+        manager.createNewTask(task1);
+        manager.deleteTask(5);
+        assertEquals(1, manager.getTasks().size(), "Попытка удаления с неправильным идентификатором");
+
+
 
     }
 
     @Test
     protected void testGetTask(){
+        Task task1 = new Task("Test1 addNewTask", "Test1 addNewTask description", Status.NEW);
+        //Стандартное поведение
+        final int taskId = manager.createNewTask(task1);
+        final Task savedTask = manager.getTask(taskId);
+        assertNotNull(savedTask, "Задача не найдена.");
+        assertEquals(task1, savedTask, "Задачи не совпадают.");
+        //С пустым списком
+        manager.deleteAllTasks();
+        final Task savedTask2 = manager.getTask(taskId);
+        assertNull(savedTask2, "Задача пресутствует в списке");
+        //С неверным идентификатором
+        manager.createNewTask(task1);
+        final Task savedTask3 = manager.getTask(3);
+        assertNull(savedTask3, "Задача присутствует в списке");
+
 
     }
 

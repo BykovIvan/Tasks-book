@@ -56,6 +56,16 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
         mapList.remove(idTask);
     }
 
+    @Override
+    public boolean contains(int ID) {
+        for (Integer integer : mapList.keySet()) {
+            if (ID == integer) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Методы от списка
 
     /**

@@ -23,4 +23,13 @@ public interface HistoryManager<T> {
      * @param Id
      */
     void remove(int Id);
+
+
+    /**
+     * Метод для проверки есть ли в списке данная задача по ID
+     *
+     * @param ID
+     * @return
+     */
+    boolean contains(int ID);
 }
