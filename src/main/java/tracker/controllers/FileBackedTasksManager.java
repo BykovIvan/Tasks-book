@@ -3,6 +3,7 @@ package main.java.tracker.controllers;
 import main.java.tracker.history.HistoryManager;
 import main.java.tracker.model.*;
 import main.java.tracker.util.*;
+import main.java.tracker.util.Status;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import static main.java.tracker.util.Status.NEW;
+import static main.java.tracker.util.Status.IN_PROGRESS;
+import static main.java.tracker.util.Status.DONE;
 
 /**
  * Класс менеджера для работы с файлами и с историей
@@ -19,14 +24,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static void main(String[] args) {
         FileBackedTasksManager manager = new FileBackedTasksManager("history.csv");
 
-        manager.createNewTask(new Task("Имя1", "Что купить1", Status.NEW));
-        manager.createNewTask(new Task("Имя2", "Что купить2", Status.NEW));
-        manager.createNewEpic(new Epic("Имя1", "Где купить1", Status.NEW));
-        manager.createNewSubTask(new Subtask("Саб1", "Где взять", Status.NEW, 2));
-        manager.createNewSubTask(new Subtask("Саб2", "Где взять", Status.NEW, 2));
-        manager.createNewTask(new Task("Имя3", "Что купить3", Status.NEW));
-        manager.createNewTask(new Task("Имя4", "Что купить4", Status.NEW));
-        manager.createNewTask(new Task("Имя5", "Что купить5", Status.NEW));
+        manager.createNewTask(new Task("Имя1", "Что купить1", NEW));
+        manager.createNewTask(new Task("Имя2", "Что купить2", DONE));
+        manager.createNewEpic(new Epic("Имя1", "Где купить1", NEW));
+        manager.createNewSubTask(new Subtask("Саб1", "Где взять", NEW, 2));
+        manager.createNewSubTask(new Subtask("Саб2", "Где взять", NEW, 2));
+        manager.createNewTask(new Task("Имя3", "Что купить3", NEW));
+        manager.createNewTask(new Task("Имя4", "Что купить4", NEW));
+        manager.createNewTask(new Task("Имя5", "Что купить5", NEW));
         manager.getTask(5);
         manager.getTask(6);
         manager.getTask(7);
@@ -271,8 +276,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Task task = null;
 
         if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.TASK)) {
-            if (Status.valueOf(arrayList[3]).equals(Status.NEW)) {
-                task = new Task(arrayList[2], arrayList[4], Status.NEW);
+            if (Status.valueOf(arrayList[3]).equals(NEW)) {
+                task = new Task(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
                 task = new Task(arrayList[2], arrayList[4], Status.IN_PROGRESS);
@@ -282,8 +287,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 task.setIdTask(Integer.parseInt(arrayList[0]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.SUBTASK)) {
-            if (Status.valueOf(arrayList[3]).equals(Status.NEW)) {
-                task = new Subtask(arrayList[2], arrayList[4], Status.NEW, Integer.parseInt(arrayList[5]));
+            if (Status.valueOf(arrayList[3]).equals(NEW)) {
+                task = new Subtask(arrayList[2], arrayList[4], NEW, Integer.parseInt(arrayList[5]));
                 task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
                 task = new Subtask(arrayList[2], arrayList[4], Status.IN_PROGRESS, Integer.parseInt(arrayList[5]));
@@ -293,8 +298,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 task.setIdTask(Integer.parseInt(arrayList[0]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.EPIC)) {
-            if (Status.valueOf(arrayList[3]).equals(Status.NEW)) {
-                task = new Epic(arrayList[2], arrayList[4], Status.NEW);
+            if (Status.valueOf(arrayList[3]).equals(NEW)) {
+                task = new Epic(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
                 task = new Epic(arrayList[2], arrayList[4], Status.IN_PROGRESS);

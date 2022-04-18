@@ -5,7 +5,10 @@ import main.java.tracker.model.Subtask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import main.java.tracker.controllers.InMemoryTaskManager;
-import main.java.tracker.util.Status;
+
+import static main.java.tracker.util.Status.NEW;
+import static main.java.tracker.util.Status.IN_PROGRESS;
+import static main.java.tracker.util.Status.DONE;
 
 import java.util.ArrayList;
 
@@ -19,10 +22,10 @@ class EpicTest {
     public void beforeEach(){
         manager = new InMemoryTaskManager();
         ArrayList<Subtask> tasks = new ArrayList<>();
-        Subtask subtask1 = new Subtask("Sub1", "Dis1", Status.NEW);
-        Subtask subtask2 = new Subtask("Sub2", "Dis2", Status.NEW);
-        Subtask subtask3 = new Subtask("Sub3", "Dis3", Status.NEW);
-        Subtask subtask4 = new Subtask("Sub4", "Dis4", Status.NEW);
+        Subtask subtask1 = new Subtask("Sub1", "Dis1", NEW);
+        Subtask subtask2 = new Subtask("Sub2", "Dis2", NEW);
+        Subtask subtask3 = new Subtask("Sub3", "Dis3", NEW);
+        Subtask subtask4 = new Subtask("Sub4", "Dis4", NEW);
         manager.createNewSubTask(subtask1);
         manager.createNewSubTask(subtask2);
         manager.createNewSubTask(subtask3);
@@ -31,7 +34,7 @@ class EpicTest {
         tasks.add(subtask2);
         tasks.add(subtask3);
         tasks.add(subtask4);
-        epic = new Epic("Epic1","EpicDis", Status.NEW,  tasks);
+        epic = new Epic("Epic1","EpicDis", NEW,  tasks);
 
     }
 
@@ -49,10 +52,10 @@ class EpicTest {
     public void allStatusOfSubtaskIsNew(){
         ArrayList<Subtask> list = epic.getSubtasksOfEpic();
         for (Subtask subtask : list) {
-            subtask.setStatus(Status.NEW);
+            subtask.setStatus(NEW);
         }
         manager.createNewEpic(epic);
-        assertEquals(Status.NEW, epic.getStatus());
+        assertEquals(NEW, epic.getStatus());
     }
 
 
@@ -61,10 +64,10 @@ class EpicTest {
     public void allStatusOfSubtaskIsDone(){
         ArrayList<Subtask> list = epic.getSubtasksOfEpic();
         for (Subtask subtask : list) {
-            subtask.setStatus(Status.DONE);
+            subtask.setStatus(DONE);
         }
         manager.createNewEpic(epic);
-        assertEquals(Status.DONE, epic.getStatus());
+        assertEquals(DONE, epic.getStatus());
     }
 
     //Подзадачи со статусами NEW и DONE
@@ -73,14 +76,14 @@ class EpicTest {
         ArrayList<Subtask> list = epic.getSubtasksOfEpic();
         for (Subtask subtask : list) {
             if (subtask.getIdTask() % 2 == 0){
-                subtask.setStatus(Status.NEW);
+                subtask.setStatus(NEW);
             }else{
-                subtask.setStatus(Status.DONE);
+                subtask.setStatus(DONE);
             }
 
         }
         manager.createNewEpic(epic);
-        assertEquals(Status.IN_PROGRESS, epic.getStatus());
+        assertEquals(IN_PROGRESS, epic.getStatus());
     }
 
     //Подзадачи со статусом IN_PROGRESS
@@ -88,10 +91,10 @@ class EpicTest {
     public void allStatusOfSubtaskIsInProgress(){
         ArrayList<Subtask> list = epic.getSubtasksOfEpic();
         for (Subtask subtask : list) {
-            subtask.setStatus(Status.IN_PROGRESS);
+            subtask.setStatus(IN_PROGRESS);
         }
         manager.createNewEpic(epic);
-        assertEquals(Status.IN_PROGRESS, epic.getStatus());
+        assertEquals(IN_PROGRESS, epic.getStatus());
     }
 
 }

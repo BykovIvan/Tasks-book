@@ -3,6 +3,8 @@ package tracker.controlles;
 import main.java.tracker.controllers.TaskManager;
 import main.java.tracker.model.Task;
 import main.java.tracker.util.Status;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,10 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 abstract class TaskManagerTest<T extends TaskManager> {
 
-    private T manager;
+    protected T manager;
+
 
     @Test
-    void createNewTask() {
+    protected void createNewTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
 //        final int taskId = manager.addNewTask(task);
         final int taskId = manager.createNewTask(task);
