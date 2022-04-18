@@ -1,8 +1,8 @@
-package tracker.controllers;
+package main.java.tracker.controllers;
 
-import tracker.history.HistoryManager;
-import tracker.history.InMemoryHistoryManager;
-import tracker.model.Task;
+import main.java.tracker.history.HistoryManager;
+import main.java.tracker.history.InMemoryHistoryManager;
+import main.java.tracker.model.Task;
 
 /**
  * Утилитарный класс для метод создания объектов

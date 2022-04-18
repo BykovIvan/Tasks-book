@@ -1,4 +1,4 @@
-package tracker.history;
+package main.java.tracker.history;
 
 import java.util.List;
 

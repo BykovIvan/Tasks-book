@@ -1,10 +1,10 @@
-package tracker.controllers;
+package main.java.tracker.controllers;
 
-import tracker.history.HistoryManager;
-import tracker.model.Epic;
-import tracker.model.Subtask;
-import tracker.model.Task;
-import tracker.util.Status;
+import main.java.tracker.history.HistoryManager;
+import main.java.tracker.model.Epic;
+import main.java.tracker.model.Subtask;
+import main.java.tracker.model.Task;
+import main.java.tracker.util.Status;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createNewSubTask(Subtask subtask) {
+    public int createNewSubTask(Subtask subtask) {
         subtask.setIdTask(id);
         id++;
         mapSubtasks.put(subtask.getIdTask(), subtask);
@@ -62,6 +62,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.getSubtasksOfEpic().add(subtask);
         }
         updateStatusEpic();
+        return subtask.getIdTask();
     }
 
     @Override
@@ -119,7 +120,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createNewEpic(Epic epic) {
+    public int createNewEpic(Epic epic) {
         epic.setIdTask(id);
         ArrayList<Subtask> listSub = epic.getSubtasksOfEpic();
         for (Subtask subtask : listSub) {
@@ -128,6 +129,8 @@ public class InMemoryTaskManager implements TaskManager {
         id++;
         mapEpics.put(epic.getIdTask(), epic);
         updateStatusEpic();
+
+        return epic.getIdTask();
     }
 
     @Override
@@ -182,10 +185,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createNewTask(Task task) {
+    public int createNewTask(Task task) {
         task.setIdTask(id);
         id++;
         mapTasks.put(task.getIdTask(), task);
+        return task.getIdTask();
     }
 
     @Override

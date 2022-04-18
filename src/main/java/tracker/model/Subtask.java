@@ -1,19 +1,19 @@
-package tracker.model;
+package main.java.tracker.model;
 
-import tracker.util.Status;
-import tracker.util.TypeOfTasks;
+import main.java.tracker.util.Status;
+import main.java.tracker.util.TypeOfTasks;
 
 import java.util.Objects;
 
 public class Subtask extends Task {
     private int idEpic;
 
-    public Subtask(int idTask, String name, Status status, String discription, int idEpic) {
-        super(idTask, name, status, discription);
+    public Subtask(String name, String discription, Status status, int idEpic) {
+        super(name, discription, status);
         this.idEpic = idEpic;
     }
-    public Subtask(int idTask, String name, Status status, String discription) {
-        super(idTask, name, status, discription);
+    public Subtask(String name, String discription, Status status) {
+        super(name, discription, status);
     }
 
     public int getIdEpic() {

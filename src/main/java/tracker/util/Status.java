@@ -1,4 +1,4 @@
-package tracker.util;
+package main.java.tracker.util;
 
 /**
  * Используется для выставления статуса задачам

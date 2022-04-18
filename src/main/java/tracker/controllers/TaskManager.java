@@ -1,6 +1,6 @@
-package tracker.controllers;
+package main.java.tracker.controllers;
 
-import tracker.model.*;
+import main.java.tracker.model.*;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public interface TaskManager {
      *
      * @param subtask
      */
-    void createNewSubTask(Subtask subtask);
+    int createNewSubTask(Subtask subtask);
 
     /**
      * обновление подзадачи(Замена существующей)
@@ -73,7 +73,7 @@ public interface TaskManager {
      *
      * @param epic
      */
-    void createNewEpic(Epic epic);
+    int createNewEpic(Epic epic);
 
     /**
      * Обновление эпика (Замена существующего)
@@ -128,7 +128,7 @@ public interface TaskManager {
      *
      * @param task
      */
-    void createNewTask(Task task);
+    int createNewTask(Task task);
 
     /**
      * Обновление задачи (Замена существующей)

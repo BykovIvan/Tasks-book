@@ -1,8 +1,8 @@
-package tracker.controllers;
+package main.java.tracker.controllers;
 
-import tracker.history.HistoryManager;
-import tracker.model.*;
-import tracker.util.*;
+import main.java.tracker.history.HistoryManager;
+import main.java.tracker.model.*;
+import main.java.tracker.util.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -19,14 +19,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static void main(String[] args) {
         FileBackedTasksManager manager = new FileBackedTasksManager("history.csv");
 
-        manager.createNewTask(new Task(0, "Имя1", Status.NEW, "Что купить1"));
-        manager.createNewTask(new Task(1, "Имя2", Status.NEW, "Что купить2"));
-        manager.createNewEpic(new Epic(2, "Имя1", Status.NEW, "Где купить1"));
-        manager.createNewSubTask(new Subtask(3, "Саб1", Status.NEW, "Где взять", 2));
-        manager.createNewSubTask(new Subtask(4, "Саб2", Status.NEW, "Где взять", 2));
-        manager.createNewTask(new Task(5, "Имя3", Status.NEW, "Что купить3"));
-        manager.createNewTask(new Task(6, "Имя4", Status.NEW, "Что купить4"));
-        manager.createNewTask(new Task(7, "Имя5", Status.NEW, "Что купить5"));
+        manager.createNewTask(new Task("Имя1", "Что купить1", Status.NEW));
+        manager.createNewTask(new Task("Имя2", "Что купить2", Status.NEW));
+        manager.createNewEpic(new Epic("Имя1", "Где купить1", Status.NEW));
+        manager.createNewSubTask(new Subtask("Саб1", "Где взять", Status.NEW, 2));
+        manager.createNewSubTask(new Subtask("Саб2", "Где взять", Status.NEW, 2));
+        manager.createNewTask(new Task("Имя3", "Что купить3", Status.NEW));
+        manager.createNewTask(new Task("Имя4", "Что купить4", Status.NEW));
+        manager.createNewTask(new Task("Имя5", "Что купить5", Status.NEW));
         manager.getTask(5);
         manager.getTask(6);
         manager.getTask(7);
@@ -61,10 +61,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createNewTask(Task task) {
-        super.createNewTask(task);
+    public int createNewTask(Task task) {
+        int id = super.createNewTask(task);
         save();
+        return id;
     }
+
+
+    //    @Override
+//    public int createNewTask(Task task) {
+//        super.createNewTask(task);
+//        save();
+//    }
 
     @Override
     public void updateTask(Task task) {
@@ -96,9 +104,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createNewSubTask(Subtask subtask) {
-        super.createNewSubTask(subtask);
+    public int createNewSubTask(Subtask subtask) {
+        int id = super.createNewSubTask(subtask);
         save();
+        return id;
     }
 
     @Override
@@ -131,9 +140,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createNewEpic(Epic epic) {
-        super.createNewEpic(epic);
+    public int createNewEpic(Epic epic) {
+        int id = super.createNewEpic(epic);
         save();
+        return id;
     }
 
     @Override
@@ -262,27 +272,36 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.TASK)) {
             if (Status.valueOf(arrayList[3]).equals(Status.NEW)) {
-                task = new Task(Integer.parseInt(arrayList[0]), arrayList[2], Status.NEW, arrayList[4]);
+                task = new Task(arrayList[2], arrayList[4], Status.NEW);
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
-                task = new Task(Integer.parseInt(arrayList[0]), arrayList[2], Status.IN_PROGRESS, arrayList[4]);
+                task = new Task(arrayList[2], arrayList[4], Status.IN_PROGRESS);
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.DONE)) {
-                task = new Task(Integer.parseInt(arrayList[0]), arrayList[2], Status.DONE, arrayList[4]);
+                task = new Task(arrayList[2], arrayList[4], Status.DONE);
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.SUBTASK)) {
             if (Status.valueOf(arrayList[3]).equals(Status.NEW)) {
-                task = new Subtask(Integer.parseInt(arrayList[0]), arrayList[2], Status.NEW, arrayList[4], Integer.parseInt(arrayList[5]));
+                task = new Subtask(arrayList[2], arrayList[4], Status.NEW, Integer.parseInt(arrayList[5]));
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
-                task = new Subtask(Integer.parseInt(arrayList[0]), arrayList[2], Status.IN_PROGRESS, arrayList[4], Integer.parseInt(arrayList[5]));
+                task = new Subtask(arrayList[2], arrayList[4], Status.IN_PROGRESS, Integer.parseInt(arrayList[5]));
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.DONE)) {
-                task = new Subtask(Integer.parseInt(arrayList[0]), arrayList[2], Status.DONE, arrayList[4], Integer.parseInt(arrayList[5]));
+                task = new Subtask(arrayList[2], arrayList[4], Status.DONE, Integer.parseInt(arrayList[5]));
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.EPIC)) {
             if (Status.valueOf(arrayList[3]).equals(Status.NEW)) {
-                task = new Epic(Integer.parseInt(arrayList[0]), arrayList[2], Status.NEW, arrayList[4]);
+                task = new Epic(arrayList[2], arrayList[4], Status.NEW);
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
-                task = new Epic(Integer.parseInt(arrayList[0]), arrayList[2], Status.IN_PROGRESS, arrayList[4]);
+                task = new Epic(arrayList[2], arrayList[4], Status.IN_PROGRESS);
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             } else if (Status.valueOf(arrayList[3]).equals(Status.DONE)) {
-                task = new Epic(Integer.parseInt(arrayList[0]), arrayList[2], Status.DONE, arrayList[4]);
+                task = new Epic(arrayList[2], arrayList[4], Status.DONE);
+                task.setIdTask(Integer.parseInt(arrayList[0]));
             }
         }
         return task;

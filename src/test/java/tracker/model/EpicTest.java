@@ -1,13 +1,13 @@
 package tracker.model;
 
-import org.junit.jupiter.api.BeforeAll;
+import main.java.tracker.model.Epic;
+import main.java.tracker.model.Subtask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tracker.controllers.InMemoryTaskManager;
-import tracker.util.Status;
+import main.java.tracker.controllers.InMemoryTaskManager;
+import main.java.tracker.util.Status;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,12 +18,21 @@ class EpicTest {
     @BeforeEach
     public void beforeEach(){
         manager = new InMemoryTaskManager();
-        epic = new Epic(1, "Epic1", Status.NEW,"EpicDis",  new ArrayList<>(
-                Arrays.asList(new Subtask(1, "Sub1", Status.NEW, "Dis1"),
-                        new Subtask(2, "Sub2", Status.NEW, "Dis2"),
-                        new Subtask(3, "Sub3", Status.NEW, "Dis3"),
-                        new Subtask(4, "Sub4", Status.NEW, "Dis4"))
-        ));
+        ArrayList<Subtask> tasks = new ArrayList<>();
+        Subtask subtask1 = new Subtask("Sub1", "Dis1", Status.NEW);
+        Subtask subtask2 = new Subtask("Sub2", "Dis2", Status.NEW);
+        Subtask subtask3 = new Subtask("Sub3", "Dis3", Status.NEW);
+        Subtask subtask4 = new Subtask("Sub4", "Dis4", Status.NEW);
+        manager.createNewSubTask(subtask1);
+        manager.createNewSubTask(subtask2);
+        manager.createNewSubTask(subtask3);
+        manager.createNewSubTask(subtask4);
+        tasks.add(subtask1);
+        tasks.add(subtask2);
+        tasks.add(subtask3);
+        tasks.add(subtask4);
+        epic = new Epic("Epic1","EpicDis", Status.NEW,  tasks);
+
     }
 
     //Пустой список дозадач

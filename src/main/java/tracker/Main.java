@@ -1,11 +1,4 @@
-package tracker;
-
-import tracker.controllers.FileBackedTasksManager;
-import tracker.controllers.InMemoryTaskManager;
-import tracker.model.Epic;
-import tracker.model.Subtask;
-import tracker.model.Task;
-import tracker.util.Status;
+package main.java.tracker;
 
 public class Main {
     public static void main(String[] args) {

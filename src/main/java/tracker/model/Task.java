@@ -1,7 +1,7 @@
-package tracker.model;
+package main.java.tracker.model;
 
-import tracker.util.Status;
-import tracker.util.TypeOfTasks;
+import main.java.tracker.util.Status;
+import main.java.tracker.util.TypeOfTasks;
 
 import java.util.Objects;
 
@@ -13,11 +13,10 @@ public class Task {
     private int idEpic;                 //ID эпика задачи (Если требуется)
     private TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
-    public Task(int idTask, String name, Status status, String discription) {
+    public Task(String name, String discription, Status status) {
         this.name = name;
         this.discription = discription;
         this.status = status;
-        this.idTask = idTask;
         typeOfTask = TypeOfTasks.TASK;
     }
 

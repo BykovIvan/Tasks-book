@@ -1,6 +1,6 @@
-package tracker.history;
+package main.java.tracker.history;
 
-import tracker.model.Task;
+import main.java.tracker.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;

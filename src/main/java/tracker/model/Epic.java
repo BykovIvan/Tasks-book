@@ -1,7 +1,7 @@
-package tracker.model;
+package main.java.tracker.model;
 
-import tracker.util.Status;
-import tracker.util.TypeOfTasks;
+import main.java.tracker.util.Status;
+import main.java.tracker.util.TypeOfTasks;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -9,12 +9,12 @@ import java.util.Objects;
 public class Epic extends Task {
     private ArrayList<Subtask> subtasksOfEpic;
 
-    public Epic(int idTask, String name, Status status, String discription) {
-        super(idTask, name, status, discription);
+    public Epic(String name, String discription, Status status) {
+        super(name, discription, status);
         subtasksOfEpic = new ArrayList<>();
     }
-    public Epic(int idTask, String name, Status status, String discription, ArrayList<Subtask> subtasksOfEpic) {
-        super(idTask, name, status, discription);
+    public Epic(String name, String discription, Status status, ArrayList<Subtask> subtasksOfEpic) {
+        super(name, discription, status);
         this.subtasksOfEpic = subtasksOfEpic;
     }
 
