@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTest<T extends TaskManager> {
 
@@ -52,7 +51,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.createNewTask(task3);
         manager.deleteAllTasks();
         manager.updateTask(task2, task3);
-        assertEquals(0, manager.getTasks().size(), "Список не пустой.");
+        assertTrue(manager.getTasks().isEmpty(), "Список не пустой.");
 
 //        //пустой или не действующий идентификатор
 //        Task task4 = new Task("Test4 addNewTask", "Test4 addNewTask description", Status.NEW);
@@ -64,6 +63,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     protected void testDeleteTask(){
         Task task1 = new Task("Test1 addNewTask", "Test1 addNewTask description", Status.NEW);
+        int id = manager.createNewTask(task1);
+        manager.deleteTask(id);
 
     }
 
