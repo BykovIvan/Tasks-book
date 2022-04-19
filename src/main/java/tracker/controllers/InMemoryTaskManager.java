@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Класс менеджера для работы только с историей
  */
-
 public class InMemoryTaskManager implements TaskManager {
 
     private int id = 0;
@@ -66,10 +65,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
-        int idTemp = subtask.getIdTask();
-        if (mapSubtasks.containsKey(idTemp)) {
-            mapSubtasks.put(idTemp, subtask);
+    public void updateSubtask(Subtask oldSubtask, Subtask newSubtask) {
+        if (mapSubtasks.containsKey(oldSubtask.getIdTask())){
+            int idTemp = oldSubtask.getIdTask();
+            mapSubtasks.put(idTemp, newSubtask);
         }
         updateStatusEpic();
     }
@@ -82,7 +81,9 @@ public class InMemoryTaskManager implements TaskManager {
             tempSubtasksOfEpic.remove(mapSubtasks.get(id));                                       //удаляем из списка пр объекту
             updateStatusEpic();
             mapSubtasks.remove(id);
-            historyList.remove(id);             // удаление задачи из листа истории
+            if (historyList.contains(id)) {
+                historyList.remove(id);             //проверка и удаление задачи из листа истории
+            }
         }
     }
 
@@ -129,7 +130,6 @@ public class InMemoryTaskManager implements TaskManager {
         id++;
         mapEpics.put(epic.getIdTask(), epic);
         updateStatusEpic();
-
         return epic.getIdTask();
     }
 
@@ -138,31 +138,24 @@ public class InMemoryTaskManager implements TaskManager {
         int idTemp = epic.getIdTask();
         mapEpics.put(idTemp, epic);
         updateStatusEpic();
-
-
     }
 
     @Override
     public void deleteEpic(int id) {
         if (mapEpics.containsKey(id)) {
             mapEpics.get(id).getSubtasksOfEpic().clear();
-            historyList.remove(id);             // удаление задачи из листа истории
+            if (historyList.contains(id)) {
+                historyList.remove(id);             //проверка и удаление задачи из листа истории
+            }
             mapEpics.remove(id);
             updateStatusEpic();
         }
     }
 
-    /**
-     * Получение списка подзадач у эпика по его ид
-     *
-     * @param idEpic
-     * @return
-     */
     @Override
     public ArrayList<Subtask> getSubtasksByEpicId(int idEpic) {
         return mapEpics.get(idEpic).getSubtasksOfEpic();
     }
-
 
     @Override
     public ArrayList<Task> getTasks() {
@@ -194,7 +187,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task oldTask, Task newTask) {
-        if (mapTasks.containsKey(oldTask.getIdTask())){
+        if (mapTasks.containsKey(oldTask.getIdTask())) {
             int idTemp = oldTask.getIdTask();
             mapTasks.put(idTemp, newTask);
         }
@@ -205,15 +198,16 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTask(int id) {
         if (mapTasks.containsKey(id)) {
             mapTasks.remove(id);
-            if (historyList.contains(id)){
-                historyList.remove(id);             // удаление задачи из листа истории
+            if (historyList.contains(id)) {
+                historyList.remove(id);             //проверка и удаление задачи из листа истории
             }
         }
-
     }
 
-
-    @Override
+    /**
+     * Обновление статуса Эпика изходя из статуса подзадачи
+     *
+     */
     public void updateStatusEpic() {
         int tempId = -1;                    //Переменная для хранения ID эпика
         int tempSizeList;              //Переменная для временного хранения размера Аррайлиста эписка с подзадачами
@@ -243,6 +237,11 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    /**
+     * Получение истории
+     *
+     * @return
+     */
     public List<Task> history() {
         return historyList.getHistory();
     }

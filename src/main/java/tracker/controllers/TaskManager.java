@@ -38,7 +38,7 @@ public interface TaskManager {
      *
      * @param subtask
      */
-    void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask oldSubtask, Subtask newSubtask);
 
     /**
      * Удаление подзадачи по ее ID
