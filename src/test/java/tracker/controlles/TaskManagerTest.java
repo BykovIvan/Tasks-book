@@ -9,6 +9,7 @@ import main.java.tracker.util.Status;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +20,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
 //Тест создания задачи
     @Test
-    protected void testCreateNewTask() {
+    protected void testAddNewTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
 //        final int taskId = manager.addNewTask(task);
         final int taskId = manager.createNewTask(task);
@@ -49,9 +50,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.deleteAllTasks();
         final Task savedTask4 = manager.getTask(taskId2);
         assertNull(savedTask4, "Задача возвращается.");
-        assertEquals(0, tasks.size(), "Неверное количество задач.");
+        assertEquals(0, tasks.size(), "Список не пустой.");
 
 
+//        ArrayList<Task> getTasks();
+//        Task getTask(int id);
+//        int createNewTask(Task task);
+//        void updateTask(Task oldTask, Task newTask);
+//        void deleteTask(int id);
     }
 
     //Тест обновления задачи
