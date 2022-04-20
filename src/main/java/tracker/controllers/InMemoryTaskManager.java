@@ -134,9 +134,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) {
-        int idTemp = epic.getIdTask();
-        mapEpics.put(idTemp, epic);
+    public void updateEpic(Epic oldEpic, Epic newEpic) {
+        if (mapEpics.containsKey(oldEpic.getIdTask())) {
+            int idTemp = oldEpic.getIdTask();
+            mapEpics.put(idTemp, newEpic);
+        }
         updateStatusEpic();
     }
 

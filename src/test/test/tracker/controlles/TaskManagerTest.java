@@ -6,8 +6,10 @@ import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static main.java.tracker.util.Status.IN_PROGRESS;
 import static main.java.tracker.util.Status.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,6 +90,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         final int subtaskId = manager.createNewSubTask(subtask);
         final Task savedSubtask = manager.getSubtask(subtaskId);
+
+        //Наличие ид эпика
+        int idEpicOfSub = manager.getSubtask(subtaskId).getIdEpic();
+
+        assertEquals(epicId, idEpicOfSub, "Id не совпадает.");
+
         //метод добавления
         assertNotNull(savedSubtask, "Подзадача не найдена после добавления.");
         assertEquals(subtask, savedSubtask, "Задачи не совпадают.");
@@ -107,7 +115,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(subtask2, savedSubtask2, "Задачи не совпадают.");
         assertEquals(1, subtasksUpdate.size(), "Неверное количество задач.");
 //
-        final Subtask savedSubtask3 = manager.getSubtask(5);
+        final Subtask savedSubtask3 = manager.getSubtask(89);
 
         assertNull(savedSubtask3, "Задача не удалена.");
 
@@ -137,18 +145,110 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final List<Subtask> subtasks4 = manager.getSubtasks();
 
         assertNotNull(subtasks4, "Задачи на возвращаются.");
-        assertEquals(1, subtasks4.size(), "Список не изменился.");
+        assertEquals(1, subtasks4.size(), "Список не изменился1.");
 
         manager.deleteSubtask(8);
 
         final List<Subtask> subtasks5 = manager.getSubtasks();
 
         assertNotNull(subtasks5, "Задачи на возвращаются.");
-        assertEquals(1, subtasks5.size(), "Список изменился.");
-        //Наличие ид эпика
-        int idEpicOfSub = subtasks5.get(subtaskId4).getIdEpic();
+        assertEquals(1, subtasks5.size(), "Список изменился2.");
 
-        assertEquals(epicId, idEpicOfSub, "Список изменился.");
+
+    }
+
+    @Test
+    protected void testAddNewEpic() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        Epic epic2 = new Epic("Test2 addNewEpic", "Test2 addNewEpic description", NEW);
+
+        final int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW, epicId);
+        Subtask subtask2 = new Subtask("Test2 addNewTask", "Test2 addNewTask description", NEW, epicId);
+
+        manager.createNewSubTask(subtask);
+        manager.createNewSubTask(subtask2);
+
+        final Epic savedEpic = manager.getEpic(epicId);
+        //метод добавления
+        assertNotNull(savedEpic, "Задача не найдена после создания.");
+        assertEquals(epic, savedEpic, "Задачи не совпадают (Epic).");
+
+        final List<Epic> epics = manager.getEpics();
+
+        assertNotNull(epics, "Задачи на возвращаются.");
+        assertEquals(1, epics.size(), "Неверное количество задач.");
+        assertEquals(epic, epics.get(0), "Задачи не совпадают после получния по id.");
+
+        //метод Update
+        //В этот методе надо доваить проверку на то как поменяется количество подзадач после обновления
+        final ArrayList<Subtask> list = epic.getSubtasksOfEpic();
+
+        assertEquals(2, list.size(), "Количество подзадач не совпадает1");
+
+        manager.updateEpic(epic, epic2);
+
+        final Epic savedEpic2 = manager.getEpic(epicId);
+        final List<Epic> EpicsUpdate = manager.getEpics();
+
+        assertEquals(epic2, savedEpic2, "Задачи не совпадают после обновления.");
+        assertEquals(1, EpicsUpdate.size(), "Неверное количество задач после обновления.");
+
+        final ArrayList<Subtask> listAfterUpdate = savedEpic2.getSubtasksOfEpic();
+
+        assertEquals(0, listAfterUpdate.size(), "Количество подзадач не совпадает2");
+
+        final Epic savedEpic3 = manager.getEpic(78);
+
+        assertNull(savedEpic3, "Задача не удалена после указания неправильного id.");
+
+        //Для метода удаления всех задач
+        manager.createNewEpic(epic);
+        manager.createNewEpic(epic2);
+
+        manager.deleteAllEpics();
+        final List<Epic> epics2 = manager.getEpics();
+        final Epic savedEpic4 = manager.getEpic(0);
+
+        assertNull(savedEpic4, "Задача не удалена после полного удаления.");
+        assertEquals(0, epics2.size(), "Список не пустой после удаления всех задач.");
+
+        //Метод удаления по id
+        final int epicId3 = manager.createNewEpic(epic);
+
+        manager.createNewEpic(epic2);
+
+        final List<Epic> epics3 = manager.getEpics();
+
+        assertEquals(2, epics3.size(), "Список пустой.");
+        assertNotNull(epics3, "Задачи на возвращаются.");
+
+        manager.deleteEpic(epicId3);
+        final List<Epic> epics4 = manager.getEpics();
+
+        assertNotNull(epics4, "Задачи на возвращаются.");
+        assertEquals(1, epics4.size(), "Список не изменился1.");
+
+        manager.deleteTask(5);
+        final List<Epic> epics5 = manager.getEpics();
+
+        assertNotNull(epics5, "Задачи на возвращаются.");
+        assertEquals(1, epics4.size(), "Список изменился2.");
+
+        //Расчет статуса Эпика
+        manager.deleteAllEpics();
+        final int idSub1Status = manager.createNewSubTask(subtask);
+        final int idSub2Status = manager.createNewSubTask(subtask2);
+        final int idEpicStatus = manager.createNewEpic(epic);
+
+        assertEquals(NEW, epic.getStatus(), "Неверный статус при создании");
+
+        ArrayList<Subtask> listOfSubStatus = manager.getEpic(idEpicStatus).getSubtasksOfEpic();
+        listOfSubStatus.get(idSub1Status).setStatus(IN_PROGRESS);
+
+        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверный статус при создании");
+
 
     }
 }

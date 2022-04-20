@@ -17,5 +17,15 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         super.testAddNewTask();
     }
 
+    @Test
+    @Override
+    protected void testAddNewSubtask() {
+        super.testAddNewSubtask();
+    }
 
+    @Test
+    @Override
+    protected void testAddNewEpic() {
+        super.testAddNewEpic();
+    }
 }

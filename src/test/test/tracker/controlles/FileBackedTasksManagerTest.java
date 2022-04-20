@@ -17,6 +17,16 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         super.testAddNewTask();
     }
 
+    @Test
+    @Override
+    protected void testAddNewSubtask() {
+        super.testAddNewSubtask();
+    }
 
+    @Test
+    @Override
+    protected void testAddNewEpic() {
+        super.testAddNewEpic();
+    }
 }
 

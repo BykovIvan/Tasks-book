@@ -36,7 +36,8 @@ public interface TaskManager {
     /**
      * обновление подзадачи(Замена существующей)
      *
-     * @param subtask
+     * @param oldSubtask
+     * @param newSubtask
      */
     void updateSubtask(Subtask oldSubtask, Subtask newSubtask);
 
@@ -78,9 +79,10 @@ public interface TaskManager {
     /**
      * Обновление эпика (Замена существующего)
      *
-     * @param epic
+     * @param oldEpic
+     * @param newEpic
      */
-    void updateEpic(Epic epic);
+    void updateEpic(Epic oldEpic, Epic newEpic);
 
     /**
      * Удаление эпика и его подзадач по ID эпика
@@ -133,7 +135,8 @@ public interface TaskManager {
     /**
      * Обновление задачи (Замена существующей)
      *
-     * @param task
+     * @param oldTask
+     * @param newTask
      */
     void updateTask(Task oldTask, Task newTask);
 
