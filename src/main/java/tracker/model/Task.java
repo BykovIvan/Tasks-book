@@ -3,6 +3,8 @@ package main.java.tracker.model;
 import main.java.tracker.util.Status;
 import main.java.tracker.util.TypeOfTasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -12,6 +14,10 @@ public class Task {
     private Status status;              //Статус задачи
     private int idEpic;                 //ID эпика задачи (Если требуется)
     private TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
+
+    private LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
+    private Duration duration;           //продолжительность задачи
+
 
     public Task(String name, String discription, Status status) {
         this.name = name;
@@ -58,6 +64,27 @@ public class Task {
 
     public int getIdEpic() {
         return idEpic;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime(){
+        //Стартовое время плюс продолжетельность
+        return null;
     }
 
     @Override

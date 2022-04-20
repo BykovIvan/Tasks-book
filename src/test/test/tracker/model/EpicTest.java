@@ -34,7 +34,8 @@ class EpicTest {
         tasks.add(subtask2);
         tasks.add(subtask3);
         tasks.add(subtask4);
-        epic = new Epic("Epic1","EpicDis", NEW,  tasks);
+        epic = new Epic("Epic1","EpicDis", NEW);
+        epic.setSubtasksOfEpic(tasks);
 
     }
 

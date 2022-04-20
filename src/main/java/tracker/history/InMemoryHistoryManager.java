@@ -52,8 +52,11 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
 
     @Override
     public void remove(int idTask) {
-        removeNode(mapList.get(idTask));
-        mapList.remove(idTask);
+        if (mapList.containsKey(idTask)){
+            removeNode(mapList.get(idTask));
+            mapList.remove(idTask);
+        }
+
     }
 
     @Override
