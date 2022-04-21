@@ -5,6 +5,7 @@ import main.java.tracker.util.TypeOfTasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -25,6 +26,9 @@ public class Task {
         this.status = status;
         typeOfTask = TypeOfTasks.TASK;
     }
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
+
 
     public String getName() {
         return name;
@@ -66,12 +70,12 @@ public class Task {
         return idEpic;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public String getStartTime() {
+        return startTime.format(formatter);
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setStartTime(String startTimeStr) {
+        startTime = LocalDateTime.parse(startTimeStr, formatter);
     }
 
     public Duration getDuration() {
@@ -82,7 +86,7 @@ public class Task {
         this.duration = duration;
     }
 
-    public LocalDateTime getEndTime(){
+    public String getEndTime(){
         //Стартовое время плюс продолжетельность
         return null;
     }

@@ -3,12 +3,14 @@ package main.java.tracker.model;
 import main.java.tracker.util.Status;
 import main.java.tracker.util.TypeOfTasks;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasksOfEpic;
+    private LocalDateTime endTime;
 
     public Epic(String name, String discription, Status status) {
         super(name, discription, status);
@@ -29,7 +31,19 @@ public class Epic extends Task {
     }
 
     @Override
-    public LocalDateTime getEndTime() {
+    public String getStartTime() {
+        // своя реализация
+        return null;
+    }
+
+    @Override
+    public Duration getDuration() {
+        //Своя реализация
+        return null;
+    }
+
+    @Override
+    public String getEndTime() {
         //Своя реализация
         return null;
     }
