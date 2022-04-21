@@ -32,20 +32,37 @@ public class Epic extends Task {
 
     @Override
     public String getStartTime() {
-        // своя реализация
-        return null;
+        countStartAndEndTime();
+        return startTime.format(formatter);
     }
 
     @Override
     public Duration getDuration() {
-        //Своя реализация
-        return null;
+        countStartAndEndTime();
+        return Duration.between(startTime, endTime);
     }
 
     @Override
     public String getEndTime() {
-        //Своя реализация
-        return null;
+        countStartAndEndTime();
+        return endTime.format(formatter);
+    }
+
+    /**
+     * Расчет начала и конца време Эпиков
+     */
+    private void countStartAndEndTime(){
+        startTime = LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter);
+        endTime = LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter);
+        for (Subtask subtask : subtasksOfEpic) {
+            LocalDateTime tempTime = LocalDateTime.parse(subtask.getStartTime(), formatter);
+            if (tempTime.isBefore(startTime)){
+                startTime = tempTime;
+            }
+            if (tempTime.isAfter(endTime)){
+                endTime = tempTime;
+            }
+        }
     }
 
     @Override

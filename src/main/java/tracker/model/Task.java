@@ -16,18 +16,18 @@ public class Task {
     private int idEpic;                 //ID эпика задачи (Если требуется)
     private TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
-    private LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
-    private Duration duration;           //продолжительность задачи
-
+    protected LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
+    protected Duration duration;           //продолжительность задачи
+    protected DateTimeFormatter formatter;
 
     public Task(String name, String discription, Status status) {
         this.name = name;
         this.discription = discription;
         this.status = status;
         typeOfTask = TypeOfTasks.TASK;
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
     }
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
 
 
     public String getName() {
@@ -82,13 +82,12 @@ public class Task {
         return duration;
     }
 
-    public void setDuration(Duration duration) {
-        this.duration = duration;
+    public void setDuration(int durationInMin) {
+        duration = Duration.ofMinutes(durationInMin) ;
     }
 
     public String getEndTime(){
-        //Стартовое время плюс продолжетельность
-        return null;
+        return startTime.plusMinutes(duration.toMinutes()).format(formatter);
     }
 
     @Override
