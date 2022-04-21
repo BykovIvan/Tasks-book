@@ -7,8 +7,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.Optional;
 
-public class Task {
+public class Task implements Comparable<Task>  {
     private String name;                //Имя задачи
     private String discription;         //Описание задачи
     private int idTask;                 //ID задачи (создается автоматически при методе создания
@@ -16,8 +17,8 @@ public class Task {
     private int idEpic;                 //ID эпика задачи (Если требуется)
     private TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
-    protected LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
-    protected Duration duration;           //продолжительность задачи
+    protected Optional<LocalDateTime> startTime;     //дата, когда предпологается приступить к выполнению задачи
+    protected Optional<Duration> duration;           //продолжительность задачи
     protected DateTimeFormatter formatter;
 
     public Task(String name, String discription, Status status) {
@@ -114,5 +115,16 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hash(name, discription, idTask, status);
+    }
+
+    @Override
+    public int compareTo(Task anotherTask) {
+        if (this.startTime.isAfter(anotherTask.startTime)){
+            return 1;
+        }else if (this.startTime.isBefore(anotherTask.startTime)){
+            return -1;
+        }else {
+            return 0;
+        }
     }
 }

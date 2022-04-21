@@ -9,6 +9,7 @@ import main.java.tracker.util.Status;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * Класс менеджера для работы только с историей
@@ -22,11 +23,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected HistoryManager<Task> historyList;
 
+    TreeSet<Task> taskPrioritizedList;
+
     public InMemoryTaskManager() {
         mapTasks = new HashMap<>();
         mapEpics = new HashMap<>();
         mapSubtasks = new HashMap<>();
         historyList = Managers.getDefaultHistory();
+        taskPrioritizedList = new TreeSet<>();
     }
 
     @Override
@@ -246,5 +250,17 @@ public class InMemoryTaskManager implements TaskManager {
      */
     public List<Task> history() {
         return historyList.getHistory();
+    }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        sortedPrioritizedTasks();
+        return taskPrioritizedList;
+    }
+
+    @Override
+    public void sortedPrioritizedTasks() {
+        taskPrioritizedList.addAll(getTasks());
+        taskPrioritizedList.addAll(getSubtasks());
     }
 }

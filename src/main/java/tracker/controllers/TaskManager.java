@@ -3,6 +3,7 @@ package main.java.tracker.controllers;
 import main.java.tracker.model.*;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public interface TaskManager {
     /**
@@ -146,5 +147,18 @@ public interface TaskManager {
      * @param id
      */
     void deleteTask(int id);
+
+    /**
+     * Возвращение остортированного списка по времени
+     *
+     * @return
+     */
+    TreeSet<Task> getPrioritizedTasks();
+
+    /**
+     * Метод сортировки задач по времени старта
+     *
+     */
+    void sortedPrioritizedTasks();
 
 }
