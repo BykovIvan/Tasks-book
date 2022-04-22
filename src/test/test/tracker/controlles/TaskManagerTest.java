@@ -4,6 +4,7 @@ import main.java.tracker.controllers.TaskManager;
 import main.java.tracker.model.Epic;
 import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,27 +18,31 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     protected T manager;
 
-//Тест создания задачи
+    //Тест создания задачи
     @Test
     protected void testAddNewTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-
         final int taskId = manager.createNewTask(task);
         final Task savedTask = manager.getTask(taskId);
-        //метод добавления
         assertNotNull(savedTask, "Задача не найдена после создания.");
         assertEquals(task, savedTask, "Задачи не совпадают (Task).");
 
         final List<Task> tasks = manager.getTasks();
 
-        assertNotNull(tasks, "Задачи на возвращаются.");
+        assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.get(0), "Задачи не совпадают после получния по id.");
+    }
 
-        //метод Update
-//        final int taskId2 = manager.createNewTask(task);
+    //Метод тестирование метода Update
+    @Test
+    protected void testUpdateTask() {
+
+        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
+        final int taskId = manager.createNewTask(task);
         manager.updateTask(task, task2);
+
         final Task savedTask2 = manager.getTask(taskId);
         final List<Task> tasksUpdate = manager.getTasks();
 
@@ -48,10 +53,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNull(savedTask3, "Задача не удалена после указания неправильного id.");
 
-        //Для метода удаления всех задач
+    }
+
+    //Для метода удаления всех задач
+    @Test
+    protected void testDeleteAllTask() {
+        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
         manager.createNewTask(task);
         manager.createNewTask(task2);
-
         manager.deleteAllTasks();
         final List<Task> tasks2 = manager.getTasks();
         final Task savedTask4 = manager.getTask(0);
@@ -59,26 +69,83 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNull(savedTask4, "Задача не удалена после полного удаления.");
         assertEquals(0, tasks2.size(), "Список не пустой после удаления всех задач.");
 
-        //Метод удаления по id
-        final int taskId3 = manager.createNewTask(task);
-        manager.createNewTask(task2);
-        final List<Task> tasks3 = manager.getTasks();
+    }
 
-        assertEquals(2, tasks3.size(), "Список пустой.");
-        assertNotNull(tasks3, "Задачи на возвращаются.");
+    //Метод удаления по id
+    @Test
+    protected void testDeleteTask() {
+        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
+        final int taskId1 = manager.createNewTask(task);
+        final int taskId2 = manager.createNewTask(task2);
+        final List<Task> tasks1 = manager.getTasks();
 
-        manager.deleteTask(taskId3);
-        final List<Task> tasks4 = manager.getTasks();
+        assertEquals(2, tasks1.size(), "Список пустой.");
+        assertNotNull(tasks1, "Задачи не возвращаются.");
 
-        assertNotNull(tasks4, "Задачи на возвращаются.");
-        assertEquals(1, tasks4.size(), "Список не изменился.");
+        manager.deleteTask(taskId1);
+        final List<Task> tasks2 = manager.getTasks();
+
+        assertNotNull(tasks2, "Задачи не возвращаются.");
+        assertEquals(1, tasks2.size(), "Список не изменился.");
 
         manager.deleteTask(5);
-        final List<Task> tasks5 = manager.getTasks();
+        final List<Task> tasks3 = manager.getTasks();
 
-        assertNotNull(tasks5, "Задачи на возвращаются.");
-        assertEquals(1, tasks4.size(), "Список изменился.");
+        assertNotNull(tasks3, "Задачи не возвращаются.");
+        assertEquals(1, tasks3.size(), "Список изменился.");
+
+        manager.deleteAllTasks();
+        manager.deleteTask(taskId2);
+        final List<Task> tasks4 = manager.getTasks();
+
+        assertEquals(0, tasks4.size(), "Список изменился.");
+
     }
+
+    @Test
+    protected void testGetTasks() {
+        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
+        final int taskId1 = manager.createNewTask(task);
+        final int taskId2 = manager.createNewTask(task2);
+
+        final List<Task> tasks = manager.getTasks();
+
+        assertNotNull(tasks, "Задачи не возвращаются.");
+        assertEquals(2, tasks.size(), "Неверное количество задач.");
+        assertEquals(task, tasks.get(taskId1), "Задачи не совпадают.");
+        assertEquals(task2, tasks.get(taskId2), "Задачи не совпадают.");
+
+        manager.deleteAllTasks();
+
+        final List<Task> tasks2 = manager.getTasks();
+
+        assertEquals(0, tasks2.size(), "Неверное количество задач.");
+
+    }
+
+    @Test
+    protected void testGetTask() {
+        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
+        final int taskId1 = manager.createNewTask(task);
+        final int taskId2 = manager.createNewTask(task2);
+
+        Task getTask = manager.getTask(taskId1);
+        assertEquals(task, getTask, "Задачи не совпадают.");
+
+        Task getTast2 = manager.getTask(565);
+        assertNull(getTast2, "Ошибка получения какой то задачи из списка");
+
+        manager.deleteAllTasks();
+        Task getTask3 = manager.getTask(taskId2);
+        assertNull(getTask3, "Список не пустой");
+
+    }
+
+
+    //Subtask
 
     @Test
     protected void testAddNewSubtask() {
@@ -87,157 +154,327 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
         subtask.setIdEpic(epicId);
-        Subtask subtask2 = new Subtask("Test2 addNewTask", "Test2 addNewTask description", NEW);
-        subtask2.setIdEpic(epicId);
         final int subtaskId = manager.createNewSubTask(subtask);
-        final Task savedSubtask = manager.getSubtask(subtaskId);
 
-        //Наличие ид эпика
-        int idEpicOfSub = manager.getSubtask(subtaskId).getIdEpic();
+        final Subtask savedSubtask = manager.getSubtask(subtaskId);
 
-        assertEquals(epicId, idEpicOfSub, "Id не совпадает.");
-
-        //метод добавления
-        assertNotNull(savedSubtask, "Подзадача не найдена после добавления.");
-        assertEquals(subtask, savedSubtask, "Задачи не совпадают.");
+        assertNotNull(savedSubtask, "Задача не найдена после создания.");
+        assertEquals(subtask, savedSubtask, "Задачи не совпадают (Subtask).");
 
         final List<Subtask> subtasks = manager.getSubtasks();
 
-        assertNotNull(subtasks, "Подзадачи на возвращаются.");
-        assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
-        assertEquals(subtask, subtasks.get(0), "Подзадачи не совпадают.");
+        assertNotNull(subtasks, "Задачи не возвращаются.");
+        assertEquals(1, subtasks.size(), "Неверное количество задач.");
+        assertEquals(subtask, subtasks.get(0), "Задачи не совпадают после получния по id.");
+    }
 
-        //метод Update
-//        final int subtaskId2 = manager.createNewSubTask(subtask);
+    //Метод тестирование метода Update
+    @Test
+    protected void testUpdateSubtask() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        final int subtaskId = manager.createNewSubTask(subtask);
+
         manager.updateSubtask(subtask, subtask2);
+
         final Subtask savedSubtask2 = manager.getSubtask(subtaskId);
         final List<Subtask> subtasksUpdate = manager.getSubtasks();
 
-        assertEquals(subtask2, savedSubtask2, "Задачи не совпадают.");
-        assertEquals(1, subtasksUpdate.size(), "Неверное количество задач.");
-//
-        final Subtask savedSubtask3 = manager.getSubtask(89);
+        assertEquals(subtask2, savedSubtask2, "Задачи не совпадают после одновления.");
+        assertEquals(1, subtasksUpdate.size(), "Неверное количество задач после обновления.");
 
-        assertNull(savedSubtask3, "Задача не удалена.");
+        final Subtask savedSubtask3 = manager.getSubtask(5);
 
-        //Для метода удаления всех задач
+        assertNull(savedSubtask3, "Задача не удалена после указания неправильного id.");
+
+    }
+
+    //Для метода удаления всех задач
+    @Test
+    protected void testDeleteAllSubtask() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
 
         manager.deleteAllSubtasks();
+
         final List<Subtask> subtasks2 = manager.getSubtasks();
         final Subtask savedSubtask4 = manager.getSubtask(0);
 
-        assertNull(savedSubtask4, "Задача не удалена.");
-        assertEquals(0, subtasks2.size(), "Список не пустой.");
+        assertNull(savedSubtask4, "Задача не удалена после полного удаления.");
+        assertEquals(0, subtasks2.size(), "Список не пустой после удаления всех задач.");
 
-        //Метод удаления по id
-        final int subtaskId3 = manager.createNewSubTask(subtask);
+    }
 
-        final int subtaskId4 = manager.createNewSubTask(subtask2);
+    //Метод удаления по id
+    @Test
+    protected void testDeleteSubtask() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
 
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        final int subtaskId1 = manager.createNewSubTask(subtask);
+        final int subtaskId2 = manager.createNewSubTask(subtask2);
+
+        final List<Subtask> subtasks1 = manager.getSubtasks();
+
+        assertEquals(2, subtasks1.size(), "Список пустой.");
+        assertNotNull(subtasks1, "Задачи не возвращаются.");
+
+        manager.deleteSubtask(subtaskId1);
+        final List<Subtask> subtasks2 = manager.getSubtasks();
+
+        assertNotNull(subtasks2, "Задачи не возвращаются.");
+        assertEquals(1, subtasks2.size(), "Список не изменился.");
+
+        manager.deleteSubtask(5);
         final List<Subtask> subtasks3 = manager.getSubtasks();
 
-        assertEquals(2, subtasks3.size(), "Список пустой.");
-        assertNotNull(subtasks3, "Задачи на возвращаются.");
+        assertNotNull(subtasks3, "Задачи не возвращаются.");
+        assertEquals(1, subtasks3.size(), "Список изменился.");
 
-        manager.deleteSubtask(subtaskId3);
+        manager.deleteAllSubtasks();
 
+        manager.deleteSubtask(subtaskId2);
         final List<Subtask> subtasks4 = manager.getSubtasks();
 
-        assertNotNull(subtasks4, "Задачи на возвращаются.");
-        assertEquals(1, subtasks4.size(), "Список не изменился1.");
-
-        manager.deleteSubtask(8);
-
-        final List<Subtask> subtasks5 = manager.getSubtasks();
-
-        assertNotNull(subtasks5, "Задачи на возвращаются.");
-        assertEquals(1, subtasks5.size(), "Список изменился2.");
-
+        assertEquals(0, subtasks4.size(), "Список изменился.");
 
     }
 
     @Test
-    protected void testAddNewEpic() {
+    protected void testGetSubtasks() {
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
-        Epic epic2 = new Epic("Test2 addNewEpic", "Test2 addNewEpic description", NEW);
-
-        final int epicId = manager.createNewEpic(epic);
+        int epicId = manager.createNewEpic(epic);
 
         Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
-        Subtask subtask2 = new Subtask("Test2 addNewTask", "Test2 addNewTask description", NEW);
         subtask2.setIdEpic(epicId);
-
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
 
+        final List<Subtask> subtasks = manager.getSubtasks();
+
+        assertNotNull(subtasks, "Задачи не возвращаются.");
+        assertEquals(2, subtasks.size(), "Неверное количество задач.");
+
+        manager.deleteAllSubtasks();
+
+        final List<Subtask> subtasks2 = manager.getSubtasks();
+
+        assertEquals(0, subtasks2.size(), "Неверное количество задач.");
+
+    }
+
+    @Test
+    protected void testGetSubtask() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        final int subtaskId1 = manager.createNewSubTask(subtask);
+        final int subtaskId2 = manager.createNewSubTask(subtask2);
+
+        final Subtask savedSubtask = manager.getSubtask(subtaskId1);
+        final Subtask savedSubtask2 = manager.getSubtask(subtaskId2);
+        assertEquals(subtask, savedSubtask, "Задачи не совпадают.");
+        assertEquals(subtask2, savedSubtask2, "Задачи не совпадают.");
+
+        Subtask getSubtask2 = manager.getSubtask(565);
+        assertNull(getSubtask2, "Ошибка получения какой то задачи из списка");
+
+        manager.deleteAllSubtasks();
+        Subtask getSubtask3 = manager.getSubtask(subtaskId2);
+        assertNull(getSubtask3, "Список не пустой");
+
+    }
+
+    //Epic
+
+    @Test
+    protected void testAddNewEpic() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        subtask.setIdEpic(epicId);
+        manager.createNewSubTask(subtask);
+
         final Epic savedEpic = manager.getEpic(epicId);
-        //метод добавления
+
         assertNotNull(savedEpic, "Задача не найдена после создания.");
-        assertEquals(epic, savedEpic, "Задачи не совпадают (Epic).");
+        assertEquals(epic, savedEpic, "Задачи не совпадают (Subtask).");
 
         final List<Epic> epics = manager.getEpics();
 
-        assertNotNull(epics, "Задачи на возвращаются.");
+        assertNotNull(epics, "Задачи не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество задач.");
         assertEquals(epic, epics.get(0), "Задачи не совпадают после получния по id.");
+    }
 
-        //метод Update
-        //В этот методе надо доваить проверку на то как поменяется количество подзадач после обновления
-        final ArrayList<Subtask> list = epic.getSubtasksOfEpic();
+    //Метод тестирование метода Update
+    @Test
+    protected void testUpdateEpic() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        manager.createNewSubTask(subtask);
+        manager.createNewSubTask(subtask2);
 
-        assertEquals(2, list.size(), "Количество подзадач не совпадает1");
+        Epic epic2 = new Epic("Test addNewEpic2", "Test addNewEpic2 description", NEW);
 
         manager.updateEpic(epic, epic2);
 
-        final Epic savedEpic2 = manager.getEpic(epicId);
-        final List<Epic> EpicsUpdate = manager.getEpics();
+        final Epic savedEpic = manager.getEpic(epicId);
+        final List<Epic> epicsUpdate = manager.getEpics();
 
-        assertEquals(epic2, savedEpic2, "Задачи не совпадают после обновления.");
-        assertEquals(1, EpicsUpdate.size(), "Неверное количество задач после обновления.");
+        assertEquals(epic2, savedEpic, "Задачи не совпадают после одновления.");
+        assertEquals(1, epicsUpdate.size(), "Неверное количество задач после обновления.");
 
-        final ArrayList<Subtask> listAfterUpdate = savedEpic2.getSubtasksOfEpic();
+        final Epic savedEpic2 = manager.getEpic(5);
 
-        assertEquals(0, listAfterUpdate.size(), "Количество подзадач не совпадает2");
+        assertNull(savedEpic2, "Задача не удалена после указания неправильного id.");
 
-        final Epic savedEpic3 = manager.getEpic(78);
+    }
 
-        assertNull(savedEpic3, "Задача не удалена после указания неправильного id.");
+    //Для метода удаления всех задач
+    @Test
+    protected void testDeleteAllEpic() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
 
-        //Для метода удаления всех задач
-        manager.createNewEpic(epic);
-        manager.createNewEpic(epic2);
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        manager.createNewSubTask(subtask);
+        manager.createNewSubTask(subtask2);
 
-        manager.deleteAllEpics();
-        final List<Epic> epics2 = manager.getEpics();
-        final Epic savedEpic4 = manager.getEpic(0);
+        manager.deleteAllSubtasks();
 
-        assertNull(savedEpic4, "Задача не удалена после полного удаления.");
-        assertEquals(0, epics2.size(), "Список не пустой после удаления всех задач.");
+        final List<Subtask> subtasks2 = manager.getSubtasks();
+        final Subtask savedSubtask4 = manager.getSubtask(0);
 
-        //Метод удаления по id
-        final int epicId3 = manager.createNewEpic(epic);
+        assertNull(savedSubtask4, "Задача не удалена после полного удаления.");
+        assertEquals(0, subtasks2.size(), "Список не пустой после удаления всех задач.");
 
-        manager.createNewEpic(epic2);
+    }
 
-        final List<Epic> epics3 = manager.getEpics();
+    //Метод удаления по id
+    @Test
+    protected void testDeleteEpic() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
 
-        assertEquals(2, epics3.size(), "Список пустой.");
-        assertNotNull(epics3, "Задачи на возвращаются.");
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        final int subtaskId1 = manager.createNewSubTask(subtask);
+        final int subtaskId2 = manager.createNewSubTask(subtask2);
 
-        manager.deleteEpic(epicId3);
-        final List<Epic> epics4 = manager.getEpics();
+        final List<Subtask> subtasks1 = manager.getSubtasks();
 
-        assertNotNull(epics4, "Задачи на возвращаются.");
-        assertEquals(1, epics4.size(), "Список не изменился1.");
+        assertEquals(2, subtasks1.size(), "Список пустой.");
+        assertNotNull(subtasks1, "Задачи не возвращаются.");
 
-        manager.deleteTask(5);
-        final List<Epic> epics5 = manager.getEpics();
+        manager.deleteSubtask(subtaskId1);
+        final List<Subtask> subtasks2 = manager.getSubtasks();
 
-        assertNotNull(epics5, "Задачи на возвращаются.");
-        assertEquals(1, epics4.size(), "Список изменился2.");
+        assertNotNull(subtasks2, "Задачи не возвращаются.");
+        assertEquals(1, subtasks2.size(), "Список не изменился.");
+
+        manager.deleteSubtask(5);
+        final List<Subtask> subtasks3 = manager.getSubtasks();
+
+        assertNotNull(subtasks3, "Задачи не возвращаются.");
+        assertEquals(1, subtasks3.size(), "Список изменился.");
+
+        manager.deleteAllSubtasks();
+
+        manager.deleteSubtask(subtaskId2);
+        final List<Subtask> subtasks4 = manager.getSubtasks();
+
+        assertEquals(0, subtasks4.size(), "Список изменился.");
+
+    }
+
+    @Test
+    protected void testGetEpics() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        manager.createNewSubTask(subtask);
+        manager.createNewSubTask(subtask2);
+
+        final List<Subtask> subtasks = manager.getSubtasks();
+
+        assertNotNull(subtasks, "Задачи не возвращаются.");
+        assertEquals(2, subtasks.size(), "Неверное количество задач.");
+
+        manager.deleteAllSubtasks();
+
+        final List<Subtask> subtasks2 = manager.getSubtasks();
+
+        assertEquals(0, subtasks2.size(), "Неверное количество задач.");
+
+    }
+
+    @Test
+    protected void testGetEpic() {
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        final int subtaskId1 = manager.createNewSubTask(subtask);
+        final int subtaskId2 = manager.createNewSubTask(subtask2);
+
+        final Subtask savedSubtask = manager.getSubtask(subtaskId1);
+        final Subtask savedSubtask2 = manager.getSubtask(subtaskId2);
+        assertEquals(subtask, savedSubtask, "Задачи не совпадают.");
+        assertEquals(subtask2, savedSubtask2, "Задачи не совпадают.");
+
+        Subtask getSubtask2 = manager.getSubtask(565);
+        assertNull(getSubtask2, "Ошибка получения какой то задачи из списка");
+
+        manager.deleteAllSubtasks();
+        Subtask getSubtask3 = manager.getSubtask(subtaskId2);
+        assertNull(getSubtask3, "Список не пустой");
+
+    }
+
+
+
+
+}
 
         //Расчет статуса Эпика
 //        manager.deleteAllEpics();
@@ -326,5 +563,4 @@ abstract class TaskManagerTest<T extends TaskManager> {
 //    protected void testGetTasks(){
 //
 //    }
-    }
-}
+

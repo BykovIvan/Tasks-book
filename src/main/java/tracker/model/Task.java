@@ -17,8 +17,8 @@ public class Task implements Comparable<Task>  {
     private int idEpic;                 //ID эпика задачи (Если требуется)
     private TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
-    protected Optional<LocalDateTime> startTime;     //дата, когда предпологается приступить к выполнению задачи
-    protected Optional<Duration> duration;           //продолжительность задачи
+    protected LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
+    protected Duration duration;           //продолжительность задачи
     protected DateTimeFormatter formatter;
 
     public Task(String name, String discription, Status status) {

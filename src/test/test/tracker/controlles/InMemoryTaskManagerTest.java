@@ -19,13 +19,67 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     @Override
+    protected void testUpdateTask() {
+        super.testUpdateTask();
+    }
+
+    @Test
+    @Override
+    protected void testDeleteAllTask() {
+        super.testDeleteAllTask();
+    }
+
+    @Test
+    @Override
+    protected void testDeleteTask() {
+        super.testDeleteTask();
+    }
+
+    @Test
+    @Override
+    protected void testGetTasks() {
+        super.testGetTasks();
+    }
+
+    @Test
+    @Override
+    protected void testGetTask() {
+        super.testGetTask();
+    }
+
+    @Test
+    @Override
     protected void testAddNewSubtask() {
         super.testAddNewSubtask();
     }
 
     @Test
     @Override
-    protected void testAddNewEpic() {
-        super.testAddNewEpic();
+    protected void testUpdateSubtask() {
+        super.testUpdateSubtask();
+    }
+
+    @Test
+    @Override
+    protected void testDeleteAllSubtask() {
+        super.testDeleteAllSubtask();
+    }
+
+    @Test
+    @Override
+    protected void testDeleteSubtask() {
+        super.testDeleteSubtask();
+    }
+
+    @Test
+    @Override
+    protected void testGetSubtasks() {
+        super.testGetSubtasks();
+    }
+
+    @Test
+    @Override
+    protected void testGetSubtask() {
+        super.testGetSubtask();
     }
 }
