@@ -298,11 +298,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(subtask, savedSubtask, "Задачи не совпадают.");
         assertEquals(subtask2, savedSubtask2, "Задачи не совпадают.");
 
-        Subtask getSubtask2 = manager.getSubtask(565);
+        final Subtask getSubtask2 = manager.getSubtask(565);
         assertNull(getSubtask2, "Ошибка получения какой то задачи из списка");
 
         manager.deleteAllSubtasks();
-        Subtask getSubtask3 = manager.getSubtask(subtaskId2);
+        final Subtask getSubtask3 = manager.getSubtask(subtaskId2);
         assertNull(getSubtask3, "Список не пустой");
 
     }
@@ -371,13 +371,18 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
 
-        manager.deleteAllSubtasks();
+        Epic epic2 = new Epic("Test addNewEpic3", "Test addNewEpic3 description", NEW);
+        manager.createNewEpic(epic);
+        Epic epic3 = new Epic("Test addNewEpic3", "Test addNewEpic3 description", NEW);
+        manager.createNewEpic(epic);
 
-        final List<Subtask> subtasks2 = manager.getSubtasks();
-        final Subtask savedSubtask4 = manager.getSubtask(0);
+        manager.deleteAllEpics();
 
-        assertNull(savedSubtask4, "Задача не удалена после полного удаления.");
-        assertEquals(0, subtasks2.size(), "Список не пустой после удаления всех задач.");
+        final List<Epic> epics = manager.getEpics();
+        final Epic savedEpic1 = manager.getEpic(0);
+
+        assertNull(savedEpic1, "Задача не удалена после полного удаления.");
+        assertEquals(0, epics.size(), "Список не пустой после удаления всех задач.");
 
     }
 
@@ -394,29 +399,36 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);
 
-        final List<Subtask> subtasks1 = manager.getSubtasks();
+        Epic epic2 = new Epic("Test addNewEpic2", "Test addNewEpic2 description", NEW);
+        int epicId2 = manager.createNewEpic(epic);
+        Epic epic3 = new Epic("Test addNewEpic3", "Test addNewEpic3 description", NEW);
+        int epicId3 = manager.createNewEpic(epic);
 
-        assertEquals(2, subtasks1.size(), "Список пустой.");
-        assertNotNull(subtasks1, "Задачи не возвращаются.");
 
-        manager.deleteSubtask(subtaskId1);
-        final List<Subtask> subtasks2 = manager.getSubtasks();
 
-        assertNotNull(subtasks2, "Задачи не возвращаются.");
-        assertEquals(1, subtasks2.size(), "Список не изменился.");
+        final List<Epic> epics1 = manager.getEpics();
 
-        manager.deleteSubtask(5);
-        final List<Subtask> subtasks3 = manager.getSubtasks();
+        assertEquals(3, epics1.size(), "Список пустой.");
+        assertNotNull(epics1, "Задачи не возвращаются.");
 
-        assertNotNull(subtasks3, "Задачи не возвращаются.");
-        assertEquals(1, subtasks3.size(), "Список изменился.");
+        manager.deleteEpic(epicId);
+        final List<Epic> epics2 = manager.getEpics();
 
-        manager.deleteAllSubtasks();
+        assertNotNull(epics2, "Задачи не возвращаются.");
+        assertEquals(2, epics2.size(), "Список не изменился.");
 
-        manager.deleteSubtask(subtaskId2);
-        final List<Subtask> subtasks4 = manager.getSubtasks();
+        manager.deleteEpic(5);
+        final List<Epic> epics3 = manager.getEpics();
 
-        assertEquals(0, subtasks4.size(), "Список изменился.");
+        assertNotNull(epics3, "Задачи не возвращаются.");
+        assertEquals(2, epics3.size(), "Список изменился.");
+
+        manager.deleteAllEpics();
+
+        manager.deleteEpic(epicId2);
+        final List<Epic> epics4 = manager.getEpics();
+
+        assertEquals(0, epics4.size(), "Список изменился.");
 
     }
 
@@ -431,6 +443,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         subtask2.setIdEpic(epicId);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
+
+        Epic epic2 = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        manager.createNewEpic(epic2);
 
         final List<Subtask> subtasks = manager.getSubtasks();
 
@@ -457,22 +472,26 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);
 
-        final Subtask savedSubtask = manager.getSubtask(subtaskId1);
-        final Subtask savedSubtask2 = manager.getSubtask(subtaskId2);
-        assertEquals(subtask, savedSubtask, "Задачи не совпадают.");
-        assertEquals(subtask2, savedSubtask2, "Задачи не совпадают.");
+        Epic epic2 = new Epic("Test addNewEpic2", "Test addNewEpic2 description", NEW);
+        int epicId2 = manager.createNewEpic(epic2);
+        Epic epic3 = new Epic("Test addNewEpic3", "Test addNewEpic3 description", NEW);
+        int epicId3 = manager.createNewEpic(epic3);
 
-        Subtask getSubtask2 = manager.getSubtask(565);
-        assertNull(getSubtask2, "Ошибка получения какой то задачи из списка");
+        final Epic savedEpic = manager.getEpic(epicId);
+        final Epic savedEpic2 = manager.getEpic(epicId2);
 
-        manager.deleteAllSubtasks();
-        Subtask getSubtask3 = manager.getSubtask(subtaskId2);
-        assertNull(getSubtask3, "Список не пустой");
+        assertEquals(epic, savedEpic, "Задачи не совпадают.");
+        assertEquals(epic2, savedEpic2, "Задачи не совпадают2.");
+
+        final Epic savedEpic3 = manager.getEpic(565);
+        assertNull(savedEpic3, "Ошибка получения какой то задачи из списка");
+
+        manager.deleteAllEpics();
+        final Epic savedEpic4 = manager.getEpic(epicId3);
+
+        assertNull(savedEpic4, "Список не пустой");
 
     }
-
-
-
 
 }
 

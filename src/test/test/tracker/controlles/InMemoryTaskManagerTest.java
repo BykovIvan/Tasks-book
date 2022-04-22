@@ -82,4 +82,40 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     protected void testGetSubtask() {
         super.testGetSubtask();
     }
+
+    @Test
+    @Override
+    protected void testAddNewEpic() {
+        super.testAddNewEpic();
+    }
+
+    @Test
+    @Override
+    protected void testUpdateEpic() {
+        super.testUpdateEpic();
+    }
+
+    @Test
+    @Override
+    protected void testDeleteAllEpic() {
+        super.testDeleteAllEpic();
+    }
+
+    @Test
+    @Override
+    protected void testDeleteEpic() {
+        super.testDeleteEpic();
+    }
+
+    @Test
+    @Override
+    protected void testGetEpics() {
+        super.testGetEpics();
+    }
+
+    @Test
+    @Override
+    protected void testGetEpic() {
+        super.testGetEpic();
+    }
 }
