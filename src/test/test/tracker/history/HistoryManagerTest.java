@@ -40,17 +40,17 @@ class HistoryManagerTest {
         historyManager.add(subtask);
         final List<Task> history2 = historyManager.getHistory();
         assertNotNull(history2, "История пустая.");
-        assertEquals(2, history2.size(), "История состоит не из 2 задачи.");
+        assertEquals(2, history2.size(), "История состоит не из 2 задач.");
 
         historyManager.add(epic);
         final List<Task> history3 = historyManager.getHistory();
         assertNotNull(history3, "История пустая.");
-        assertEquals(3, history3.size(), "История состоит не из 3 задачи.");
+        assertEquals(3, history3.size(), "История состоит не из 3 задач.");
         //Дублирование
         historyManager.add(epic);
         final List<Task> history4 = historyManager.getHistory();
         assertNotNull(history4, "История пустая.");
-        assertEquals(3, history3.size(), "История состоит не из 3 задачи.");
+        assertEquals(3, history3.size(), "История состоит не из 3 задач.");
     }
 
     @Test
@@ -120,7 +120,6 @@ class HistoryManagerTest {
         final int idTask2 = 5;
         boolean containsTask2 = historyManager.contains(idTask2);
         assertFalse(containsTask2, "Ошибка при проверке содержания задачи при неправильном id");
-
 
     }
 }

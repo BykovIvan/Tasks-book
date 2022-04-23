@@ -49,7 +49,7 @@ public class Epic extends Task {
     }
 
     /**
-     * Расчет начала и конца време Эпиков
+     * Расчет начала и конца времени Эпиков
      */
     private void countStartAndEndTime(){
         startTime = LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter);

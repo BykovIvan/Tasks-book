@@ -183,7 +183,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * Метод сохранения информации о задачах в файл *.csv
      * должен сохранять по порядку по id задачи
      */
-    private void save() {
+    public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8))) {
             bw.write("id,type,name,status,description,epic\n");
             int fullSize = mapTasks.size() + mapEpics.size() + mapSubtasks.size();      //получение всех задач в порядке возрастания ID
@@ -205,13 +205,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
+    @Override
+    public List<Task> history() {
+        return super.history();
+    }
+
     /**
      * Метод загрузки из файла в новый менеджер, на вход имя файла
      *
      * @param file
      * @return
      */
-    private static FileBackedTasksManager loadFromFile(File file) {
+    public static FileBackedTasksManager loadFromFile(File file) {
 
         FileBackedTasksManager fileManagerFromFile = new FileBackedTasksManager(file.getName());
         try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
@@ -281,6 +286,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Task task = null;
 
         if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.TASK)) {
+
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Task(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
@@ -292,6 +298,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 task.setIdTask(Integer.parseInt(arrayList[0]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.SUBTASK)) {
+
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Subtask(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
@@ -306,6 +313,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 ((Subtask) task).setIdEpic(Integer.parseInt(arrayList[5]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.EPIC)) {
+
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Epic(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
@@ -364,4 +372,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

@@ -3,6 +3,7 @@ package main.java.tracker.controllers;
 import main.java.tracker.model.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 public interface TaskManager {
@@ -160,5 +161,8 @@ public interface TaskManager {
      *
      */
     void sortedPrioritizedTasks();
+
+
+    List<Task> history();
 
 }
