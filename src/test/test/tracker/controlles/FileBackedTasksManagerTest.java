@@ -1,17 +1,11 @@
 package tracker.controlles;
 
 import main.java.tracker.controllers.FileBackedTasksManager;
-import main.java.tracker.model.Epic;
-import main.java.tracker.model.Subtask;
-import main.java.tracker.model.Task;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 
-import static main.java.tracker.util.Status.DONE;
-import static main.java.tracker.util.Status.NEW;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
@@ -140,10 +134,6 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         super.testStatusOfEpic();
     }
 
-    @Test
-    @Override
-    protected void testSaveToAndFromFiles() {
-        super.testSaveToAndFromFiles();
-    }
+
 }
 

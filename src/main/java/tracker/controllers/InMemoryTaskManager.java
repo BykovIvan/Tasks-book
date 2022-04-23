@@ -33,6 +33,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubtasks() {
+        for (Integer integer : mapSubtasks.keySet()) {
+            if (historyList.contains(integer)) {
+                historyList.remove(integer);             //проверка и удаление задачи из листа истории
+            }
+        }
         mapSubtasks.clear();
         updateStatusEpic();
     }
@@ -108,6 +113,11 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer num : mapEpics.keySet()) {
             mapEpics.get(num).getSubtasksOfEpic().clear();
         }
+        for (Integer integer : mapEpics.keySet()) {
+            if (historyList.contains(integer)) {
+                historyList.remove(integer);             //проверка и удаление задачи из листа истории
+            }
+        }
         mapEpics.clear();
         updateStatusEpic();
     }
@@ -168,7 +178,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
+        for (Integer integer : mapTasks.keySet()) {
+            if (historyList.contains(integer)) {
+                historyList.remove(integer);             //проверка и удаление задачи из листа истории
+            }
+        }
         mapTasks.clear();
+
     }
 
     @Override

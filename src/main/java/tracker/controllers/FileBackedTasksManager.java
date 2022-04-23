@@ -187,7 +187,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8))) {
             bw.write("id,type,name,status,description,epic\n");
             int fullSize = mapTasks.size() + mapEpics.size() + mapSubtasks.size();      //получение всех задач в порядке возрастания ID
-            for (int i = 0; i < fullSize; i++) {
+            int minIdOfAnyTask = Integer.MAX_VALUE;
+            for (Task value : mapTasks.values()) {
+                if (value.getIdTask() < minIdOfAnyTask){
+                    minIdOfAnyTask = value.getIdTask();
+                }
+            }
+            for (Task value : mapEpics.values()) {
+                if (value.getIdTask() < minIdOfAnyTask){
+                    minIdOfAnyTask = value.getIdTask();
+                }
+            }
+            for (Task value : mapSubtasks.values()) {
+                if (value.getIdTask() < minIdOfAnyTask){
+                    minIdOfAnyTask = value.getIdTask();
+                }
+            }
+            for (int i = minIdOfAnyTask; i < (minIdOfAnyTask + fullSize); i++) {
                 if (mapTasks.containsKey(i)) {
                     bw.write(toString(mapTasks.get(i)) + "\n");
                 } else if (mapEpics.containsKey(i)) {
@@ -203,11 +219,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             throw new ManagerSaveException();
         }
 
-    }
-
-    @Override
-    public List<Task> history() {
-        return super.history();
     }
 
     /**
@@ -236,16 +247,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             fileManagerFromFile.addSubtaskInListEpic(); //восстановление подзадач у эпиков
             String lineHistory = br.readLine();
-            List<Integer> listHist = fromStringHistory(lineHistory);
-            for (Integer integer : listHist) {
-                if (fileManagerFromFile.mapTasks.containsKey(integer)) {
-                    fileManagerFromFile.historyList.add(fileManagerFromFile.getTask(integer));
-                } else if (fileManagerFromFile.mapSubtasks.containsKey(integer)) {
-                    fileManagerFromFile.historyList.add(fileManagerFromFile.getSubtask(integer));
-                } else if (fileManagerFromFile.mapEpics.containsKey(integer)) {
-                    fileManagerFromFile.historyList.add(fileManagerFromFile.getEpic(integer));
+            if (lineHistory != null){
+                List<Integer> listHist = fromStringHistory(lineHistory);
+                for (Integer integer : listHist) {
+                    if (fileManagerFromFile.mapTasks.containsKey(integer)) {
+                        fileManagerFromFile.historyList.add(fileManagerFromFile.getTask(integer));
+                    } else if (fileManagerFromFile.mapSubtasks.containsKey(integer)) {
+                        fileManagerFromFile.historyList.add(fileManagerFromFile.getSubtask(integer));
+                    } else if (fileManagerFromFile.mapEpics.containsKey(integer)) {
+                        fileManagerFromFile.historyList.add(fileManagerFromFile.getEpic(integer));
+                    }
                 }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -367,18 +381,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private void addSubtaskInListEpic() {
         for (Subtask value : mapSubtasks.values()) {                             //пробегаемся по всему списку подзадач
             int tempIdOfEpic = value.getIdEpic();                                //находим id эпика
-            List<Subtask> list = mapEpics.get(tempIdOfEpic).getSubtasksOfEpic(); //получаем список по id
-            list.add(value);                                                     //добавляем подзадачу в этот список
+            if (tempIdOfEpic != -1){
+                List<Subtask> list = mapEpics.get(tempIdOfEpic).getSubtasksOfEpic(); //получаем список по id
+                list.add(value);
+            }
+                                                                //добавляем подзадачу в этот список
         }
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
 }

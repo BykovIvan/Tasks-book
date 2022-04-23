@@ -553,47 +553,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     }
 
-    @Test
-    protected void testSaveToAndFromFiles() {
-
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-        Task task3 = new Task("Test3 addNewTask", "Test3 addNewTask description", NEW);
-        final int taskId = manager.createNewTask(task);
-        final int taskId2 = manager.createNewTask(task2);
-        final int taskId3 = manager.createNewTask(task3);
-
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
-        int epicId = manager.createNewEpic(epic);
-
-        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
-        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
-        subtask.setIdEpic(epicId);
-        subtask2.setIdEpic(epicId);
-        final int subtaskId1 = manager.createNewSubTask(subtask);
-        final int subtaskId2 = manager.createNewSubTask(subtask2);
-
-        manager.getTask(taskId3);
-        manager.getTask(taskId);
-        manager.getTask(taskId2);
-        manager.getEpic(epicId);
-        manager.getSubtask(subtaskId2);
-        manager.getSubtask(subtaskId1);
-        manager.getTask(taskId3);
-
-
-        File file = new File("history.csv");
-        FileBackedTasksManager fileManager = FileBackedTasksManager.loadFromFile(file);
-
-        assertNotNull(fileManager, "Новый объект не сохранился");
-        assertEquals(manager.getTasks(), fileManager.getTasks(), "Задачи не сохранились");
-        assertEquals(manager.getEpics(), fileManager.getEpics(), "Эпики не сохранились");
-        assertEquals(manager.getSubtasks(), fileManager.getSubtasks(), "Подзададчи не сохранились");
-//        assertEquals(manager.getPrioritizedTasks(), fileManager.getPrioritizedTasks(), "Лист приорита не совпадает");
-        assertEquals(manager.history(), fileManager.history(), "История не сохранилась");
-
-    }
-
 
 }
 

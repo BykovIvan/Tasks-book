@@ -6,7 +6,7 @@ import main.java.tracker.util.TypeOfTasks;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private int idEpic;
+    private int idEpic = -1;
 
     public Subtask(String name, String discription, Status status) {
         super(name, discription, status);
