@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.java.tracker.util.Status.IN_PROGRESS;
-import static main.java.tracker.util.Status.NEW;
+import static main.java.tracker.util.Status.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTest<T extends TaskManager> {
@@ -307,6 +306,23 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     }
 
+    @Test
+    protected void testGetIdEpicFromSubtask(){
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        final int subtaskId1 = manager.createNewSubTask(subtask);
+        final int subtaskId2 = manager.createNewSubTask(subtask2);
+
+        final int idEpicOfSubtask = manager.getSubtask(subtaskId1).getIdEpic();
+        assertEquals(epicId, idEpicOfSubtask, "ID эпика не совпадает.");
+
+    }
+
     //Epic
 
     @Test
@@ -493,93 +509,52 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     }
 
+    @Test
+    protected void testStatusOfEpic(){
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description", NEW);
+        int epicId = manager.createNewEpic(epic);
+
+        Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
+        Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
+        subtask.setIdEpic(epicId);
+        subtask2.setIdEpic(epicId);
+        final int subtaskId1 = manager.createNewSubTask(subtask);
+        final int subtaskId2 = manager.createNewSubTask(subtask2);
+
+        manager.updateStatusEpic();
+        assertEquals(NEW, epic.getStatus(), "Неверный статус когда все подзадачи в NEW");
+
+        manager.getSubtask(subtaskId1).setStatus(IN_PROGRESS);
+
+        manager.updateStatusEpic();
+        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверный статус когда одна- NEW, вторая - IN_PROGRESS");
+
+        manager.getSubtask(subtaskId2).setStatus(IN_PROGRESS);
+
+        manager.updateStatusEpic();
+        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверный статус когда все подзадачи в IN_PROGRESS");
+
+        manager.getSubtask(subtaskId1).setStatus(DONE);
+
+        manager.updateStatusEpic();
+        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверный статус когда одна- DONE, вторая - IN_PROGRESS");
+
+        manager.getSubtask(subtaskId2).setStatus(DONE);
+
+        manager.updateStatusEpic();
+        assertEquals(DONE, epic.getStatus(), "Неверный статус когда все подзадачи в DONE");
+
+        manager.getSubtask(subtaskId2).setStatus(NEW);
+
+        manager.updateStatusEpic();
+        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверный статус когда одна- DONE, вторая - NEW");
+
+
+
+    }
+
+
+
 }
 
-        //Расчет статуса Эпика
-//        manager.deleteAllEpics();
-//        final int idSub1Status = manager.createNewSubTask(subtask);
-//        final int idSub2Status = manager.createNewSubTask(subtask2);
-//        final int idEpicStatus = manager.createNewEpic(epic);
-//
-//        assertEquals(NEW, epic.getStatus(), "Неверный статус при создании");
-//
-//        ArrayList<Subtask> listOfSubStatus = manager.getEpic(idEpicStatus).getSubtasksOfEpic();
-//        listOfSubStatus.get(idSub1Status).setStatus(IN_PROGRESS);
-//
-//        assertEquals(IN_PROGRESS, epic.getStatus(), "Неверный статус при создании");
-
-        //Тест обновления задачи
-//    @Test
-//    protected void testUpdateTask(){
-//        Task task1 = new Task("Test1 addNewTask", "Test1 addNewTask description", NEW);
-//        Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-//        //Стандартное поведение задачи
-//        int idTask1 = manager.createNewTask(task1);
-//        manager.createNewTask(task2);
-//        manager.updateTask(task1, task2);
-//
-//        final Task savedTask = manager.getTask(idTask1);
-//        assertNotNull(savedTask, "Задача на возвращаются.");
-//        assertEquals(task2, savedTask, "Задачи не совпадают.");
-//
-//        //С пустым списком задач
-//        Task task3 = new Task("Test3 addNewTask", "Test3 addNewTask description", NEW);
-//        manager.createNewTask(task3);
-//        manager.deleteAllTasks();
-//        manager.updateTask(task2, task3);
-//        assertTrue(manager.getTasks().isEmpty(), "Список не пустой.");
-//
-////        //пустой или не действующий идентификатор
-////        Task task4 = new Task("Test4 addNewTask", "Test4 addNewTask description", Status.NEW);
-////        Task task5 = new Task("Test5 addNewTask", "Test5 addNewTask description", Status.NEW);
-////        manager.createNewTask(task4);
-////        manager.createNewTask(task5);
-//
-//    }
-//    @Test
-//    protected void testDeleteTask(){
-//        Task task1 = new Task("Test1 addNewTask", "Test1 addNewTask description", NEW);
-//        //Стандартное поведение
-//        int id = manager.createNewTask(task1);
-//
-//        manager.deleteTask(id);
-//        assertTrue(manager.getTasks().isEmpty(), "Список не пустой.");
-//        //С пустым списком задач
-//        manager.deleteAllTasks();
-//        manager.deleteTask(id);
-//        assertTrue(manager.getTasks().isEmpty(), "Список не пустой.");
-//
-//        //С неверным идентификатором
-//        manager.createNewTask(task1);
-//        manager.deleteTask(5);
-//        assertEquals(1, manager.getTasks().size(), "Попытка удаления с неправильным идентификатором");
-//
-//
-//
-//    }
-//
-//    @Test
-//    protected void testGetTask(){
-//        Task task1 = new Task("Test1 addNewTask", "Test1 addNewTask description", NEW);
-//        //Стандартное поведение
-//        final int taskId = manager.createNewTask(task1);
-//        final Task savedTask = manager.getTask(taskId);
-//        assertNotNull(savedTask, "Задача не найдена.");
-//        assertEquals(task1, savedTask, "Задачи не совпадают.");
-//        //С пустым списком
-//        manager.deleteAllTasks();
-//        final Task savedTask2 = manager.getTask(taskId);
-//        assertNull(savedTask2, "Задача пресутствует в списке");
-//        //С неверным идентификатором
-//        manager.createNewTask(task1);
-//        final Task savedTask3 = manager.getTask(3);
-//        assertNull(savedTask3, "Задача присутствует в списке");
-//
-//
-//    }
-//
-//    @Test
-//    protected void testGetTasks(){
-//
-//    }
 

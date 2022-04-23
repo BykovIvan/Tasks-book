@@ -120,6 +120,18 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     }
 
     @Test
+    @Override
+    protected void testGetIdEpicFromSubtask() {
+        super.testGetIdEpicFromSubtask();
+    }
+
+    @Test
+    @Override
+    protected void testStatusOfEpic() {
+        super.testStatusOfEpic();
+    }
+
+    @Test
     private void testSaveToFile(){
 
     }

@@ -118,4 +118,16 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     protected void testGetEpic() {
         super.testGetEpic();
     }
+
+    @Test
+    @Override
+    protected void testGetIdEpicFromSubtask() {
+        super.testGetIdEpicFromSubtask();
+    }
+
+    @Test
+    @Override
+    protected void testStatusOfEpic() {
+        super.testStatusOfEpic();
+    }
 }
