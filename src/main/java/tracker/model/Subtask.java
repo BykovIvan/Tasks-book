@@ -27,12 +27,23 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
+        if (startTime.isPresent() && duration.isPresent()){
+            return "Subtask {" +
+                    "name='" + getName() + '\'' +
+                    ", discription='" + getDiscription() + '\'' +
+                    ", idTask=" + getIdTask() +
+                    ", status=" + getStatus() +
+                    ", startTime=" + getStartTime() +
+                    ", duraction=" + getDuration().toMinutes() +
+                    '}' + "\n";
+    }
         return "Subtask {" +
                 "name='" + getName() + '\'' +
-                ", discription='" + getDiscription() + '\'' +
-                ", idTask=" + getIdTask() +
-                ", status=" + getStatus() +
-                '}' + "\n ";
+            ", discription='" + getDiscription() + '\'' +
+            ", idTask=" + getIdTask() +
+            ", status=" + getStatus() +
+            '}' + "\n ";
+
     }
 
     @Override

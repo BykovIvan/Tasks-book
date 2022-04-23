@@ -9,7 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Task implements Comparable<Task>  {
+//public class Task implements Comparable<Task>  {
+public class Task  {
     private String name;                //Имя задачи
     private String discription;         //Описание задачи
     private int idTask;                 //ID задачи (создается автоматически при методе создания
@@ -141,22 +142,22 @@ public class Task implements Comparable<Task>  {
         return Objects.hash(name, discription, idTask, status, discription, startTime);
     }
 
-    @Override
-    public int compareTo(Task anotherTask) {
-        if (startTime.isPresent() && anotherTask.startTime.isPresent()){
-            if (this.startTime.get().isAfter(anotherTask.startTime.get())){
-                return 1;
-            }else if (this.startTime.get().isBefore(anotherTask.startTime.get())){
-                return -1;
-            }else {
-                return 0;
-            }
-        }else if (startTime.isPresent()){
-            return -1;
-        } else if (anotherTask.startTime.isPresent()){
-            return 1;
-        }
-        return 1;
-
-    }
+//    @Override
+//    public int compareTo(Task anotherTask) {
+//        if (startTime.isPresent() && anotherTask.startTime.isPresent()){
+//            if (this.startTime.get().isAfter(anotherTask.startTime.get())){
+//                return 1;
+//            }else if (this.startTime.get().isBefore(anotherTask.startTime.get())){
+//                return -1;
+//            }else {
+//                return 0;
+//            }
+//        }else if (startTime.isPresent()){
+//            return -1;
+//        } else if (anotherTask.startTime.isPresent()){
+//            return 1;
+//        }
+//        return 1;
+//
+//    }
 }

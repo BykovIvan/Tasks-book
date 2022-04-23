@@ -6,6 +6,7 @@ import main.java.tracker.model.Epic;
 import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
 import main.java.tracker.util.Status;
+import main.java.tracker.util.TaskStartTimeComparator;
 
 import java.util.*;
 
@@ -22,13 +23,15 @@ public class InMemoryTaskManager implements TaskManager {
     protected HistoryManager<Task> historyList;
 
     TreeSet<Task> taskPrioritizedList;
+    TaskStartTimeComparator comp;
 
     public InMemoryTaskManager() {
         mapTasks = new HashMap<>();
         mapEpics = new HashMap<>();
         mapSubtasks = new HashMap<>();
         historyList = Managers.getDefaultHistory();
-        taskPrioritizedList = new TreeSet<>();
+        comp = new TaskStartTimeComparator();
+        taskPrioritizedList = new TreeSet<>(comp);
     }
 
     @Override
@@ -276,6 +279,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void sortedPrioritizedTasks() {
         taskPrioritizedList.addAll(mapTasks.values());
+        for (Subtask value : mapSubtasks.values()) {
+            taskPrioritizedList.add(value);
+        }
     }
 
 

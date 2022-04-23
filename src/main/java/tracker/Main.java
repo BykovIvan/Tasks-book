@@ -18,9 +18,9 @@ public class Main {
         Task task2 = new Task("Task2", "Dis2", NEW);
         Task task3 = new Task("Task3", "Dis3", NEW);
         Task task4 = new Task("Task4", "Dis4", NEW);
-        task.setStartTime("15.10.2022-12:21");
+        task.setStartTime("16.12.2022-12:21");
         task.setDuration(15);
-        task3.setStartTime("15.10.2022-12:29");
+        task3.setStartTime("13.11.2022-12:29");
         task3.setDuration(15);
         task4.setStartTime("15.10.2022-13:21");
         task4.setDuration(15);
@@ -35,27 +35,30 @@ public class Main {
 
         System.out.println(manager.getTask(idTask).getDuration().toHours() + " час " + manager.getTask(idTask).getDuration().toMinutesPart() + " мин");
 
-//        Epic epic = new Epic("Epic1", "Dis1", NEW);
+        Epic epic = new Epic("Epic1", "Dis1", NEW);
 
-//        int idEpic = manager.createNewEpic(epic);
+        int idEpic = manager.createNewEpic(epic);
 
-//        Subtask subtask1 = new Subtask("Subtask1", "Sub1", NEW);
-//        subtask1.setIdEpic(idEpic);
+        Subtask subtask1 = new Subtask("Subtask1", "Sub1", NEW);
+        subtask1.setIdEpic(idEpic);
+        subtask1.setStartTime("16.10.2023-11:21");
+        subtask1.setDuration(20);
 
-//        int idSub1 = manager.createNewSubTask(subtask1);
+        int idSub1 = manager.createNewSubTask(subtask1);
 
-//        Subtask subtask2 = new Subtask("Subtask2", "Sub2", NEW);
-//        subtask2.setIdEpic(idEpic);
+        Subtask subtask2 = new Subtask("Subtask2", "Sub2", NEW);
+        subtask2.setIdEpic(idEpic);
+        subtask2.setStartTime("14.10.2023-15:21");
+        subtask2.setDuration(20);
+        int idSub2 = manager.createNewSubTask(subtask2);
 
-//        int idSub2 = manager.createNewSubTask(subtask2);
+        Subtask subtask3 = new Subtask("Subtask3", "Sub3", NEW);
+        subtask3.setIdEpic(idEpic);
+        subtask3.setStartTime("14.09.2023-13:21");
+        subtask3.setDuration(20);
+        int idSub3 = manager.createNewSubTask(subtask3);
 
-//        Subtask subtask3 = new Subtask("Subtask3", "Sub3", NEW);
-//        subtask2.setIdEpic(idEpic);
 
-//        int idSub3 = manager.createNewSubTask(subtask3);
-
-//        manager.getSubtask(idSub1).setStartTime("14.09.2023-10:21");
-//        manager.getSubtask(idSub1).setDuration(20);
 //        manager.getSubtask(idSub2).setStartTime("15.09.2023-04:26");
 //        manager.getSubtask(idSub2).setDuration(14);
 //        manager.getSubtask(idSub3).setStartTime("13.09.2023-23:11");
@@ -68,7 +71,7 @@ public class Main {
 
         TreeSet<Task> setList = manager.getPrioritizedTasks();
         for (Task task1 : setList) {
-            System.out.println(task1);
+            System.out.print(task1);
         }
 
 
