@@ -23,26 +23,43 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
         FileBackedTasksManager manager = new FileBackedTasksManager("history.csv");
+        Task task1 = new Task("Имя1", "Что купить1", NEW);
+        Task task2 = new Task("Имя2", "Что купить2", NEW);
+        Task task3 = new Task("Имя3", "Что купить3", NEW);
 
-        manager.createNewTask(new Task("Имя1", "Что купить1", NEW));
-        manager.createNewTask(new Task("Имя2", "Что купить2", DONE));
-        manager.createNewEpic(new Epic("Имя1", "Где купить1", NEW));
-        Subtask subtask = new Subtask("Саб1", "Где взять", NEW);
-        subtask.setIdEpic(2);
-        manager.createNewSubTask(subtask);
-        Subtask subtask2 = new Subtask("Саб2", "Где взять", NEW);
-        subtask2.setIdEpic(2);
-        manager.createNewSubTask(subtask2);
-        manager.createNewTask(new Task("Имя3", "Что купить3", NEW));
-        manager.createNewTask(new Task("Имя4", "Что купить4", NEW));
-        manager.createNewTask(new Task("Имя5", "Что купить5", NEW));
-        manager.getTask(5);
-        manager.getTask(6);
-        manager.getTask(7);
-        manager.getEpic(2);
-        manager.getSubtask(4);
-        manager.getSubtask(3);
-        manager.getTask(0);
+        int idTask1 = manager.createNewTask(task1);
+        int idTask2 = manager.createNewTask(task2);
+        int idTask3 = manager.createNewTask(task3);
+
+        manager.getTask(idTask1).setStartTime("15.11.2022, 12:21");
+        manager.getTask(idTask2).setStartTime("14.04.2022, 12:21");
+        manager.getTask(idTask1).setDuration(34);
+        manager.getTask(idTask2).setDuration(43);
+//        Subtask subtask = new Subtask("Саб1", "Где взять", NEW);
+//        subtask.setIdEpic(2);
+//        manager.createNewSubTask(subtask);
+//        Subtask subtask2 = new Subtask("Саб2", "Где взять", NEW);
+//        subtask2.setIdEpic(2);
+//        manager.createNewSubTask(subtask2);
+//        manager.createNewTask(new Task("Имя3", "Что купить3", NEW));
+//        manager.createNewTask(new Task("Имя4", "Что купить4", NEW));
+//        manager.createNewTask(new Task("Имя5", "Что купить5", NEW));
+        manager.getTask(idTask2);
+        manager.getTask(idTask1);
+        manager.getTask(idTask3);
+//        manager.getEpic(2);
+//        manager.getSubtask(4);
+//        manager.getSubtask(3);
+//        manager.getTask(0);
+
+
+        System.out.println("Task :");
+        System.out.println(manager.getTask(idTask1).getStartTime());
+
+
+        System.out.println(manager.getTask(idTask1).getEndTime());
+        System.out.println(manager.getTask(idTask1).getDuration().toHours() + " час " + manager.getTask(idTask1).getDuration().toMinutesPart() + " мин");
+
 
         System.out.println("История:");
         System.out.println(manager.history());
@@ -185,8 +202,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      */
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(nameTestFile, StandardCharsets.UTF_8))) {
-            bw.write("id,type,name,status,description,epic\n");
+            bw.write("id,type,name,status,description,epic,startTime,duration,endTime\n");
             int fullSize = mapTasks.size() + mapEpics.size() + mapSubtasks.size();      //получение всех задач в порядке возрастания ID
+            //для расчета начала если вдруг ид задачи начинается не с нуля
             int minIdOfAnyTask = Integer.MAX_VALUE;
             for (Task value : mapTasks.values()) {
                 if (value.getIdTask() < minIdOfAnyTask){
@@ -280,14 +298,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + task.getTypeOfTask() +
                     "," + task.getName() +
                     "," + task.getStatus() +
-                    "," + task.getDiscription();
+                    "," + task.getDiscription() +
+                    "," + task.getStartTime() +
+                    "," + task.getDuration() +
+                    "," + task.getEndTime();
         } else if (typeOfTask.equals(TypeOfTasks.SUBTASK)) {
             fullTaskName = task.getIdTask() +
                     "," + task.getTypeOfTask() +
                     "," + task.getName() +
                     "," + task.getStatus() +
                     "," + task.getDiscription() +
-                    "," + task.getIdEpic();
+                    "," + task.getIdEpic() +
+                    "," + task.getStartTime() +
+                    "," + task.getDuration() +
+                    "," + task.getEndTime();
         }
         return fullTaskName;
     }
@@ -304,6 +328,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Task(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
+//                task.setStartTime(arrayList[5]);
+//                task.setDuration(arrayList[6]);
             } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
                 task = new Task(arrayList[2], arrayList[4], Status.IN_PROGRESS);
                 task.setIdTask(Integer.parseInt(arrayList[0]));

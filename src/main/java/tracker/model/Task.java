@@ -15,10 +15,11 @@ public class Task implements Comparable<Task>  {
     private int idTask;                 //ID задачи (создается автоматически при методе создания
     private Status status;              //Статус задачи
     private int idEpic;                 //ID эпика задачи (Если требуется)
-    private TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
+    private final TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
-    protected LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
-    protected Duration duration;           //продолжительность задачи
+    protected Optional<LocalDateTime> startTime;     //дата, когда предпологается приступить к выполнению задачи
+    protected Optional<Duration> duration;           //продолжительность задачи
+
     protected DateTimeFormatter formatter;
 
     public Task(String name, String discription, Status status) {
@@ -28,8 +29,6 @@ public class Task implements Comparable<Task>  {
         typeOfTask = TypeOfTasks.TASK;
         formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
     }
-
-
 
     public String getName() {
         return name;
@@ -72,23 +71,33 @@ public class Task implements Comparable<Task>  {
     }
 
     public String getStartTime() {
-        return startTime.format(formatter);
+        if (startTime.isPresent()){
+            return startTime.get().format(formatter);
+        }
+        return "null";
     }
 
     public void setStartTime(String startTimeStr) {
-        startTime = LocalDateTime.parse(startTimeStr, formatter);
+        startTime = Optional.of(LocalDateTime.parse(startTimeStr, formatter));
     }
 
     public Duration getDuration() {
-        return duration;
+        if (duration.isPresent()){
+            return duration.get();
+        }
+        return Duration.ofMillis(0);
+
     }
 
     public void setDuration(int durationInMin) {
-        duration = Duration.ofMinutes(durationInMin) ;
+        duration = Optional.of(Duration.ofMinutes(durationInMin));
     }
 
     public String getEndTime(){
-        return startTime.plusMinutes(duration.toMinutes()).format(formatter);
+        if (startTime.isPresent() & duration.isPresent()){
+            return startTime.get().plusMinutes(duration.get().toMinutes()).format(formatter);
+        }
+
     }
 
     @Override
@@ -109,12 +118,14 @@ public class Task implements Comparable<Task>  {
         return idTask == task.idTask &&
                 Objects.equals(name, task.name) &&
                 Objects.equals(discription, task.discription) &&
+                Objects.equals(duration, task.duration) &&
+                Objects.equals(startTime, task.startTime) &&
                 status == task.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, discription, idTask, status);
+        return Objects.hash(name, discription, idTask, status, discription, startTime);
     }
 
     @Override

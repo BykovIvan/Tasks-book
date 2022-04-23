@@ -70,7 +70,7 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
     }
 
     @Test
-    protected void testSaveToAndFromFileswithEmptyList() {
+    protected void testSaveToAndFromFileWithEmptyList() {
         //Пустыйе списки задач
         manager.deleteAllTasks();
         manager.deleteAllEpics();
@@ -87,7 +87,7 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
     }
 
     @Test
-    public void testSaveToAndFromFileswithEmptyHistoryList(){
+    public void testSaveToAndFromFileWithEmptyHistoryList(){
         //Пустой список истории
         manager.createNewTask(task);
         manager.createNewTask(task2);
