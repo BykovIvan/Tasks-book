@@ -24,13 +24,10 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
     private static Subtask subtask;
     private static Subtask subtask2;
 
-    @BeforeAll
-    public static void beforeAll(){
-        manager = new FileBackedTasksManager("history2.csv");
-    }
 
     @BeforeEach
     public void beforeEach(){
+        manager = new FileBackedTasksManager("history2.csv");
         task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
         task3 = new Task("Test3 addNewTask", "Test3 addNewTask description", NEW);
@@ -53,9 +50,9 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         int epicId = manager.createNewEpic(epic);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("13.11.2022-12:21");
+        subtask.setStartTime("13.11.2022-16:21");
         subtask.setDuration(34);
-        subtask2.setStartTime("14.11.2022-12:21");
+        subtask2.setStartTime("14.11.2022-12:45");
         subtask2.setDuration(34);
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);
@@ -75,7 +72,6 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         assertEquals(manager.getTasks(), fileManager.getTasks(), "Задачи не сохранились");
         assertEquals(manager.getEpics(), fileManager.getEpics(), "Эпики не сохранились");
         assertEquals(manager.getSubtasks(), fileManager.getSubtasks(), "Подзададчи не сохранились");
-//        assertEquals(manager.getPrioritizedTasks(), fileManager.getPrioritizedTasks(), "Лист приорита не совпадает");
         assertEquals(manager.history(), fileManager.history(), "История не сохранилась");
         assertEquals(manager.getTask(taskId).getStartTime(), fileManager.getTask(taskId).getStartTime(), "Время не сохранилась");
         assertEquals(manager.getTask(taskId).getDuration(), fileManager.getTask(taskId).getDuration(), "Продолжительность не сохранилась");
@@ -94,7 +90,6 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         assertEquals(manager.getTasks(), fileManager.getTasks(), "Задачи не сохранились2");
         assertEquals(manager.getEpics(), fileManager.getEpics(), "Эпики не сохранились2");
         assertEquals(manager.getSubtasks(), fileManager.getSubtasks(), "Подзададчи не сохранились2");
-//        assertEquals(manager.getPrioritizedTasks(), fileManager.getPrioritizedTasks(), "Лист приорита не совпадает");
         assertEquals(manager.history(), fileManager.history(), "История не сохранилась2");
     }
 
@@ -127,7 +122,6 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         assertEquals(manager.getTasks(), fileManager.getTasks(), "Задачи не сохранились3");
         assertEquals(manager.getEpics(), fileManager.getEpics(), "Эпики не сохранились3");
         assertEquals(manager.getSubtasks(), fileManager.getSubtasks(), "Подзададчи не сохранились3");
-//        assertEquals(manager.getPrioritizedTasks(), fileManager.getPrioritizedTasks(), "Лист приорита не совпадает");
         assertEquals(manager.history(), fileManager.history(), "История не сохранилась3");
     }
 }

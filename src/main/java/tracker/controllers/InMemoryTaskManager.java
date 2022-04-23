@@ -75,7 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
                 Epic epic = mapEpics.get(idEpicTemp);
                 epic.getSubtasksOfEpic().add(subtask);
             }
-//            taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
+            taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
             updateStatusEpic();
             return subtask.getIdTask();
         }else if (intersectionTask(subtask)){
@@ -87,36 +87,39 @@ public class InMemoryTaskManager implements TaskManager {
                 Epic epic = mapEpics.get(idEpicTemp);
                 epic.getSubtasksOfEpic().add(subtask);
             }
-//            taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
+            taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
             updateStatusEpic();
             return subtask.getIdTask();
         }else {
             System.out.println("Задача id-" + subtask.getIdTask() + " пересекается!");
             return -1;
         }
-//
-//        subtask.setIdTask(id);
-//        id++;
-//        mapSubtasks.put(subtask.getIdTask(), subtask);
-//        int idEpicTemp = subtask.getIdEpic();
-//        if (mapEpics.containsKey(idEpicTemp)) {                  //добавдяем в список подзадач эпика свою задачу
-//            Epic epic = mapEpics.get(idEpicTemp);
-//            epic.getSubtasksOfEpic().add(subtask);
-//        }
-//
-//        taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
-//
-//        updateStatusEpic();
-//        return subtask.getIdTask();
+
     }
 
     @Override
     public void updateSubtask(Subtask oldSubtask, Subtask newSubtask) {
-        if (mapSubtasks.containsKey(oldSubtask.getIdTask())){
-            int idTemp = oldSubtask.getIdTask();
-            mapSubtasks.put(idTemp, newSubtask);
+        if (newSubtask.getStartTime().equals("Null")){
+            if (mapSubtasks.containsKey(oldSubtask.getIdTask())){
+                int idTemp = oldSubtask.getIdTask();
+                mapSubtasks.put(idTemp, newSubtask);
+                taskPrioritizedList.remove(oldSubtask);
+                taskPrioritizedList.add(newSubtask);
+            }
+
+        }else if (intersectionTask(newSubtask)){
+            if (mapSubtasks.containsKey(oldSubtask.getIdTask())){
+                int idTemp = oldSubtask.getIdTask();
+                mapSubtasks.put(idTemp, newSubtask);
+                taskPrioritizedList.remove(oldSubtask);
+                taskPrioritizedList.add(newSubtask);
+            }
+            updateStatusEpic();
+        }else{
+            System.out.println("Задача id-" + newSubtask.getIdTask() + " пересекается!");
         }
-        updateStatusEpic();
+
+
     }
 
     @Override
@@ -242,13 +245,13 @@ public class InMemoryTaskManager implements TaskManager {
             task.setIdTask(id);
             id++;
             mapTasks.put(task.getIdTask(), task);
-//            taskPrioritizedList.add(task);              //добавление задачи в лист приоритета
+            taskPrioritizedList.add(task);              //добавление задачи в лист приоритета
             return task.getIdTask();
         }else if (intersectionTask(task)){
             task.setIdTask(id);
             id++;
             mapTasks.put(task.getIdTask(), task);
-//            taskPrioritizedList.add(task);              //добавление задачи в лист приоритета
+            taskPrioritizedList.add(task);              //добавление задачи в лист приоритета
             return task.getIdTask();
         }else {
             System.out.println("Задача id-" + task.getIdTask() + " пересекаются!");
@@ -259,11 +262,23 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task oldTask, Task newTask) {
-        if (mapTasks.containsKey(oldTask.getIdTask())) {
-            int idTemp = oldTask.getIdTask();
-            mapTasks.put(idTemp, newTask);
+        if (newTask.getStartTime().equals("Null")){
+            if (mapTasks.containsKey(oldTask.getIdTask())) {
+                int idTemp = oldTask.getIdTask();
+                mapTasks.put(idTemp, newTask);
+                taskPrioritizedList.remove(oldTask);
+                taskPrioritizedList.add(newTask);
+            }
+        }else if (intersectionTask(newTask)) {
+            if (mapTasks.containsKey(oldTask.getIdTask())) {
+                int idTemp = oldTask.getIdTask();
+                mapTasks.put(idTemp, newTask);
+                taskPrioritizedList.remove(oldTask);
+                taskPrioritizedList.add(newTask);
+            }
+        }else{
+            System.out.println("Задача id-" + newTask.getIdTask() + " пересекается!");
         }
-
     }
 
     @Override
@@ -321,8 +336,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public TreeSet<Task> getPrioritizedTasks() {
-        taskPrioritizedList.addAll(getTasks());
-        taskPrioritizedList.addAll(getSubtasks());
         return taskPrioritizedList;
     }
 
