@@ -275,8 +275,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void sortedPrioritizedTasks() {
-        taskPrioritizedList.addAll(getTasks());
-        taskPrioritizedList.addAll(getSubtasks());
+        taskPrioritizedList.addAll(mapTasks.values());
     }
 
 

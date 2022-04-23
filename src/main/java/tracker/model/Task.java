@@ -27,7 +27,9 @@ public class Task implements Comparable<Task>  {
         this.discription = discription;
         this.status = status;
         typeOfTask = TypeOfTasks.TASK;
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
+        startTime = Optional.empty();
+        duration = Optional.empty();
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
     }
 
     public String getName() {
@@ -74,7 +76,7 @@ public class Task implements Comparable<Task>  {
         if (startTime.isPresent()){
             return startTime.get().format(formatter);
         }
-        return "null";
+        return "Null";
     }
 
     public void setStartTime(String startTimeStr) {
@@ -97,17 +99,28 @@ public class Task implements Comparable<Task>  {
         if (startTime.isPresent() & duration.isPresent()){
             return startTime.get().plusMinutes(duration.get().toMinutes()).format(formatter);
         }
-
+        return "null";
     }
 
     @Override
     public String toString() {
+        if (startTime.isPresent() && duration.isPresent()){
+            return "Task {" +
+                    "name='" + name + '\'' +
+                    ", discription='" + discription + '\'' +
+                    ", idTask=" + idTask +
+                    ", status=" + status +
+                    ", startTime=" + startTime.get().format(formatter) +
+                    ", duraction=" + duration.get().toMinutes() +
+                    '}' + "\n";
+        }
         return "Task {" +
                 "name='" + name + '\'' +
                 ", discription='" + discription + '\'' +
                 ", idTask=" + idTask +
                 ", status=" + status +
                 '}' + "\n";
+
     }
 
     @Override
@@ -130,12 +143,20 @@ public class Task implements Comparable<Task>  {
 
     @Override
     public int compareTo(Task anotherTask) {
-        if (this.startTime.isAfter(anotherTask.startTime)){
-            return 1;
-        }else if (this.startTime.isBefore(anotherTask.startTime)){
+        if (startTime.isPresent() && anotherTask.startTime.isPresent()){
+            if (this.startTime.get().isAfter(anotherTask.startTime.get())){
+                return 1;
+            }else if (this.startTime.get().isBefore(anotherTask.startTime.get())){
+                return -1;
+            }else {
+                return 0;
+            }
+        }else if (startTime.isPresent()){
             return -1;
-        }else {
-            return 0;
+        } else if (anotherTask.startTime.isPresent()){
+            return 1;
         }
+        return 1;
+
     }
 }

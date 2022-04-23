@@ -7,10 +7,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasksOfEpic;
-    private LocalDateTime endTime;
+    private Optional<LocalDateTime> endTime;
 
     public Epic(String name, String discription, Status status) {
         super(name, discription, status);
@@ -33,34 +34,43 @@ public class Epic extends Task {
     @Override
     public String getStartTime() {
         countStartAndEndTime();
-        return startTime.format(formatter);
+        if (startTime.isPresent()){
+            return startTime.get().format(formatter);
+        }
+        return "null";
     }
 
     @Override
     public Duration getDuration() {
         countStartAndEndTime();
-        return Duration.between(startTime, endTime);
+        if (startTime.isPresent() && endTime.isPresent()){
+            Duration.between(startTime.get(), endTime.get());
+        }
+        return Duration.ofMillis(0);
     }
 
     @Override
     public String getEndTime() {
         countStartAndEndTime();
-        return endTime.format(formatter);
+        if (endTime.isPresent()){
+            return endTime.get().format(formatter);
+        }
+        return "null";
     }
 
     /**
      * Расчет начала и конца времени Эпиков
      */
     private void countStartAndEndTime(){
-        startTime = LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter);
-        endTime = LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter);
+        startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+        endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
         for (Subtask subtask : subtasksOfEpic) {
             LocalDateTime tempTime = LocalDateTime.parse(subtask.getStartTime(), formatter);
-            if (tempTime.isBefore(startTime)){
-                startTime = tempTime;
+            if (tempTime.isBefore(startTime.get())){
+                startTime = Optional.of(tempTime);
             }
-            if (tempTime.isAfter(endTime)){
-                endTime = tempTime;
+            if (tempTime.isAfter(endTime.get())){
+                endTime = Optional.of(tempTime);
             }
         }
     }

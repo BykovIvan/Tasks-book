@@ -41,12 +41,22 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
 
     @Test
     protected void testSaveToAndFromFiles() {
+        task.setStartTime("15.11.2022-12:21");
+        task.setDuration(34);
+        task2.setStartTime("16.11.2022-12:21");
+        task2.setDuration(34);
+        task3.setStartTime("17.11.2022-12:21");
+        task3.setDuration(34);
         final int taskId = manager.createNewTask(task);
         final int taskId2 = manager.createNewTask(task2);
         final int taskId3 = manager.createNewTask(task3);
         int epicId = manager.createNewEpic(epic);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
+        subtask.setStartTime("13.11.2022-12:21");
+        subtask.setDuration(34);
+        subtask2.setStartTime("14.11.2022-12:21");
+        subtask2.setDuration(34);
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);
 
@@ -67,6 +77,8 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         assertEquals(manager.getSubtasks(), fileManager.getSubtasks(), "Подзададчи не сохранились");
 //        assertEquals(manager.getPrioritizedTasks(), fileManager.getPrioritizedTasks(), "Лист приорита не совпадает");
         assertEquals(manager.history(), fileManager.history(), "История не сохранилась");
+        assertEquals(manager.getTask(taskId).getStartTime(), fileManager.getTask(taskId).getStartTime(), "Время не сохранилась");
+        assertEquals(manager.getTask(taskId).getDuration(), fileManager.getTask(taskId).getDuration(), "Продолжительность не сохранилась");
     }
 
     @Test
@@ -89,12 +101,22 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
     @Test
     public void testSaveToAndFromFileWithEmptyHistoryList(){
         //Пустой список истории
+        task.setStartTime("15.11.2022-12:21");
+        task.setDuration(34);
+        task2.setStartTime("16.11.2022-12:21");
+        task2.setDuration(34);
+        task3.setStartTime("17.11.2022-12:21");
+        task3.setDuration(34);
         manager.createNewTask(task);
         manager.createNewTask(task2);
         manager.createNewTask(task3);
         final int epicId2 = manager.createNewEpic(epic);
         subtask.setIdEpic(epicId2);
         subtask2.setIdEpic(epicId2);
+        subtask.setStartTime("16.11.2022-12:21");
+        subtask.setDuration(33);
+        subtask2.setStartTime("17.11.2022-12:21");
+        subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
 
