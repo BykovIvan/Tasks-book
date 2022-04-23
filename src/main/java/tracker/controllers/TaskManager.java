@@ -157,12 +157,10 @@ public interface TaskManager {
     TreeSet<Task> getPrioritizedTasks();
 
     /**
-     * Метод сортировки задач по времени старта
+     * получение истории просмотров задач, добавляется по методу GetЗАДАЧА
      *
+     * @return
      */
-    void sortedPrioritizedTasks();
-
-
     List<Task> history();
 
 }

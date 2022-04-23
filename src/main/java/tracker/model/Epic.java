@@ -44,7 +44,7 @@ public class Epic extends Task {
     public Duration getDuration() {
         countStartAndEndTime();
         if (startTime.isPresent() && endTime.isPresent()){
-            Duration.between(startTime.get(), endTime.get());
+            return Duration.between(startTime.get(), endTime.get());
         }
         return Duration.ofMillis(0);
     }

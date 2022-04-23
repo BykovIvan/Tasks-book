@@ -8,6 +8,9 @@ import main.java.tracker.model.Task;
 import main.java.tracker.util.Status;
 import main.java.tracker.util.TaskStartTimeComparator;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -62,16 +65,49 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int createNewSubTask(Subtask subtask) {
-        subtask.setIdTask(id);
-        id++;
-        mapSubtasks.put(subtask.getIdTask(), subtask);
-        int idEpicTemp = subtask.getIdEpic();
-        if (mapEpics.containsKey(idEpicTemp)) {                  //добавдяем в список подзадач эпика свою задачу
-            Epic epic = mapEpics.get(idEpicTemp);
-            epic.getSubtasksOfEpic().add(subtask);
+
+        if (subtask.getStartTime().equals("Null")){
+            subtask.setIdTask(id);
+            id++;
+            mapSubtasks.put(subtask.getIdTask(), subtask);
+            int idEpicTemp = subtask.getIdEpic();
+            if (mapEpics.containsKey(idEpicTemp)) {                  //добавдяем в список подзадач эпика свою задачу
+                Epic epic = mapEpics.get(idEpicTemp);
+                epic.getSubtasksOfEpic().add(subtask);
+            }
+//            taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
+            updateStatusEpic();
+            return subtask.getIdTask();
+        }else if (intersectionTask(subtask)){
+            subtask.setIdTask(id);
+            id++;
+            mapSubtasks.put(subtask.getIdTask(), subtask);
+            int idEpicTemp = subtask.getIdEpic();
+            if (mapEpics.containsKey(idEpicTemp)) {                  //добавдяем в список подзадач эпика свою задачу
+                Epic epic = mapEpics.get(idEpicTemp);
+                epic.getSubtasksOfEpic().add(subtask);
+            }
+//            taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
+            updateStatusEpic();
+            return subtask.getIdTask();
+        }else {
+            System.out.println("Задача id-" + subtask.getIdTask() + " пересекается!");
+            return -1;
         }
-        updateStatusEpic();
-        return subtask.getIdTask();
+//
+//        subtask.setIdTask(id);
+//        id++;
+//        mapSubtasks.put(subtask.getIdTask(), subtask);
+//        int idEpicTemp = subtask.getIdEpic();
+//        if (mapEpics.containsKey(idEpicTemp)) {                  //добавдяем в список подзадач эпика свою задачу
+//            Epic epic = mapEpics.get(idEpicTemp);
+//            epic.getSubtasksOfEpic().add(subtask);
+//        }
+//
+//        taskPrioritizedList.add(subtask);                           //добавление задачи в лист приоритета
+//
+//        updateStatusEpic();
+//        return subtask.getIdTask();
     }
 
     @Override
@@ -202,10 +238,23 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int createNewTask(Task task) {
-        task.setIdTask(id);
-        id++;
-        mapTasks.put(task.getIdTask(), task);
-        return task.getIdTask();
+        if (task.getStartTime().equals("Null")){
+            task.setIdTask(id);
+            id++;
+            mapTasks.put(task.getIdTask(), task);
+//            taskPrioritizedList.add(task);              //добавление задачи в лист приоритета
+            return task.getIdTask();
+        }else if (intersectionTask(task)){
+            task.setIdTask(id);
+            id++;
+            mapTasks.put(task.getIdTask(), task);
+//            taskPrioritizedList.add(task);              //добавление задачи в лист приоритета
+            return task.getIdTask();
+        }else {
+            System.out.println("Задача id-" + task.getIdTask() + " пересекаются!");
+            return -1;
+        }
+
     }
 
     @Override
@@ -272,17 +321,41 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public TreeSet<Task> getPrioritizedTasks() {
-        sortedPrioritizedTasks();
+        taskPrioritizedList.addAll(getTasks());
+        taskPrioritizedList.addAll(getSubtasks());
         return taskPrioritizedList;
     }
 
-    @Override
-    public void sortedPrioritizedTasks() {
-        taskPrioritizedList.addAll(mapTasks.values());
-        for (Subtask value : mapSubtasks.values()) {
-            taskPrioritizedList.add(value);
+    /**
+     * Метод нахождение пересечения задачи
+     *
+     * @return
+     */
+    protected boolean intersectionTask(Task task){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
+        int count = 0;
+        LocalDateTime startTask = LocalDateTime.parse(task.getStartTime(), formatter);
+        LocalDateTime endTask = LocalDateTime.parse(task.getEndTime(), formatter);
+        for (Task getTask : taskPrioritizedList) {
+            if (!(getTask.getStartTime().equals("Null"))){
+                if (startTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter)) &&
+                        endTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter))){
+                    count++;
+                } else if (startTask.isAfter(LocalDateTime.parse(getTask.getEndTime(), formatter)) &&
+                        endTask.isAfter(LocalDateTime.parse(getTask.getEndTime(), formatter))){
+                    count++;
+                } else return false;
+            }else {
+                count++;
+            }
         }
+        if (count == taskPrioritizedList.size()){
+            return true;
+        }
+        return false;
     }
+
+
 
 
 }

@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import static main.java.tracker.util.Status.NEW;
 import static main.java.tracker.util.Status.IN_PROGRESS;
@@ -37,13 +38,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         Subtask subtask = new Subtask("Саб1", "Где взять", NEW);
         subtask.setIdEpic(idEpic1);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime("15.11.2022-12:24");
         subtask.setDuration(78);
+
         Subtask subtask2 = new Subtask("Саб2", "Где взять2", NEW);
         subtask2.setIdEpic(idEpic1);
-        subtask2.setStartTime("15.12.2021-15:21");
+        subtask2.setStartTime("13.12.2021-15:21");
         subtask2.setDuration(65);
-
 
         int idSubtask1 = manager.createNewSubTask(subtask);
         int idSubtask2 = manager.createNewSubTask(subtask2);
@@ -52,6 +53,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager.getEpic(idEpic1);
         manager.getTask(idTask1);
         manager.getSubtask(idSubtask2);
+
+        System.out.println("По порядку старта:");
+        TreeSet<Task> setList = manager.getPrioritizedTasks();
+        for (Task taskSet : setList) {
+            System.out.print(taskSet);
+        }
+        System.out.println("");
 
         System.out.println("Task 1:");
         System.out.println(manager.getTask(idTask1).getStartTime());
@@ -66,6 +74,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println("История:");
         System.out.println(manager.history());
 
+        System.out.println("");
+
         File file = new File("history.csv");
         FileBackedTasksManager fileManager = loadFromFile(file); //должен восстанавливаться только сам объект
 
@@ -74,9 +84,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         System.out.println("Epic 2:");
         System.out.println(fileManager.getEpic(idEpic1).getStartTime());
+        System.out.println(fileManager.getEpic(idEpic1).getDuration().toDays() + " дней");
         System.out.println(fileManager.getEpic(idEpic1).getEndTime());
-
-
 
     }
 
