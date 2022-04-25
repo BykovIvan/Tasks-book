@@ -4,7 +4,6 @@ import main.java.tracker.controllers.FileBackedTasksManager;
 import main.java.tracker.model.Epic;
 import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
 
     @BeforeEach
     public void beforeEach(){
-        manager = new FileBackedTasksManager("history2.csv");
+        manager = new FileBackedTasksManager("./src/resources/historyTest.csv");
         task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
         task3 = new Task("Test3 addNewTask", "Test3 addNewTask description", NEW);
@@ -65,7 +64,7 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         manager.getSubtask(subtaskId1);
         manager.getTask(taskId3);
 
-        File file = new File("history2.csv");
+        File file = new File("./src/resources/historyTest.csv");
         final FileBackedTasksManager fileManager = FileBackedTasksManager.loadFromFile(file);
 
         assertNotNull(fileManager, "Новый объект не сохранился");
@@ -83,7 +82,7 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         manager.deleteAllTasks();
         manager.deleteAllEpics();
         manager.deleteAllSubtasks();
-        File file = new File("history2.csv");
+        File file = new File("./src/resources/historyTest.csv");
         final FileBackedTasksManager fileManager = FileBackedTasksManager.loadFromFile(file);
 
         assertNotNull(fileManager, "Новый объект не сохранился2");
@@ -115,7 +114,7 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
 
-        File file = new File("history2.csv");
+        File file = new File("./src/resources/historyTest.csv");
         final FileBackedTasksManager fileManager = FileBackedTasksManager.loadFromFile(file);
 
         assertNotNull(fileManager, "Новый объект не сохранился3");

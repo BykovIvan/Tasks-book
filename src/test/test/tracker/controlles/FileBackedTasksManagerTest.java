@@ -11,7 +11,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
     @BeforeEach
     public void beforeEach(){
-        manager = new FileBackedTasksManager("history.csv");
+        manager = new FileBackedTasksManager("./src/resources/historyTest.csv");
     }
 
     @Test

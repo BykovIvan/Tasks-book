@@ -23,7 +23,7 @@ import static main.java.tracker.util.Status.DONE;
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
-        FileBackedTasksManager manager = new FileBackedTasksManager("history.csv");
+        FileBackedTasksManager manager = new FileBackedTasksManager("./src/resources/history.csv");
         Task task1 = new Task("Имя1", "Что купить1", NEW);
         Task task2 = new Task("Имя2", "Что купить2", NEW);
         task1.setStartTime("15.11.2022-12:21");
@@ -76,7 +76,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         System.out.println("");
 
-        File file = new File("history.csv");
+        File file = new File("./src/resources/history.csv");
         FileBackedTasksManager fileManager = loadFromFile(file); //должен восстанавливаться только сам объект
 
         System.out.println("История2:");
