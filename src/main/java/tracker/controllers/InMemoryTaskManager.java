@@ -91,7 +91,7 @@ public class InMemoryTaskManager implements TaskManager {
             updateStatusEpic();
             return subtask.getIdTask();
         }else {
-            System.out.println("Задача id-" + subtask.getIdTask() + " пересекается!");
+            System.out.println("Подзадача id-" + id + " пересекается!");
             return -1;
         }
 
@@ -277,7 +277,7 @@ public class InMemoryTaskManager implements TaskManager {
                 taskPrioritizedList.add(newTask);
             }
         }else{
-            System.out.println("Задача id-" + newTask.getIdTask() + " пересекается!");
+            System.out.println("Задача id-" + id + " пересекается!");
         }
     }
 

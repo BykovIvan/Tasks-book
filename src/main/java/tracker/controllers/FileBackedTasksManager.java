@@ -16,6 +16,9 @@ import java.util.TreeSet;
 import static main.java.tracker.util.Status.NEW;
 import static main.java.tracker.util.Status.IN_PROGRESS;
 import static main.java.tracker.util.Status.DONE;
+import static main.java.tracker.util.TypeOfTasks.TASK;
+import static main.java.tracker.util.TypeOfTasks.EPIC;
+import static main.java.tracker.util.TypeOfTasks.SUBTASK;
 
 /**
  * Класс менеджера для работы с файлами и с историей
@@ -23,7 +26,7 @@ import static main.java.tracker.util.Status.DONE;
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
-        FileBackedTasksManager manager = new FileBackedTasksManager("./src/resources/history.csv");
+        TaskManager manager = Managers.getDefault();
         Task task1 = new Task("Имя1", "Что купить1", NEW);
         Task task2 = new Task("Имя2", "Что купить2", NEW);
         task1.setStartTime("15.11.2022-12:21");
@@ -262,7 +265,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             String line = br.readLine();
             while (!line.equals("")) {
                 Task tempTask = fileManagerFromFile.fromString(line);
-                if (tempTask.getTypeOfTask() == TypeOfTasks.TASK) {
+                if (tempTask.getTypeOfTask() == TASK) {
                     fileManagerFromFile.mapTasks.put(tempTask.getIdTask(), tempTask);
                 } else if (tempTask.getTypeOfTask() == TypeOfTasks.SUBTASK) {
                     fileManagerFromFile.mapSubtasks.put(tempTask.getIdTask(), (Subtask) tempTask);
@@ -302,7 +305,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public String toString(Task task) {
         String fullTaskName = null;
         TypeOfTasks typeOfTask = task.getTypeOfTask();
-        if (typeOfTask.equals(TypeOfTasks.TASK)) {
+        if (typeOfTask.equals(TASK)) {
             fullTaskName = task.getIdTask() +
                     "," + task.getTypeOfTask() +
                     "," + task.getName() +
@@ -310,14 +313,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + task.getDiscription() +
                     "," + task.getStartTime() +
                     "," + task.getDuration().toMinutes();
-        } else if (typeOfTask.equals(TypeOfTasks.EPIC)) {
+        } else if (typeOfTask.equals(EPIC)) {
             Epic epic = (Epic) task;
             fullTaskName = epic.getIdTask() +
                     "," + epic.getTypeOfTask() +
                     "," + epic.getName() +
                     "," + epic.getStatus() +
                     "," + epic.getDiscription();
-        } else if (typeOfTask.equals(TypeOfTasks.SUBTASK)) {
+        } else if (typeOfTask.equals(SUBTASK)) {
             Subtask subtask = (Subtask) task;
             fullTaskName = subtask.getIdTask() +
                     "," + subtask.getTypeOfTask() +
@@ -338,25 +341,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String[] arrayList = value.split(",");
         Task task = null;
 
-        if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.TASK)) {
+        if (TypeOfTasks.valueOf(arrayList[1]).equals(TASK)) {
 
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Task(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 task.setStartTime(arrayList[5]);
                 task.setDuration(Integer.parseInt(arrayList[6]));
-            } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
-                task = new Task(arrayList[2], arrayList[4], Status.IN_PROGRESS);
+            } else if (Status.valueOf(arrayList[3]).equals(IN_PROGRESS)) {
+                task = new Task(arrayList[2], arrayList[4], IN_PROGRESS);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 task.setStartTime(arrayList[5]);
                 task.setDuration(Integer.parseInt(arrayList[6]));
-            } else if (Status.valueOf(arrayList[3]).equals(Status.DONE)) {
-                task = new Task(arrayList[2], arrayList[4], Status.DONE);
+            } else if (Status.valueOf(arrayList[3]).equals(DONE)) {
+                task = new Task(arrayList[2], arrayList[4], DONE);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 task.setStartTime(arrayList[5]);
                 task.setDuration(Integer.parseInt(arrayList[6]));
             }
-        } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.SUBTASK)) {
+        } else if (TypeOfTasks.valueOf(arrayList[1]).equals(SUBTASK)) {
 
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Subtask(arrayList[2], arrayList[4], NEW);
@@ -364,29 +367,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 ((Subtask) task).setIdEpic(Integer.parseInt(arrayList[5]));
                 task.setStartTime(arrayList[6]);
                 task.setDuration(Integer.parseInt(arrayList[7]));
-            } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
-                task = new Subtask(arrayList[2], arrayList[4], Status.IN_PROGRESS);
+            } else if (Status.valueOf(arrayList[3]).equals(IN_PROGRESS)) {
+                task = new Subtask(arrayList[2], arrayList[4], IN_PROGRESS);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 ((Subtask) task).setIdEpic(Integer.parseInt(arrayList[5]));
                 task.setStartTime(arrayList[6]);
                 task.setDuration(Integer.parseInt(arrayList[7]));
-            } else if (Status.valueOf(arrayList[3]).equals(Status.DONE)) {
-                task = new Subtask(arrayList[2], arrayList[4], Status.DONE);
+            } else if (Status.valueOf(arrayList[3]).equals(DONE)) {
+                task = new Subtask(arrayList[2], arrayList[4], DONE);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 ((Subtask) task).setIdEpic(Integer.parseInt(arrayList[5]));
                 task.setStartTime(arrayList[6]);
                 task.setDuration(Integer.parseInt(arrayList[7]));
             }
-        } else if (TypeOfTasks.valueOf(arrayList[1]).equals(TypeOfTasks.EPIC)) {
+        } else if (TypeOfTasks.valueOf(arrayList[1]).equals(EPIC)) {
 
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Epic(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
-            } else if (Status.valueOf(arrayList[3]).equals(Status.IN_PROGRESS)) {
-                task = new Epic(arrayList[2], arrayList[4], Status.IN_PROGRESS);
+            } else if (Status.valueOf(arrayList[3]).equals(IN_PROGRESS)) {
+                task = new Epic(arrayList[2], arrayList[4], IN_PROGRESS);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
-            } else if (Status.valueOf(arrayList[3]).equals(Status.DONE)) {
-                task = new Epic(arrayList[2], arrayList[4], Status.DONE);
+            } else if (Status.valueOf(arrayList[3]).equals(DONE)) {
+                task = new Epic(arrayList[2], arrayList[4], DONE);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
             }
         }

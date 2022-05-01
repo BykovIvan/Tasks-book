@@ -32,6 +32,13 @@ public class Task  {
         formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
     }
 
+    public Task() {
+        typeOfTask = TypeOfTasks.TASK;
+        startTime = Optional.empty();
+        duration = Optional.empty();
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
+    }
+
     public String getName() {
         return name;
     }

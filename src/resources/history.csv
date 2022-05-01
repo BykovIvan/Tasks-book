@@ -2,6 +2,7 @@ id,type,name,status,description,epic,startTime,duration,endTime
 0,TASK,Имя1,NEW,Что купить1,15.11.2022-12:21,34
 1,TASK,Имя2,NEW,Что купить2,14.04.2022-12:21,43
 2,EPIC,Epic 1,NEW,Der1
-3,SUBTASK,Саб2,NEW,Где взять2,2,13.12.2021-15:21,65
+3,SUBTASK,Саб1,NEW,Где взять,2,16.11.2022-12:24,78
+4,SUBTASK,Саб2,NEW,Где взять2,2,13.12.2021-15:21,65
 
-1,3,0,2
+1,2,4,0
