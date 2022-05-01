@@ -1,0 +1,9 @@
+id,type,name,status,description,epic,startTime,duration,endTime
+0,TASK,Test addNewTask,NEW,Test addNewTask description,15.11.2022-12:21,34
+1,TASK,Test2 addNewTask,NEW,Test2 addNewTask description,16.11.2022-12:21,34
+2,TASK,Test3 addNewTask,NEW,Test3 addNewTask description,17.11.2022-12:21,34
+3,EPIC,Test addNewEpic,NEW,Test addNewEpic description
+4,SUBTASK,Test addNewSubtask,NEW,Test addNewSubtask description,3,13.11.2022-16:21,34
+5,SUBTASK,Test addNewSubtask2,NEW,Test addNewSubtask2 description,3,14.11.2022-12:45,34
+
+1,3,5,4,2,0
