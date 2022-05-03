@@ -6,20 +6,22 @@ import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static main.java.tracker.util.Status.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTest<T extends TaskManager> {
-
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
     protected T manager;
 
     //Тест создания задачи
     @Test
     protected void testAddNewTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
         final int taskId = manager.createNewTask(task);
         final Task savedTask = manager.getTask(taskId);
@@ -39,9 +41,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
-        task2.setStartTime("16.11.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(334);
         final int taskId = manager.createNewTask(task);
         manager.updateTask(task, task2);
@@ -63,9 +65,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected void testDeleteAllTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
-        task2.setStartTime("16.11.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(34);
         manager.createNewTask(task);
         manager.createNewTask(task2);
@@ -83,9 +85,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected void testDeleteTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
-        task2.setStartTime("16.11.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(34);
         final int taskId1 = manager.createNewTask(task);
         final int taskId2 = manager.createNewTask(task2);
@@ -118,9 +120,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected void testGetTasks() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
-        task2.setStartTime("16.11.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(34);
         final int taskId1 = manager.createNewTask(task);
         final int taskId2 = manager.createNewTask(task2);
@@ -144,9 +146,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     protected void testGetTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
-        task2.setStartTime("16.11.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(34);
         final int taskId1 = manager.createNewTask(task);
         final int taskId2 = manager.createNewTask(task2);
@@ -173,7 +175,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
         subtask.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
         final int subtaskId = manager.createNewSubTask(subtask);
 
@@ -199,9 +201,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         final int subtaskId = manager.createNewSubTask(subtask);
 
@@ -229,9 +231,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -256,9 +258,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);
@@ -298,9 +300,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -327,9 +329,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);
@@ -357,9 +359,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         final int subtaskId1 = manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -378,7 +380,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Subtask subtask = new Subtask("Test addNewSubtask", "Test addNewSubtask description", NEW);
         subtask.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
         manager.createNewSubTask(subtask);
 
@@ -403,9 +405,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -436,9 +438,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -468,9 +470,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -517,9 +519,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -549,9 +551,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);
@@ -586,9 +588,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("15.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("16.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);

@@ -99,7 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask oldSubtask, Subtask newSubtask) {
-        if (newSubtask.getStartTime().equals("Null")){
+        if (newSubtask.getStartTime() == null){
             if (mapSubtasks.containsKey(oldSubtask.getIdTask())){
                 int idTemp = oldSubtask.getIdTask();
                 mapSubtasks.put(idTemp, newSubtask);
@@ -241,7 +241,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int createNewTask(Task task) {
-        if (task.getStartTime().equals("Null")){
+        if (task.getStartTime() == null){
             task.setIdTask(id);
             id++;
             mapTasks.put(task.getIdTask(), task);
@@ -347,15 +347,15 @@ public class InMemoryTaskManager implements TaskManager {
     protected boolean intersectionTask(Task task){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
         int count = 0;
-        LocalDateTime startTask = LocalDateTime.parse(task.getStartTime(), formatter);
-        LocalDateTime endTask = LocalDateTime.parse(task.getEndTime(), formatter);
+        LocalDateTime startTask = task.getStartTime();
+        LocalDateTime endTask = task.getEndTime();
         for (Task getTask : taskPrioritizedList) {
-            if (!(getTask.getStartTime().equals("Null"))){
-                if (startTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter)) &&
-                        endTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter))){
+            if (!(getTask.getStartTime() == null)){
+                if (startTask.isBefore(getTask.getStartTime()) &&
+                        endTask.isBefore(getTask.getStartTime())){
                     count++;
-                } else if (startTask.isAfter(LocalDateTime.parse(getTask.getEndTime(), formatter)) &&
-                        endTask.isAfter(LocalDateTime.parse(getTask.getEndTime(), formatter))){
+                } else if (startTask.isAfter(getTask.getEndTime()) &&
+                        endTask.isAfter(getTask.getEndTime())){
                     count++;
                 } else return false;
             }else {

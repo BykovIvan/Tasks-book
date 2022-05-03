@@ -7,11 +7,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
+
+import static main.java.tracker.util.TypeOfTasks.EPIC;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasksOfEpic;
-    private Optional<LocalDateTime> endTime;
+    private LocalDateTime endTime;;
 
     public Epic(String name, String discription, Status status) {
         super(name, discription, status);
@@ -28,49 +29,48 @@ public class Epic extends Task {
 
     @Override
     public TypeOfTasks getTypeOfTask() {
-        return TypeOfTasks.EPIC;
+        return EPIC;
     }
 
     @Override
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         countStartAndEndTime();
-        if (startTime.isPresent()){
-            return startTime.get().format(formatter);
-        }
-        return "null";
+        return startTime;
+
     }
 
     @Override
     public Duration getDuration() {
+        Duration duration = null;
         countStartAndEndTime();
-        if (startTime.isPresent() && endTime.isPresent()){
-            return Duration.between(startTime.get(), endTime.get());
+        if (startTime != null && endTime != null){
+            duration = Duration.between(startTime, endTime);
+            super.setDuration(duration.toMinutes());
         }
-        return Duration.ofMillis(0);
+        return duration;
     }
 
-    @Override
-    public String getEndTime() {
+
+    public LocalDateTime getEndTime() {
         countStartAndEndTime();
-        if (endTime.isPresent()){
-            return endTime.get().format(formatter);
-        }
-        return "null";
+        return endTime;
+
     }
 
     /**
      * Расчет начала и конца времени Эпиков
      */
     private void countStartAndEndTime(){
-        startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
-        endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+        startTime = subtasksOfEpic.get(0).getStartTime();
+        endTime = subtasksOfEpic.get(0).getStartTime();
         for (Subtask subtask : subtasksOfEpic) {
-            LocalDateTime tempTime = LocalDateTime.parse(subtask.getStartTime(), formatter);
-            if (tempTime.isBefore(startTime.get())){
-                startTime = Optional.of(tempTime);
+            LocalDateTime tempTime = subtask.getStartTime();
+            if (tempTime.isBefore(startTime)){
+                startTime = tempTime;
+                super.setStartTime(startTime);
             }
-            if (tempTime.isAfter(endTime.get())){
-                endTime = Optional.of(tempTime);
+            if (tempTime.isAfter(endTime)){
+                endTime = tempTime;
             }
         }
     }

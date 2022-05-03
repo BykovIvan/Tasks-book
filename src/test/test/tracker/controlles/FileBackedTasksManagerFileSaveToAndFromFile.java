@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static main.java.tracker.util.Status.NEW;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,6 +24,8 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
     private static Epic epic;
     private static Subtask subtask;
     private static Subtask subtask2;
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
+
 
 
     @BeforeEach
@@ -37,11 +41,11 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
 
     @Test
     protected void testSaveToAndFromFiles() {
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
-        task2.setStartTime("16.11.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(34);
-        task3.setStartTime("17.11.2022-12:21");
+        task3.setStartTime(LocalDateTime.parse("17.11.2022-12:21", formatter));
         task3.setDuration(34);
         final int taskId = manager.createNewTask(task);
         final int taskId2 = manager.createNewTask(task2);
@@ -49,9 +53,9 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         int epicId = manager.createNewEpic(epic);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
-        subtask.setStartTime("13.11.2022-16:21");
+        subtask.setStartTime(LocalDateTime.parse("13.11.2022-16:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime("14.11.2022-12:45");
+        subtask2.setStartTime(LocalDateTime.parse("14.11.2022-12:45", formatter));
         subtask2.setDuration(34);
         final int subtaskId1 = manager.createNewSubTask(subtask);
         final int subtaskId2 = manager.createNewSubTask(subtask2);
@@ -95,11 +99,11 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
     @Test
     public void testSaveToAndFromFileWithEmptyHistoryList(){
         //Пустой список истории
-        task.setStartTime("15.11.2022-12:21");
+        task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
-        task2.setStartTime("16.11.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(34);
-        task3.setStartTime("17.11.2022-12:21");
+        task3.setStartTime(LocalDateTime.parse("17.11.2022-12:21", formatter));
         task3.setDuration(34);
         manager.createNewTask(task);
         manager.createNewTask(task2);
@@ -107,9 +111,9 @@ public class FileBackedTasksManagerFileSaveToAndFromFile {
         final int epicId2 = manager.createNewEpic(epic);
         subtask.setIdEpic(epicId2);
         subtask2.setIdEpic(epicId2);
-        subtask.setStartTime("16.11.2022-12:21");
+        subtask.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         subtask.setDuration(33);
-        subtask2.setStartTime("17.11.2022-12:21");
+        subtask2.setStartTime(LocalDateTime.parse("17.11.2022-12:21", formatter));
         subtask2.setDuration(34);
         manager.createNewSubTask(subtask);
         manager.createNewSubTask(subtask2);

@@ -5,38 +5,26 @@ import main.java.tracker.util.TypeOfTasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.Optional;
+
+import static main.java.tracker.util.TypeOfTasks.TASK;
 
 public class Task  {
     private String name;                //Имя задачи
     private String discription;         //Описание задачи
     private int idTask;                 //ID задачи (создается автоматически при методе создания
     private Status status;              //Статус задачи
-    private int idEpic;                 //ID эпика задачи (Если требуется)
-    private final TypeOfTasks typeOfTask;     //Тип задачи (Создан для создания Spring из задачи и обратно
+    private final TypeOfTasks typeOfTask = TASK;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
-    protected Optional<LocalDateTime> startTime;     //дата, когда предпологается приступить к выполнению задачи
-    protected Optional<Duration> duration;           //продолжительность задачи
+    protected LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
+    protected Duration duration;          //продолжительность задачи
 
-    protected DateTimeFormatter formatter;
 
     public Task(String name, String discription, Status status) {
         this.name = name;
         this.discription = discription;
         this.status = status;
-        typeOfTask = TypeOfTasks.TASK;
-        startTime = Optional.empty();
-        duration = Optional.empty();
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
-    }
 
-    public Task() {
-        typeOfTask = TypeOfTasks.TASK;
-        startTime = Optional.empty();
-        duration = Optional.empty();
-        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
     }
 
     public String getName() {
@@ -75,50 +63,36 @@ public class Task  {
         return typeOfTask;
     }
 
-    public int getIdEpic() {
-        return idEpic;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public String getStartTime() {
-        if (startTime.isPresent()){
-            return startTime.get().format(formatter);
-        }
-        return "Null";
-    }
-
-    public void setStartTime(String startTimeStr) {
-        startTime = Optional.of(LocalDateTime.parse(startTimeStr, formatter));
+    public void setStartTime(LocalDateTime startTimeStr) {
+        startTime = startTimeStr;
     }
 
     public Duration getDuration() {
-        if (duration.isPresent()){
-            return duration.get();
-        }
-        return Duration.ofMillis(0);
-
+        return duration;
     }
 
-    public void setDuration(int durationInMin) {
-        duration = Optional.of(Duration.ofMinutes(durationInMin));
+    public void setDuration(long durationInMin) {
+        duration = Duration.ofMinutes(durationInMin);
     }
 
-    public String getEndTime(){
-        if (startTime.isPresent() & duration.isPresent()){
-            return startTime.get().plusMinutes(duration.get().toMinutes()).format(formatter);
-        }
-        return "null";
+    public LocalDateTime getEndTime(){
+            return startTime.plusMinutes(duration.toMinutes());
     }
 
     @Override
     public String toString() {
-        if (startTime.isPresent() && duration.isPresent()){
+        if (startTime != null && duration != null){
             return "Task {" +
                     "name='" + name + '\'' +
                     ", discription='" + discription + '\'' +
                     ", idTask=" + idTask +
                     ", status=" + status +
-                    ", startTime=" + startTime.get().format(formatter) +
-                    ", duraction=" + duration.get().toMinutes() +
+                    ", startTime=" + startTime +
+                    ", duraction=" + duration.toMinutes() +
                     '}' + "\n";
         }
         return "Task {" +

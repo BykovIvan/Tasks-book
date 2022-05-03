@@ -5,6 +5,8 @@ import main.java.tracker.util.TypeOfTasks;
 
 import java.util.Objects;
 
+import static main.java.tracker.util.TypeOfTasks.SUBTASK;
+
 public class Subtask extends Task {
     private int idEpic = -1;
 
@@ -22,12 +24,12 @@ public class Subtask extends Task {
 
     @Override
     public TypeOfTasks getTypeOfTask() {
-        return TypeOfTasks.SUBTASK;
+        return SUBTASK;
     }
 
     @Override
     public String toString() {
-        if (startTime.isPresent() && duration.isPresent()){
+        if (startTime != null && duration != null){
             return "Subtask {" +
                     "name='" + getName() + '\'' +
                     ", discription='" + getDiscription() + '\'' +
@@ -36,13 +38,13 @@ public class Subtask extends Task {
                     ", startTime=" + getStartTime() +
                     ", duraction=" + getDuration().toMinutes() +
                     '}' + "\n";
-    }
+        }
         return "Subtask {" +
                 "name='" + getName() + '\'' +
-            ", discription='" + getDiscription() + '\'' +
-            ", idTask=" + getIdTask() +
-            ", status=" + getStatus() +
-            '}' + "\n ";
+                ", discription='" + getDiscription() + '\'' +
+                ", idTask=" + getIdTask() +
+                ", status=" + getStatus() +
+                '}' + "\n ";
 
     }
 

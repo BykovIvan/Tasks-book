@@ -9,6 +9,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -24,14 +26,15 @@ import static main.java.tracker.util.TypeOfTasks.SUBTASK;
  * Класс менеджера для работы с файлами и с историей
  */
 public class FileBackedTasksManager extends InMemoryTaskManager {
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
 
     public static void main(String[] args) {
         TaskManager manager = Managers.getDefault();
         Task task1 = new Task("Имя1", "Что купить1", NEW);
         Task task2 = new Task("Имя2", "Что купить2", NEW);
-        task1.setStartTime("15.11.2022-12:21");
+        task1.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task1.setDuration(34);
-        task2.setStartTime("14.04.2022-12:21");
+        task2.setStartTime(LocalDateTime.parse("14.04.2022-12:21", formatter));
         task2.setDuration(43);
         int idTask1 = manager.createNewTask(task1);
         int idTask2 = manager.createNewTask(task2);
@@ -41,12 +44,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         Subtask subtask = new Subtask("Саб1", "Где взять", NEW);
         subtask.setIdEpic(idEpic1);
-        subtask.setStartTime("15.11.2022-12:24");
+        subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:24", formatter));
         subtask.setDuration(78);
 
         Subtask subtask2 = new Subtask("Саб2", "Где взять2", NEW);
         subtask2.setIdEpic(idEpic1);
-        subtask2.setStartTime("13.12.2021-15:21");
+        subtask2.setStartTime(LocalDateTime.parse("13.12.2021-15:21", formatter));
         subtask2.setDuration(65);
 
         int idSubtask1 = manager.createNewSubTask(subtask);
@@ -311,7 +314,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + task.getName() +
                     "," + task.getStatus() +
                     "," + task.getDiscription() +
-                    "," + task.getStartTime() +
+                    "," + task.getStartTime().format(formatter) +
                     "," + task.getDuration().toMinutes();
         } else if (typeOfTask.equals(EPIC)) {
             Epic epic = (Epic) task;
@@ -328,7 +331,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + subtask.getStatus() +
                     "," + subtask.getDiscription() +
                     "," + subtask.getIdEpic() +
-                    "," + subtask.getStartTime() +
+                    "," + subtask.getStartTime().format(formatter) +
                     "," + subtask.getDuration().toMinutes();
         }
         return fullTaskName;
@@ -346,17 +349,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             if (Status.valueOf(arrayList[3]).equals(NEW)) {
                 task = new Task(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
-                task.setStartTime(arrayList[5]);
+                task.setStartTime(LocalDateTime.parse(arrayList[5], formatter));
                 task.setDuration(Integer.parseInt(arrayList[6]));
             } else if (Status.valueOf(arrayList[3]).equals(IN_PROGRESS)) {
                 task = new Task(arrayList[2], arrayList[4], IN_PROGRESS);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
-                task.setStartTime(arrayList[5]);
+                task.setStartTime(LocalDateTime.parse(arrayList[5], formatter));
                 task.setDuration(Integer.parseInt(arrayList[6]));
             } else if (Status.valueOf(arrayList[3]).equals(DONE)) {
                 task = new Task(arrayList[2], arrayList[4], DONE);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
-                task.setStartTime(arrayList[5]);
+                task.setStartTime(LocalDateTime.parse(arrayList[5], formatter));
                 task.setDuration(Integer.parseInt(arrayList[6]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(SUBTASK)) {
@@ -365,19 +368,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 task = new Subtask(arrayList[2], arrayList[4], NEW);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 ((Subtask) task).setIdEpic(Integer.parseInt(arrayList[5]));
-                task.setStartTime(arrayList[6]);
+                task.setStartTime(LocalDateTime.parse(arrayList[6], formatter));
                 task.setDuration(Integer.parseInt(arrayList[7]));
             } else if (Status.valueOf(arrayList[3]).equals(IN_PROGRESS)) {
                 task = new Subtask(arrayList[2], arrayList[4], IN_PROGRESS);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 ((Subtask) task).setIdEpic(Integer.parseInt(arrayList[5]));
-                task.setStartTime(arrayList[6]);
+                task.setStartTime(LocalDateTime.parse(arrayList[6], formatter));
                 task.setDuration(Integer.parseInt(arrayList[7]));
             } else if (Status.valueOf(arrayList[3]).equals(DONE)) {
                 task = new Subtask(arrayList[2], arrayList[4], DONE);
                 task.setIdTask(Integer.parseInt(arrayList[0]));
                 ((Subtask) task).setIdEpic(Integer.parseInt(arrayList[5]));
-                task.setStartTime(arrayList[6]);
+                task.setStartTime(LocalDateTime.parse(arrayList[6], formatter));
                 task.setDuration(Integer.parseInt(arrayList[7]));
             }
         } else if (TypeOfTasks.valueOf(arrayList[1]).equals(EPIC)) {
