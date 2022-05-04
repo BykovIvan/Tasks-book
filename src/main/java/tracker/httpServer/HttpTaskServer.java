@@ -13,7 +13,9 @@ import main.java.tracker.model.Task;
 import main.java.tracker.util.DurationAdapter;
 import main.java.tracker.util.LocalDateAdapter;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static main.java.tracker.util.Status.NEW;
 
@@ -31,14 +34,15 @@ public class HttpTaskServer {
     private static final int PORT = 8080;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static TaskManager manager = Managers.getDefault();
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
-
-    static Gson gson = new GsonBuilder()
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
+    private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .setPrettyPrinting()
             .serializeNulls()
             .create();
+
+
     public static void main(String[] args) {
 
         Task task1 = new Task("Имя1", "Что купить1", NEW);
@@ -65,25 +69,25 @@ public class HttpTaskServer {
 
         int idSubtask1 = manager.createNewSubTask(subtask);
         int idSubtask2 = manager.createNewSubTask(subtask2);
+        epic.getStartTime();
+        epic.getDuration();
+        epic.getEndTime();
 
         manager.getTask(idTask2);
         manager.getEpic(idEpic1);
         manager.getTask(idTask1);
         manager.getSubtask(idSubtask2);
-//        System.out.println(manager.getEpic(idEpic1).getStartTime());
-//        System.out.println(manager.getEpic(idEpic1).getDuration().toMinutes());
-//        System.out.println(manager.getEpic(idEpic1).getEndTime());
-//        System.out.println(manager.getTasks());
-//        System.out.println(manager.getSubtasks());
-//        System.out.println(manager.getEpics());
 
         try {
             HttpServer httpServer = HttpServer.create();
             httpServer.bind(new InetSocketAddress(PORT), 0);
+            httpServer.createContext("/tasks/task", new TaskHandler());
+            httpServer.createContext("/tasks/epic", new EpicHandler());
+            httpServer.createContext("/tasks/subtask", new SubtaskHandler());
+            httpServer.createContext("/tasks/history", new HistoryHandler());
             httpServer.createContext("/tasks", new TasksHandler());
             httpServer.start();
             System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-
 
         } catch (IOException e) {
             System.out.println("HTTP-сервер не запущен!");
@@ -96,42 +100,131 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
 
             String method = httpExchange.getRequestMethod();
+            if (method.equals("GET")){
+                ArrayList<Task> tasksList = new ArrayList<>();
+                tasksList.addAll(manager.getEpics());
+                tasksList.addAll(manager.getTasks());
+                tasksList.addAll(manager.getSubtasks());
+                httpExchange.sendResponseHeaders(200, 0);
+                try (OutputStream os = httpExchange.getResponseBody()) {
+                    os.write(gson.toJson(tasksList).getBytes());
+                }
+            }
+        }
+    }
+    static class TaskHandler implements HttpHandler {
 
-            switch(method){
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+
+            String method = httpExchange.getRequestMethod();
+            String query = httpExchange.getRequestURI().getRawQuery();
+
+            switch (method){
                 case "GET":
-                    String path = httpExchange.getRequestURI().getPath();
-                    //получение всех задач
-                    if (path.endsWith("tasks")) {
-                        httpExchange.sendResponseHeaders(200, 0);
-                        try (OutputStream os = httpExchange.getResponseBody()) {
-                            os.write(gson.toJson(manager.getPrioritizedTasks()).getBytes());
-                        }
-                    }
-                    String tyteOfTask = path.split("/")[2];
-                    //получение только таксов
-                    if (tyteOfTask.equals("task")){
+                    if (query == null || query.isEmpty()){
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream os = httpExchange.getResponseBody()) {
                             os.write(gson.toJson(manager.getTasks()).getBytes());
                         }
-                    //получение только эпиков
-                    }else if (tyteOfTask.equals("epic")){
+                    }else{
+                        int taskID = Integer.parseInt(query.split("=")[1]);
+                        httpExchange.sendResponseHeaders(200, 0);
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write(gson.toJson(manager.getTask(taskID)).getBytes());
+                        }
+                    }
+                    break;
+                case "POST":
+                    InputStreamReader streamReader = new InputStreamReader(httpExchange.getRequestBody());
+                    BufferedReader bufferedReader = new BufferedReader(streamReader);
+                    String body = bufferedReader.lines().collect(Collectors.joining("\n"));
+                    manager.createNewTask(gson.fromJson(body, Task.class));
+                    httpExchange.sendResponseHeaders(201, 0);
+//                    try (OutputStream os = httpExchange.getResponseBody()) {
+//                        os.write(gson.toJson(manager.getTask(idTask)).getBytes());
+//                        break;
+//                    }
+//                    httpExchange.sendResponseHeaders(404, 0);
+//                    try (OutputStream os = httpExchange.getResponseBody()) {
+////                                    os.write("".getBytes());
+//                    }
+                    break;
+                case "DELETE":
+                    if (query == null || query.isEmpty()){
+                        httpExchange.sendResponseHeaders(204, 0);
+                        manager.deleteAllTasks();
+                    }else{
+                        int taskID = Integer.parseInt(query.split("=")[1]);
+                        httpExchange.sendResponseHeaders(204, 0);
+                        manager.deleteTask(taskID);
+                    }
+                    break;
+            }
+        }
+    }
+
+    static class EpicHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+
+            String method = httpExchange.getRequestMethod();
+            String query = httpExchange.getRequestURI().getRawQuery();
+
+            switch (method){
+                case "GET":
+                    if (query == null || query.isEmpty()){
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream os = httpExchange.getResponseBody()) {
                             os.write(gson.toJson(manager.getEpics()).getBytes());
                         }
-                    //получение только сабтасков
-                    }else if (tyteOfTask.equals("subtask")){
+                    }else{
+                        int taskID = Integer.parseInt(query.split("=")[1]);
+                        httpExchange.sendResponseHeaders(200, 0);
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write(gson.toJson(manager.getEpic(taskID)).getBytes());
+                        }
+                    }
+                    break;
+                case "POST":
+
+
+                    break;
+                case "DELETE":
+                    if (query == null || query.isEmpty()){
+                        httpExchange.sendResponseHeaders(204, 0);
+                        manager.deleteAllEpics();
+                    }else{
+                        int taskID = Integer.parseInt(query.split("=")[1]);
+                        httpExchange.sendResponseHeaders(204, 0);
+                        manager.deleteEpic(taskID);
+                    }
+                    break;
+            }
+
+        }
+    }
+    static class SubtaskHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+
+            String method = httpExchange.getRequestMethod();
+            String query = httpExchange.getRequestURI().getRawQuery();
+
+            switch (method){
+                case "GET":
+                    if (query == null || query.isEmpty()){
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream os = httpExchange.getResponseBody()) {
                             os.write(gson.toJson(manager.getSubtasks()).getBytes());
                         }
-                        //получение истории
-                    }else if (tyteOfTask.equals("history")){
+                    }else{
+                        int taskID = Integer.parseInt(query.split("=")[1]);
                         httpExchange.sendResponseHeaders(200, 0);
-                        System.out.println(gson.toJson(manager.history()));
                         try (OutputStream os = httpExchange.getResponseBody()) {
-                            os.write("Ответ".getBytes());
+                            os.write(gson.toJson(manager.getSubtask(taskID)).getBytes());
                         }
                     }
                     break;
@@ -139,17 +232,37 @@ public class HttpTaskServer {
 
                     break;
                 case "DELETE":
-
-                    break;
-                default:
-
+                    if (query == null || query.isEmpty()){
+                        httpExchange.sendResponseHeaders(204, 0);
+                        manager.deleteAllSubtasks();
+                    }else{
+                        int taskID = Integer.parseInt(query.split("=")[1]);
+                        httpExchange.sendResponseHeaders(204, 0);
+                        manager.deleteSubtask(taskID);
+                    }
                     break;
             }
-
-
-
         }
     }
+    static class HistoryHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+
+            String method = httpExchange.getRequestMethod();
+            if (method.equals("GET")){
+                httpExchange.sendResponseHeaders(200, 0);
+                try (OutputStream os = httpExchange.getResponseBody()) {
+                    os.write(gson.toJson(manager.history()).getBytes());
+                }
+            }
+        }
+    }
+
+
+
+
+
 }
 
 

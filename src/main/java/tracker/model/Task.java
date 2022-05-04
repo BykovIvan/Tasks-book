@@ -14,7 +14,7 @@ public class Task  {
     private String discription;         //Описание задачи
     private int idTask;                 //ID задачи (создается автоматически при методе создания
     private Status status;              //Статус задачи
-    private final TypeOfTasks typeOfTask = TASK;     //Тип задачи (Создан для создания Spring из задачи и обратно
+    private TypeOfTasks typeOfTask = TASK;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
     protected LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
     protected Duration duration;          //продолжительность задачи
@@ -61,6 +61,10 @@ public class Task  {
 
     public TypeOfTasks getTypeOfTask() {
         return typeOfTask;
+    }
+
+    protected void setTypeOfTask(TypeOfTasks typeOfTask) {
+        this.typeOfTask = typeOfTask;
     }
 
     public LocalDateTime getStartTime() {
@@ -121,5 +125,7 @@ public class Task  {
     public int hashCode() {
         return Objects.hash(name, discription, idTask, status, discription, startTime);
     }
+
+
 
 }

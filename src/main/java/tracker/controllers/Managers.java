@@ -10,10 +10,6 @@ import main.java.tracker.model.Task;
 
 public class Managers {
 
-//    private static final TaskManager taskManager = new InMemoryTaskManager();
-
-//    private static final HistoryManager<Task> inMemoryHistoryManager = new InMemoryHistoryManager<>();
-
     public static TaskManager getDefault() {
         return new FileBackedTasksManager("./src/resources/history.csv");
     }

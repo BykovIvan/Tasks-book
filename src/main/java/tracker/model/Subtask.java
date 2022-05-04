@@ -24,6 +24,7 @@ public class Subtask extends Task {
 
     @Override
     public TypeOfTasks getTypeOfTask() {
+        super.setTypeOfTask(SUBTASK);
         return SUBTASK;
     }
 

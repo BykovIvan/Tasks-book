@@ -29,6 +29,7 @@ public class Epic extends Task {
 
     @Override
     public TypeOfTasks getTypeOfTask() {
+        super.setTypeOfTask(EPIC);
         return EPIC;
     }
 

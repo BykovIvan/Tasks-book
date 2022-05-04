@@ -161,7 +161,21 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         mapEpics.clear();
+        mapSubtasks.clear();
         updateStatusEpic();
+    }
+
+    @Override
+    public void deleteEpic(int id) {
+        if (mapEpics.containsKey(id)) {
+            mapEpics.get(id).getSubtasksOfEpic().clear();
+            if (historyList.contains(id)) {
+                historyList.remove(id);             //проверка и удаление задачи из листа истории
+            }
+            mapSubtasks.values().removeIf(subtask -> subtask.getIdEpic() == id);
+            mapEpics.remove(id);
+            updateStatusEpic();
+        }
     }
 
     @Override
@@ -194,18 +208,6 @@ public class InMemoryTaskManager implements TaskManager {
             mapEpics.put(idTemp, newEpic);
         }
         updateStatusEpic();
-    }
-
-    @Override
-    public void deleteEpic(int id) {
-        if (mapEpics.containsKey(id)) {
-            mapEpics.get(id).getSubtasksOfEpic().clear();
-            if (historyList.contains(id)) {
-                historyList.remove(id);             //проверка и удаление задачи из листа истории
-            }
-            mapEpics.remove(id);
-            updateStatusEpic();
-        }
     }
 
     @Override
