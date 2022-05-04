@@ -4,6 +4,7 @@ id,type,name,status,description,epic,startTime,duration,endTime
 2,EPIC,Epic 1,NEW,Der1
 3,SUBTASK,Саб1,NEW,Где взять,2,17.11.2022-12:24,78
 4,SUBTASK,Саб2,NEW,Где взять2,2,13.12.2021-15:21,65
-5,TASK,Имя3,NEW,Что купить3,24.09.2020-12:21,43
+5,SUBTASK,Саб3,NEW,Где взять3,2,27.11.2024-12:24,34
+6,TASK,Имя3,NEW,Что купить3,25.11.2020-12:21,34
 
 1,2,0,4

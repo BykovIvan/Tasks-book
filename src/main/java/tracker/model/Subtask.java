@@ -1,8 +1,13 @@
 package main.java.tracker.model;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import main.java.tracker.util.Status;
 import main.java.tracker.util.TypeOfTasks;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 import static main.java.tracker.util.TypeOfTasks.SUBTASK;
@@ -12,6 +17,9 @@ public class Subtask extends Task {
 
     public Subtask(String name, String discription, Status status) {
         super(name, discription, status);
+    }
+
+    public Subtask() {
     }
 
     public int getIdEpic() {
@@ -62,4 +70,19 @@ public class Subtask extends Task {
     public int hashCode() {
         return Objects.hash(super.hashCode(), idEpic);
     }
+
+//    @Override
+//    public JsonElement serialize(Task task, Type type, JsonSerializationContext jsonSerializationContext) {
+//        JsonObject result = new JsonObject();
+//
+//        result.addProperty("Name", task.getName());
+//        result.addProperty("Discription", task.getDiscription());
+//        result.addProperty("idTask", task.getIdTask());
+//        result.addProperty("status", String.valueOf(task.getStatus()));
+//        result.addProperty("typeOfTask", String.valueOf(task.getTypeOfTask()));
+//        result.addProperty("ipEpic", (Subtask)task.getIdEpic());
+//        result.addProperty("startTime", task.getStartTime().format(formatter) );
+//        result.addProperty("duration", task.getDuration().toMinutes());
+//        return result;
+//    }
 }

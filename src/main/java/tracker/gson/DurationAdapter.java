@@ -1,4 +1,4 @@
-package main.java.tracker.util;
+package main.java.tracker.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

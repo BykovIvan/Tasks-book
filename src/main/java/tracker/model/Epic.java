@@ -19,6 +19,9 @@ public class Epic extends Task {
         subtasksOfEpic = new ArrayList<>();
     }
 
+    public Epic() {
+    }
+
     public ArrayList<Subtask> getSubtasksOfEpic() {
         return subtasksOfEpic;
     }

@@ -7,11 +7,10 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import main.java.tracker.controllers.Managers;
 import main.java.tracker.controllers.TaskManager;
+import main.java.tracker.gson.*;
 import main.java.tracker.model.Epic;
 import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
-import main.java.tracker.util.DurationAdapter;
-import main.java.tracker.util.LocalDateAdapter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,11 +20,9 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static main.java.tracker.util.Status.NEW;
@@ -36,8 +33,11 @@ public class HttpTaskServer {
     private static TaskManager manager = Managers.getDefault();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
     private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
-            .registerTypeAdapter(Duration.class, new DurationAdapter())
+//            .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
+//            .registerTypeAdapter(Duration.class, new DurationAdapter())
+            .registerTypeAdapter(Task.class, new TaskSerializer())
+            .registerTypeAdapter(Subtask.class, new SubtaskSerializer())
+            .registerTypeAdapter(Epic.class, new EpicSerializer())
             .setPrettyPrinting()
             .serializeNulls()
             .create();
@@ -139,25 +139,28 @@ public class HttpTaskServer {
                     InputStreamReader streamReader = new InputStreamReader(httpExchange.getRequestBody());
                     BufferedReader bufferedReader = new BufferedReader(streamReader);
                     String body = bufferedReader.lines().collect(Collectors.joining("\n"));
-                    manager.createNewTask(gson.fromJson(body, Task.class));
+                    Task task = gson.fromJson(body, Task.class);
+                    manager.createNewTask(task);
                     httpExchange.sendResponseHeaders(201, 0);
-//                    try (OutputStream os = httpExchange.getResponseBody()) {
-//                        os.write(gson.toJson(manager.getTask(idTask)).getBytes());
-//                        break;
-//                    }
-//                    httpExchange.sendResponseHeaders(404, 0);
-//                    try (OutputStream os = httpExchange.getResponseBody()) {
-////                                    os.write("".getBytes());
-//                    }
+                    try (OutputStream os = httpExchange.getResponseBody()) {
+                        os.write("Задача создана".getBytes());
+                    }
+
                     break;
                 case "DELETE":
                     if (query == null || query.isEmpty()){
-                        httpExchange.sendResponseHeaders(204, 0);
+                        httpExchange.sendResponseHeaders(200, 0);
                         manager.deleteAllTasks();
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write("Удалены все задачи".getBytes());
+                        }
                     }else{
                         int taskID = Integer.parseInt(query.split("=")[1]);
-                        httpExchange.sendResponseHeaders(204, 0);
+                        httpExchange.sendResponseHeaders(200, 0);
                         manager.deleteTask(taskID);
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write("Удалена задача".getBytes());
+                        }
                     }
                     break;
             }
@@ -193,12 +196,18 @@ public class HttpTaskServer {
                     break;
                 case "DELETE":
                     if (query == null || query.isEmpty()){
-                        httpExchange.sendResponseHeaders(204, 0);
+                        httpExchange.sendResponseHeaders(200, 0);
                         manager.deleteAllEpics();
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write("Удалены все эпики".getBytes());
+                        }
                     }else{
                         int taskID = Integer.parseInt(query.split("=")[1]);
-                        httpExchange.sendResponseHeaders(204, 0);
+                        httpExchange.sendResponseHeaders(200, 0);
                         manager.deleteEpic(taskID);
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write("Удален эпик".getBytes());
+                        }
                     }
                     break;
             }
@@ -229,16 +238,30 @@ public class HttpTaskServer {
                     }
                     break;
                 case "POST":
-
+                    InputStreamReader streamReader = new InputStreamReader(httpExchange.getRequestBody());
+                    BufferedReader bufferedReader = new BufferedReader(streamReader);
+                    String body = bufferedReader.lines().collect(Collectors.joining("\n"));
+                    Subtask subtask = gson.fromJson(body, Subtask.class);
+                    manager.createNewSubTask(subtask);
+                    httpExchange.sendResponseHeaders(201, 0);
+                    try (OutputStream os = httpExchange.getResponseBody()) {
+                        os.write("Задача создана".getBytes());
+                    }
                     break;
                 case "DELETE":
                     if (query == null || query.isEmpty()){
-                        httpExchange.sendResponseHeaders(204, 0);
+                        httpExchange.sendResponseHeaders(200, 0);
                         manager.deleteAllSubtasks();
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write("Удалены все подзадачи".getBytes());
+                        }
                     }else{
                         int taskID = Integer.parseInt(query.split("=")[1]);
-                        httpExchange.sendResponseHeaders(204, 0);
+                        httpExchange.sendResponseHeaders(200, 0);
                         manager.deleteSubtask(taskID);
+                        try (OutputStream os = httpExchange.getResponseBody()) {
+                            os.write("Удалена подзадача".getBytes());
+                        }
                     }
                     break;
             }

@@ -44,8 +44,25 @@ public class InMemoryTaskManager implements TaskManager {
                 historyList.remove(integer);             //проверка и удаление задачи из листа истории
             }
         }
+//        for (Epic epic : mapEpics.values()) {
+//            epic.getSubtasksOfEpic().clear();
+//        }
         mapSubtasks.clear();
         updateStatusEpic();
+    }
+
+    @Override
+    public void deleteSubtask(int id) {
+        if (mapSubtasks.containsKey(id)) {
+            int idEpicTemp = mapSubtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
+            ArrayList<Subtask> tempSubtasksOfEpic = mapEpics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
+            tempSubtasksOfEpic.remove(mapSubtasks.get(id));                                       //удаляем из списка пр объекту
+            updateStatusEpic();
+            mapSubtasks.remove(id);
+            if (historyList.contains(id)) {
+                historyList.remove(id);             //проверка и удаление задачи из листа истории
+            }
+        }
     }
 
     @Override
@@ -122,19 +139,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     }
 
-    @Override
-    public void deleteSubtask(int id) {
-        if (mapSubtasks.containsKey(id)) {
-            int idEpicTemp = mapSubtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
-            ArrayList<Subtask> tempSubtasksOfEpic = mapEpics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
-            tempSubtasksOfEpic.remove(mapSubtasks.get(id));                                       //удаляем из списка пр объекту
-            updateStatusEpic();
-            mapSubtasks.remove(id);
-            if (historyList.contains(id)) {
-                historyList.remove(id);             //проверка и удаление задачи из листа истории
-            }
-        }
-    }
 
     public void deleteSubtaskWithOutHistory(int id) {
         if (mapSubtasks.containsKey(id)) {
