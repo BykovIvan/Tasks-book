@@ -7,8 +7,6 @@ import main.java.tracker.util.Status;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -93,12 +91,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     }
 
-    private final String nameTestFile;                  // файл для автосохранения
-    private final Path path;
+    protected String nameTestFile;                  // файл для автосохранения
 
     public FileBackedTasksManager(String nameTestFile) {
         this.nameTestFile = nameTestFile;
-        path = Paths.get(nameTestFile);
     }
 
     @Override

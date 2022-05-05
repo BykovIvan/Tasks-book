@@ -70,6 +70,21 @@ public class KVServer {
             }
         });
         server.createContext("/load", (h) -> {
+            try {
+                System.out.println("\n/load");
+                switch (h.getRequestMethod()) {
+                    case "GET":
+                        String key = h.getRequestURI().getPath().substring("/load/".length());
+                        sendText(h, data.get(key));
+                        break;
+                    default:
+                        System.out.println("/load ждёт GET-запрос, а получил " + h.getRequestMethod());
+                        h.sendResponseHeaders(405, 0);
+                }
+            } finally {
+                h.close();
+            }
+
             // TODO Добавьте получение значения по ключу
         });
     }

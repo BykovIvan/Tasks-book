@@ -19,18 +19,18 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import static main.java.tracker.util.Status.NEW;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static TaskManager manager = Managers.getDefault();
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
+    private HttpServer httpServer;
+
+//    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Task.class, new TaskSerializer())
             .registerTypeAdapter(Subtask.class, new SubtaskSerializer())
@@ -39,44 +39,9 @@ public class HttpTaskServer {
             .serializeNulls()
             .create();
 
-
-    public static void main(String[] args) {
-
-        Task task1 = new Task("Имя1", "Что купить1", NEW);
-        Task task2 = new Task("Имя2", "Что купить2", NEW);
-        task1.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
-        task1.setDuration(34);
-        task2.setStartTime(LocalDateTime.parse("14.04.2022-12:21", formatter));
-        task2.setDuration(43);
-        int idTask1 = manager.createNewTask(task1);
-        int idTask2 = manager.createNewTask(task2);
-
-        Epic epic = new Epic("Epic 1", "Der1", NEW);
-        int idEpic1 = manager.createNewEpic(epic);
-
-        Subtask subtask = new Subtask("Саб1", "Где взять", NEW);
-        subtask.setIdEpic(idEpic1);
-        subtask.setStartTime(LocalDateTime.parse("17.11.2022-12:24", formatter));
-        subtask.setDuration(78);
-
-        Subtask subtask2 = new Subtask("Саб2", "Где взять2", NEW);
-        subtask2.setIdEpic(idEpic1);
-        subtask2.setStartTime(LocalDateTime.parse("13.12.2021-15:21", formatter));
-        subtask2.setDuration(65);
-
-        int idSubtask1 = manager.createNewSubTask(subtask);
-        int idSubtask2 = manager.createNewSubTask(subtask2);
-        epic.getStartTime();
-        epic.getDuration();
-        epic.getEndTime();
-
-        manager.getTask(idTask2);
-        manager.getEpic(idEpic1);
-        manager.getTask(idTask1);
-        manager.getSubtask(idSubtask2);
-
+    public HttpTaskServer() throws IOException {
         try {
-            HttpServer httpServer = HttpServer.create();
+            httpServer = HttpServer.create();
             httpServer.bind(new InetSocketAddress(PORT), 0);
             httpServer.createContext("/tasks/task", new TaskHandler());
             httpServer.createContext("/tasks/epic", new EpicHandler());
@@ -90,6 +55,65 @@ public class HttpTaskServer {
         } catch (IOException e) {
             System.out.println("HTTP-сервер не запущен!");
         }
+    }
+
+
+    //    public static void main(String[] args) {
+//
+//        Task task1 = new Task("Имя1", "Что купить1", NEW);
+//        Task task2 = new Task("Имя2", "Что купить2", NEW);
+//        task1.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
+//        task1.setDuration(34);
+//        task2.setStartTime(LocalDateTime.parse("14.04.2022-12:21", formatter));
+//        task2.setDuration(43);
+//        int idTask1 = manager.createNewTask(task1);
+//        int idTask2 = manager.createNewTask(task2);
+//
+//        Epic epic = new Epic("Epic 1", "Der1", NEW);
+//        int idEpic1 = manager.createNewEpic(epic);
+//
+//        Subtask subtask = new Subtask("Саб1", "Где взять", NEW);
+//        subtask.setIdEpic(idEpic1);
+//        subtask.setStartTime(LocalDateTime.parse("17.11.2022-12:24", formatter));
+//        subtask.setDuration(78);
+//
+//        Subtask subtask2 = new Subtask("Саб2", "Где взять2", NEW);
+//        subtask2.setIdEpic(idEpic1);
+//        subtask2.setStartTime(LocalDateTime.parse("13.12.2021-15:21", formatter));
+//        subtask2.setDuration(65);
+//
+//        int idSubtask1 = manager.createNewSubTask(subtask);
+//        int idSubtask2 = manager.createNewSubTask(subtask2);
+//        epic.getStartTime();
+//        epic.getDuration();
+//        epic.getEndTime();
+//
+//        manager.getTask(idTask2);
+//        manager.getEpic(idEpic1);
+//        manager.getTask(idTask1);
+//        manager.getSubtask(idSubtask2);
+
+//        try {
+//            HttpServer httpServer = HttpServer.create();
+//            httpServer.bind(new InetSocketAddress(PORT), 0);
+//            httpServer.createContext("/tasks/task", new TaskHandler());
+//            httpServer.createContext("/tasks/epic", new EpicHandler());
+//            httpServer.createContext("/tasks/subtask", new SubtaskHandler());
+//            httpServer.createContext("/tasks/subtask/epic", new SubtaskOfEpicHandler());
+//            httpServer.createContext("/tasks/history", new HistoryHandler());
+//            httpServer.createContext("/tasks", new TasksHandler());
+//            httpServer.start();
+//            System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+//
+//        } catch (IOException e) {
+//            System.out.println("HTTP-сервер не запущен!");
+//        }
+//    }
+
+    public void start() {
+        System.out.println("Запускаем сервер на порту " + PORT);
+        System.out.println("Открой в браузере http://localhost:" + PORT + "/");
+        httpServer.start();
     }
 
     static class TasksHandler implements HttpHandler {
