@@ -356,7 +356,7 @@ public class InMemoryTaskManager implements TaskManager {
         LocalDateTime startTask = LocalDateTime.parse(task.getStartTime(), formatter);
         LocalDateTime endTask = LocalDateTime.parse(task.getEndTime(), formatter);
         for (Task getTask : taskPrioritizedList) {
-            if (getTask.getStartTime().equals("null")){
+            if (!getTask.getStartTime().equals("null")){
                 if (startTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter)) &&
                         endTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter))){
                     count++;

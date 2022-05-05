@@ -45,7 +45,7 @@ public class Subtask extends Task {
                     ", idTask=" + getIdTask() +
                     ", status=" + getStatus() +
                     ", startTime=" + getStartTime() +
-                    ", duraction=" + getDuration() +
+                    ", duraction=" + getDuration().toMinutes() +
                     '}' + "\n";
         }
         return "Subtask {" +
@@ -71,18 +71,4 @@ public class Subtask extends Task {
         return Objects.hash(super.hashCode(), idEpic);
     }
 
-//    @Override
-//    public JsonElement serialize(Task task, Type type, JsonSerializationContext jsonSerializationContext) {
-//        JsonObject result = new JsonObject();
-//
-//        result.addProperty("Name", task.getName());
-//        result.addProperty("Discription", task.getDiscription());
-//        result.addProperty("idTask", task.getIdTask());
-//        result.addProperty("status", String.valueOf(task.getStatus()));
-//        result.addProperty("typeOfTask", String.valueOf(task.getTypeOfTask()));
-//        result.addProperty("ipEpic", (Subtask)task.getIdEpic());
-//        result.addProperty("startTime", task.getStartTime().format(formatter) );
-//        result.addProperty("duration", task.getDuration().toMinutes());
-//        return result;
-//    }
 }

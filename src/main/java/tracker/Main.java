@@ -64,7 +64,7 @@ public class Main {
         subtask3.setDuration(20);
         int idSub3 = manager.createNewSubTask(subtask3);
         System.out.println(manager.getEpic(idEpic).getStartTime());
-        System.out.println(manager.getEpic(idEpic).getDuration());
+        System.out.println(manager.getEpic(idEpic).getDuration().toMinutes());
         System.out.println(manager.getEpic(idEpic).getEndTime());
 
 

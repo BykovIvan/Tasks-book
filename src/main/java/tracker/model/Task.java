@@ -124,7 +124,7 @@ public class Task {
                     ", discription='" + discription + '\'' +
                     ", idTask=" + idTask +
                     ", status=" + status +
-                    ", startTime=" + startTime.get() +
+                    ", startTime=" + startTime.get().format(formatter) +
                     ", duraction=" + duration.get().toMinutes() +
                     '}' + "\n";
         }

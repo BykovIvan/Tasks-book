@@ -49,7 +49,6 @@ public class HttpTaskServer {
             httpServer.createContext("/tasks/subtask/epic", new SubtaskOfEpicHandler());
             httpServer.createContext("/tasks/history", new HistoryHandler());
             httpServer.createContext("/tasks", new TasksHandler());
-            httpServer.start();
             System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
 
         } catch (IOException e) {
@@ -111,8 +110,7 @@ public class HttpTaskServer {
 //    }
 
     public void start() {
-        System.out.println("Запускаем сервер на порту " + PORT);
-        System.out.println("Открой в браузере http://localhost:" + PORT + "/");
+        System.out.println("Запускаем свой сервер на порту " + PORT);
         httpServer.start();
     }
 

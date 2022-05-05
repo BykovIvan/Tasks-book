@@ -72,6 +72,11 @@ public class KVServer {
         server.createContext("/load", (h) -> {
             try {
                 System.out.println("\n/load");
+                if (!hasAuth(h)) {
+                    System.out.println("Запрос неавторизован, нужен параметр в query API_KEY со значением апи-ключа");
+                    h.sendResponseHeaders(403, 0);
+                    return;
+                }
                 switch (h.getRequestMethod()) {
                     case "GET":
                         String key = h.getRequestURI().getPath().substring("/load/".length());
