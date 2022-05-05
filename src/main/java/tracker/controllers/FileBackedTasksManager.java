@@ -71,7 +71,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println(manager.getTask(idTask1).getStartTime());
         System.out.println(manager.getTask(idTask1).getEndTime());
 
-        System.out.println(manager.getTask(idTask1).getDuration().toHours() + " час " + manager.getTask(idTask1).getDuration().toMinutesPart() + " мин");
 
         System.out.println("Epic 1:");
         System.out.println(manager.getEpic(idEpic1).getStartTime());
@@ -90,7 +89,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         System.out.println("Epic 2:");
         System.out.println(fileManager.getEpic(idEpic1).getStartTime());
-        System.out.println(fileManager.getEpic(idEpic1).getDuration().toDays() + " дней");
         System.out.println(fileManager.getEpic(idEpic1).getEndTime());
 
     }
@@ -314,8 +312,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + task.getName() +
                     "," + task.getStatus() +
                     "," + task.getDiscription() +
-                    "," + task.getStartTime().format(formatter) +
-                    "," + task.getDuration().toMinutes();
+                    "," + task.getStartTime() +
+                    "," + task.getDuration();
         } else if (typeOfTask.equals(EPIC)) {
             Epic epic = (Epic) task;
             fullTaskName = epic.getIdTask() +
@@ -331,8 +329,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + subtask.getStatus() +
                     "," + subtask.getDiscription() +
                     "," + subtask.getIdEpic() +
-                    "," + subtask.getStartTime().format(formatter) +
-                    "," + subtask.getDuration().toMinutes();
+                    "," + subtask.getStartTime() +
+                    "," + subtask.getDuration();
         }
         return fullTaskName;
     }

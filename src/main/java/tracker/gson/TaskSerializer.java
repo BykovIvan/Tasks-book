@@ -6,6 +6,7 @@ import main.java.tracker.util.Status;
 import main.java.tracker.util.TypeOfTasks;
 
 import java.lang.reflect.Type;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -21,8 +22,12 @@ public class TaskSerializer implements JsonSerializer<Task>, JsonDeserializer<Ta
         result.addProperty("discription", task.getDiscription());
         result.addProperty("idTask", task.getIdTask());
         result.addProperty("status", String.valueOf(task.getStatus()));
-        result.addProperty("startTime", task.getStartTime().format(formatter) );
-        result.addProperty("duration", task.getDuration().toMinutes());
+        if (!task.getStartTime().equals("null")){
+            result.addProperty("startTime", task.getStartTime());
+        }
+        if (task.getDuration().toMinutes() != 0){
+            result.addProperty("duration", task.getDuration().toMinutes());
+        }
         return result;
     }
 
@@ -35,8 +40,13 @@ public class TaskSerializer implements JsonSerializer<Task>, JsonDeserializer<Ta
         task.setDiscription(jsonObject.get("discription").getAsString());
         task.setIdTask(jsonObject.get("idTask").getAsInt());
         task.setStatus(Status.valueOf(jsonObject.get("status").getAsString()));
-        task.setStartTime(LocalDateTime.parse(jsonObject.get("startTime").getAsString(), formatter));
-        task.setDuration(jsonObject.get("duration").getAsLong());
+        if (jsonObject.has("startTime")){
+            task.setStartTime(LocalDateTime.parse(jsonObject.get("startTime").getAsString(), formatter));
+        }
+        if (jsonObject.has("duration")){
+            task.setDuration(jsonObject.get("duration").getAsLong());
+        }
+
         return task;
     }
 }

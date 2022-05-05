@@ -247,7 +247,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int createNewTask(Task task) {
-        if (task.getStartTime() == null){
+        if (task.getStartTime().equals("null")){
             task.setIdTask(id);
             id++;
             mapTasks.put(task.getIdTask(), task);
@@ -353,15 +353,15 @@ public class InMemoryTaskManager implements TaskManager {
     protected boolean intersectionTask(Task task){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
         int count = 0;
-        LocalDateTime startTask = task.getStartTime();
-        LocalDateTime endTask = task.getEndTime();
+        LocalDateTime startTask = LocalDateTime.parse(task.getStartTime(), formatter);
+        LocalDateTime endTask = LocalDateTime.parse(task.getEndTime(), formatter);
         for (Task getTask : taskPrioritizedList) {
-            if (!(getTask.getStartTime() == null)){
-                if (startTask.isBefore(getTask.getStartTime()) &&
-                        endTask.isBefore(getTask.getStartTime())){
+            if (getTask.getStartTime().equals("null")){
+                if (startTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter)) &&
+                        endTask.isBefore(LocalDateTime.parse(getTask.getStartTime(), formatter))){
                     count++;
-                } else if (startTask.isAfter(getTask.getEndTime()) &&
-                        endTask.isAfter(getTask.getEndTime())){
+                } else if (startTask.isAfter(LocalDateTime.parse(getTask.getEndTime(), formatter)) &&
+                        endTask.isAfter(LocalDateTime.parse(getTask.getEndTime(), formatter))){
                     count++;
                 } else return false;
             }else {

@@ -41,8 +41,6 @@ public class Main {
         System.out.println(manager.getTask(idTask).getStartTime());
         System.out.println(manager.getTask(idTask4).getStartTime());
 
-        System.out.println(manager.getTask(idTask).getDuration().toHours() + " час " + manager.getTask(idTask).getDuration().toMinutesPart() + " мин");
-
         Epic epic = new Epic("Epic1", "Dis1", NEW);
 
         int idEpic = manager.createNewEpic(epic);
@@ -66,7 +64,7 @@ public class Main {
         subtask3.setDuration(20);
         int idSub3 = manager.createNewSubTask(subtask3);
         System.out.println(manager.getEpic(idEpic).getStartTime());
-        System.out.println(manager.getEpic(idEpic).getDuration().toMinutes());
+        System.out.println(manager.getEpic(idEpic).getDuration());
         System.out.println(manager.getEpic(idEpic).getEndTime());
 
 

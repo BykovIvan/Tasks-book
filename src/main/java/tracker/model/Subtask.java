@@ -38,14 +38,14 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        if (startTime != null && duration != null){
+        if (startTime.isPresent() && duration.isPresent()){
             return "Subtask {" +
                     "name='" + getName() + '\'' +
                     ", discription='" + getDiscription() + '\'' +
                     ", idTask=" + getIdTask() +
                     ", status=" + getStatus() +
                     ", startTime=" + getStartTime() +
-                    ", duraction=" + getDuration().toMinutes() +
+                    ", duraction=" + getDuration() +
                     '}' + "\n";
         }
         return "Subtask {" +

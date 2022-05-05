@@ -7,12 +7,13 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 import static main.java.tracker.util.TypeOfTasks.EPIC;
 
 public class Epic extends Task {
     private ArrayList<Subtask> subtasksOfEpic;
-    private LocalDateTime endTime;;
+    private Optional<LocalDateTime> endTime = Optional.empty();
 
     public Epic(String name, String discription, Status status) {
         super(name, discription, status);
@@ -20,6 +21,7 @@ public class Epic extends Task {
     }
 
     public Epic() {
+        subtasksOfEpic = new ArrayList<>();
     }
 
     public ArrayList<Subtask> getSubtasksOfEpic() {
@@ -37,9 +39,13 @@ public class Epic extends Task {
     }
 
     @Override
-    public LocalDateTime getStartTime() {
+    public String getStartTime() {
         countStartAndEndTime();
-        return startTime;
+        if (startTime.isPresent()){
+            return startTime.get().format(formatter);
+        }else {
+            return "null";
+        }
 
     }
 
@@ -47,17 +53,21 @@ public class Epic extends Task {
     public Duration getDuration() {
         Duration duration = null;
         countStartAndEndTime();
-        if (startTime != null && endTime != null){
-            duration = Duration.between(startTime, endTime);
+        if (startTime.isPresent() && endTime.isPresent()){
+            duration = Duration.between(startTime.get(), endTime.get());
             super.setDuration(duration.toMinutes());
+            return duration;
         }
-        return duration;
+        return Duration.ofMinutes(0);
     }
 
 
-    public LocalDateTime getEndTime() {
+    public String getEndTime() {
         countStartAndEndTime();
-        return endTime;
+        if (endTime.isPresent()){
+            return endTime.get().format(formatter);
+        }
+        return "null";
 
     }
 
@@ -65,18 +75,34 @@ public class Epic extends Task {
      * Расчет начала и конца времени Эпиков
      */
     private void countStartAndEndTime(){
-        startTime = subtasksOfEpic.get(0).getStartTime();
-        endTime = subtasksOfEpic.get(0).getStartTime();
-        for (Subtask subtask : subtasksOfEpic) {
-            LocalDateTime tempTime = subtask.getStartTime();
-            if (tempTime.isBefore(startTime)){
-                startTime = tempTime;
-                super.setStartTime(startTime);
+        if (subtasksOfEpic.size() > 0){
+            if (subtasksOfEpic.size() == 1){
+                startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+                super.setStartTime(startTime.get());
+                endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter).plusMinutes(subtasksOfEpic.get(0).getDuration().toMinutes()));
+            }else {
+                startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+                endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+                for (Subtask subtask : subtasksOfEpic) {
+                    LocalDateTime tempTimeStart = LocalDateTime.parse(subtask.getStartTime(), formatter);
+                    LocalDateTime tempTimeEnd = LocalDateTime.parse(subtask.getStartTime(), formatter).plusMinutes(subtask.getDuration().toMinutes());
+                    if (tempTimeStart.isBefore(startTime.get())){
+                        startTime = Optional.of(tempTimeStart);
+                        super.setStartTime(startTime.get());
+                    }
+                    if (tempTimeEnd.isAfter(endTime.get())){
+                        endTime = Optional.of(tempTimeEnd);
+                    }
+                }
             }
-            if (tempTime.isAfter(endTime)){
-                endTime = tempTime;
-            }
+
         }
+//        else{
+//            startTime = null;
+//            super.setStartTime(startTime.get());
+//            endTime = null;
+//        }
+
     }
 
     @Override

@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,8 +32,6 @@ public class HttpTaskServer {
     private static TaskManager manager = Managers.getDefault();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
     private static final Gson gson = new GsonBuilder()
-//            .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
-//            .registerTypeAdapter(Duration.class, new DurationAdapter())
             .registerTypeAdapter(Task.class, new TaskSerializer())
             .registerTypeAdapter(Subtask.class, new SubtaskSerializer())
             .registerTypeAdapter(Epic.class, new EpicSerializer())
@@ -84,6 +81,7 @@ public class HttpTaskServer {
             httpServer.createContext("/tasks/task", new TaskHandler());
             httpServer.createContext("/tasks/epic", new EpicHandler());
             httpServer.createContext("/tasks/subtask", new SubtaskHandler());
+            httpServer.createContext("/tasks/subtask/epic", new SubtaskOfEpicHandler());
             httpServer.createContext("/tasks/history", new HistoryHandler());
             httpServer.createContext("/tasks", new TasksHandler());
             httpServer.start();
@@ -181,6 +179,8 @@ public class HttpTaskServer {
                         httpExchange.sendResponseHeaders(200, 0);
                         try (OutputStream os = httpExchange.getResponseBody()) {
                             os.write(gson.toJson(manager.getEpics()).getBytes());
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
                     }else{
                         int taskID = Integer.parseInt(query.split("=")[1]);
@@ -191,7 +191,15 @@ public class HttpTaskServer {
                     }
                     break;
                 case "POST":
-
+                    InputStreamReader streamReader = new InputStreamReader(httpExchange.getRequestBody());
+                    BufferedReader bufferedReader = new BufferedReader(streamReader);
+                    String body = bufferedReader.lines().collect(Collectors.joining("\n"));
+                    Epic epic = gson.fromJson(body, Epic.class);
+                    manager.createNewEpic(epic);
+                    httpExchange.sendResponseHeaders(201, 0);
+                    try (OutputStream os = httpExchange.getResponseBody()) {
+                        os.write("Эпик создан".getBytes());
+                    }
 
                     break;
                 case "DELETE":
@@ -245,7 +253,7 @@ public class HttpTaskServer {
                     manager.createNewSubTask(subtask);
                     httpExchange.sendResponseHeaders(201, 0);
                     try (OutputStream os = httpExchange.getResponseBody()) {
-                        os.write("Задача создана".getBytes());
+                        os.write("Подзадача создана".getBytes());
                     }
                     break;
                 case "DELETE":
@@ -277,6 +285,21 @@ public class HttpTaskServer {
                 httpExchange.sendResponseHeaders(200, 0);
                 try (OutputStream os = httpExchange.getResponseBody()) {
                     os.write(gson.toJson(manager.history()).getBytes());
+                }
+            }
+        }
+    }
+    static class SubtaskOfEpicHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+
+            String method = httpExchange.getRequestMethod();
+            String query = httpExchange.getRequestURI().getRawQuery();
+            int epicID = Integer.parseInt(query.split("=")[1]);
+            if (method.equals("GET")){
+                httpExchange.sendResponseHeaders(200, 0);
+                try (OutputStream os = httpExchange.getResponseBody()) {
+                    os.write(gson.toJson(manager.getEpic(epicID).getSubtasksOfEpic()).getBytes());
                 }
             }
         }

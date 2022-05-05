@@ -22,8 +22,13 @@ public class SubtaskSerializer implements JsonSerializer<Subtask>, JsonDeseriali
         result.addProperty("idTask", subtask.getIdTask());
         result.addProperty("status", String.valueOf(subtask.getStatus()));
         result.addProperty("ipEpic", subtask.getIdEpic());
-        result.addProperty("startTime", subtask.getStartTime().format(formatter) );
-        result.addProperty("duration", subtask.getDuration().toMinutes());
+        if (!subtask.getStartTime().equals("null")){
+            result.addProperty("startTime", subtask.getStartTime());
+        }
+        if (subtask.getDuration().toMinutes() != 0){
+            result.addProperty("duration", subtask.getDuration().toMinutes());
+        }
+
         return result;
     }
 
@@ -37,8 +42,13 @@ public class SubtaskSerializer implements JsonSerializer<Subtask>, JsonDeseriali
         subtask.setIdTask(jsonObject.get("idTask").getAsInt());
         subtask.setStatus(Status.valueOf(jsonObject.get("status").getAsString()));
         subtask.setIdEpic(jsonObject.get("ipEpic").getAsInt());
-        subtask.setStartTime(LocalDateTime.parse(jsonObject.get("startTime").getAsString(), formatter));
-        subtask.setDuration(jsonObject.get("duration").getAsLong());
+        if (jsonObject.has("startTime")){
+            subtask.setStartTime(LocalDateTime.parse(jsonObject.get("startTime").getAsString(), formatter));
+        }
+        if (jsonObject.has("duration")){
+            subtask.setDuration(jsonObject.get("duration").getAsLong());
+        }
+
         return subtask;
     }
 }

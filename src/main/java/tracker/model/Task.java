@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.Optional;
 
 import static main.java.tracker.util.TypeOfTasks.TASK;
 
@@ -22,8 +23,9 @@ public class Task {
     private Status status;              //Статус задачи
     private TypeOfTasks typeOfTask = TASK;     //Тип задачи (Создан для создания Spring из задачи и обратно
 
-    protected LocalDateTime startTime;     //дата, когда предпологается приступить к выполнению задачи
-    protected Duration duration;          //продолжительность задачи
+    protected Optional<LocalDateTime> startTime;     //дата, когда предпологается приступить к выполнению задачи
+    protected Optional<Duration> duration;          //продолжительность задачи
+
     protected static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm");
 
 
@@ -31,10 +33,14 @@ public class Task {
         this.name = name;
         this.discription = discription;
         this.status = status;
-
+        startTime = Optional.empty();
+        duration = Optional.empty();
     }
 
     public Task() {
+        startTime = Optional.empty();
+        duration = Optional.empty();
+
     }
 
     public String getName() {
@@ -77,36 +83,49 @@ public class Task {
         this.typeOfTask = typeOfTask;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public String getStartTime() {
+        if (startTime.isPresent()){
+            return startTime.get().format(formatter);
+        }else {
+            return "null";
+        }
     }
 
     public void setStartTime(LocalDateTime startTimeStr) {
-        startTime = startTimeStr;
+        startTime = Optional.of(startTimeStr);
     }
 
     public Duration getDuration() {
-        return duration;
+        if (duration.isPresent()){
+            return duration.get();
+        }else {
+            return Duration.ofMinutes(0);
+        }
     }
 
     public void setDuration(long durationInMin) {
-        duration = Duration.ofMinutes(durationInMin);
+        duration = Optional.of(Duration.ofMinutes(durationInMin));
     }
 
-    public LocalDateTime getEndTime(){
-            return startTime.plusMinutes(duration.toMinutes());
+    public String getEndTime(){
+        if (startTime.isPresent() && duration.isPresent()){
+            return startTime.get().plusMinutes(duration.get().toMinutes()).format(formatter);
+        }
+        else {
+            return "null";
+        }
     }
 
     @Override
     public String toString() {
-        if (startTime != null && duration != null){
+        if (startTime.isPresent() && duration.isPresent()){
             return "Task {" +
                     "name='" + name + '\'' +
                     ", discription='" + discription + '\'' +
                     ", idTask=" + idTask +
                     ", status=" + status +
-                    ", startTime=" + startTime +
-                    ", duraction=" + duration.toMinutes() +
+                    ", startTime=" + startTime.get() +
+                    ", duraction=" + duration.get().toMinutes() +
                     '}' + "\n";
         }
         return "Task {" +
@@ -135,18 +154,5 @@ public class Task {
     public int hashCode() {
         return Objects.hash(name, discription, idTask, status, discription, startTime);
     }
-//
-//    @Override
-//    public JsonElement serialize(Task task, Type type, JsonSerializationContext jsonSerializationContext) {
-//        JsonObject result = new JsonObject();
-//
-//        result.addProperty("name", task.getName());
-//        result.addProperty("discription", task.getDiscription());
-//        result.addProperty("idTask", task.getIdTask());
-//        result.addProperty("status", String.valueOf(task.getStatus()));
-//        result.addProperty("typeOfTask", String.valueOf(task.getTypeOfTask()));
-//        result.addProperty("startTime", task.getStartTime().format(formatter) );
-//        result.addProperty("duration", task.getDuration().toMinutes());
-//        return result;
-//    }
+
 }
