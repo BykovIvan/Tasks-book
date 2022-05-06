@@ -7,6 +7,7 @@ import main.java.tracker.model.Task;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 import static main.java.tracker.util.Status.NEW;
@@ -68,7 +69,7 @@ public class Main {
         System.out.println(manager.getEpic(idEpic).getEndTime());
 
 
-        TreeSet<Task> setList = manager.getPrioritizedTasks();
+        ArrayList<Task> setList = manager.getPrioritizedTasks();
         for (Task task1 : setList) {
             System.out.print(task1);
         }

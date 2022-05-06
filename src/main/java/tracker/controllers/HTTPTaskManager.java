@@ -60,12 +60,13 @@ public class HTTPTaskManager extends FileBackedTasksManager {
                 builder.append(gson.toJson(mapSubtasks.get(i))).append(";");
             }
         }
-//        builder.append("")
-//        bw.write("\n");                           //пустая строка
-//        bw.write(toStringHistory(historyList));                //получение истории
+        builder.append(";");
+        builder.append(gson.toJson(history()));
+        builder.append(";");
+        builder.append(gson.toJson(getPrioritizedTasks()));
 
         kvClient.put(key, builder.toString());
-        //TODO своя реализия
+
     }
 
     public String getKey() {

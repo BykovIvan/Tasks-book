@@ -11,7 +11,7 @@ import main.java.tracker.model.Task;
 public class Managers {
 
     public static TaskManager getDefault() {
-        return new HTTPTaskManager("http://localhost:8078/");
+        return new HTTPTaskManager("http://localhost:8078");
     }
 
     public static HistoryManager<Task> getDefaultHistory() {

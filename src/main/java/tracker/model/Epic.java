@@ -77,23 +77,39 @@ public class Epic extends Task {
     private void countStartAndEndTime(){
         if (subtasksOfEpic.size() > 0){
             if (subtasksOfEpic.size() == 1){
-                startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
-                super.setStartTime(startTime.get());
-                endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter).plusMinutes(subtasksOfEpic.get(0).getDuration().toMinutes()));
+                if (!subtasksOfEpic.get(0).getStartTime().equals("null")
+                        && subtasksOfEpic.get(0).getDuration().toMinutes() != 0){
+                    startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+                    super.setStartTime(startTime.get());
+                    endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter).plusMinutes(subtasksOfEpic.get(0).getDuration().toMinutes()));
+                }else{
+                    startTime.isEmpty();
+                    endTime.isEmpty();
+                }
             }else {
-                startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
-                endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
-                for (Subtask subtask : subtasksOfEpic) {
-                    LocalDateTime tempTimeStart = LocalDateTime.parse(subtask.getStartTime(), formatter);
-                    LocalDateTime tempTimeEnd = LocalDateTime.parse(subtask.getStartTime(), formatter).plusMinutes(subtask.getDuration().toMinutes());
-                    if (tempTimeStart.isBefore(startTime.get())){
-                        startTime = Optional.of(tempTimeStart);
-                        super.setStartTime(startTime.get());
-                    }
-                    if (tempTimeEnd.isAfter(endTime.get())){
-                        endTime = Optional.of(tempTimeEnd);
+                if (!subtasksOfEpic.get(0).getStartTime().equals("null")){
+                    startTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+                    endTime = Optional.of(LocalDateTime.parse(subtasksOfEpic.get(0).getStartTime(), formatter));
+                    for (Subtask subtask : subtasksOfEpic) {
+                        if (!subtask.getStartTime().equals("null")){
+                            LocalDateTime tempTimeStart = LocalDateTime.parse(subtask.getStartTime(), formatter);
+                            LocalDateTime tempTimeEnd = LocalDateTime.parse(subtask.getStartTime(), formatter).plusMinutes(subtask.getDuration().toMinutes());
+                            if (tempTimeStart.isBefore(startTime.get())){
+                                startTime = Optional.of(tempTimeStart);
+                                super.setStartTime(startTime.get());
+                            }
+                            if (tempTimeEnd.isAfter(endTime.get())){
+                                endTime = Optional.of(tempTimeEnd);
+                            }
+                        }else{
+                            startTime.isEmpty();
+                            endTime.isEmpty();
+                        }
+
                     }
                 }
+
+
             }
 
         }

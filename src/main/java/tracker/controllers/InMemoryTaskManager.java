@@ -1,14 +1,12 @@
 package main.java.tracker.controllers;
 
 import main.java.tracker.history.HistoryManager;
-import main.java.tracker.history.InMemoryHistoryManager;
 import main.java.tracker.model.Epic;
 import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
 import main.java.tracker.util.Status;
 import main.java.tracker.util.TaskStartTimeComparator;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -83,7 +81,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public int createNewSubTask(Subtask subtask) {
 
-        if (subtask.getStartTime().equals("Null")){
+        if (subtask.getStartTime().equals("null")){
             subtask.setIdTask(id);
             id++;
             mapSubtasks.put(subtask.getIdTask(), subtask);
@@ -341,8 +339,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TreeSet<Task> getPrioritizedTasks() {
-        return taskPrioritizedList;
+    public ArrayList<Task> getPrioritizedTasks() {
+        return new ArrayList<>(taskPrioritizedList);
     }
 
     /**

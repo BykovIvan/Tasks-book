@@ -17,15 +17,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static TaskManager manager = Managers.getDefault();
     private HttpServer httpServer;
 
@@ -37,7 +34,7 @@ public class HttpTaskServer {
             .serializeNulls()
             .create();
 
-    public HttpTaskServer() throws IOException {
+    public HttpTaskServer(){
         try {
             httpServer = HttpServer.create();
             httpServer.bind(new InetSocketAddress(PORT), 0);
@@ -52,59 +49,6 @@ public class HttpTaskServer {
             System.out.println("HTTP-сервер не запущен!");
         }
     }
-
-
-    //    public static void main(String[] args) {
-//
-//        Task task1 = new Task("Имя1", "Что купить1", NEW);
-//        Task task2 = new Task("Имя2", "Что купить2", NEW);
-//        task1.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
-//        task1.setDuration(34);
-//        task2.setStartTime(LocalDateTime.parse("14.04.2022-12:21", formatter));
-//        task2.setDuration(43);
-//        int idTask1 = manager.createNewTask(task1);
-//        int idTask2 = manager.createNewTask(task2);
-//
-//        Epic epic = new Epic("Epic 1", "Der1", NEW);
-//        int idEpic1 = manager.createNewEpic(epic);
-//
-//        Subtask subtask = new Subtask("Саб1", "Где взять", NEW);
-//        subtask.setIdEpic(idEpic1);
-//        subtask.setStartTime(LocalDateTime.parse("17.11.2022-12:24", formatter));
-//        subtask.setDuration(78);
-//
-//        Subtask subtask2 = new Subtask("Саб2", "Где взять2", NEW);
-//        subtask2.setIdEpic(idEpic1);
-//        subtask2.setStartTime(LocalDateTime.parse("13.12.2021-15:21", formatter));
-//        subtask2.setDuration(65);
-//
-//        int idSubtask1 = manager.createNewSubTask(subtask);
-//        int idSubtask2 = manager.createNewSubTask(subtask2);
-//        epic.getStartTime();
-//        epic.getDuration();
-//        epic.getEndTime();
-//
-//        manager.getTask(idTask2);
-//        manager.getEpic(idEpic1);
-//        manager.getTask(idTask1);
-//        manager.getSubtask(idSubtask2);
-
-//        try {
-//            HttpServer httpServer = HttpServer.create();
-//            httpServer.bind(new InetSocketAddress(PORT), 0);
-//            httpServer.createContext("/tasks/task", new TaskHandler());
-//            httpServer.createContext("/tasks/epic", new EpicHandler());
-//            httpServer.createContext("/tasks/subtask", new SubtaskHandler());
-//            httpServer.createContext("/tasks/subtask/epic", new SubtaskOfEpicHandler());
-//            httpServer.createContext("/tasks/history", new HistoryHandler());
-//            httpServer.createContext("/tasks", new TasksHandler());
-//            httpServer.start();
-//            System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
-//
-//        } catch (IOException e) {
-//            System.out.println("HTTP-сервер не запущен!");
-//        }
-//    }
 
     public void start() {
         System.out.println("Запускаем свой сервер на порту " + PORT);
@@ -163,10 +107,13 @@ public class HttpTaskServer {
                             int taskID = Integer.parseInt(query.split("=")[1]);
                             httpExchange.sendResponseHeaders(200, 0);
                             try (OutputStream os = httpExchange.getResponseBody()) {
-                                os.write(gson.toJson(manager.getTask(taskID)).getBytes());
+                                Task task = manager.getTask(taskID);
+                                System.out.println(task);
+                                os.write(gson.toJson(task).getBytes());
                             }
                         }
                         break;
+
                     case "POST":
                         InputStreamReader streamReader = new InputStreamReader(httpExchange.getRequestBody());
                         BufferedReader bufferedReader = new BufferedReader(streamReader);
@@ -177,8 +124,8 @@ public class HttpTaskServer {
                             os.write("Задача создана".getBytes());
                         }
                         manager.createNewTask(task);
-
                         break;
+
                     case "DELETE":
                         if (query == null || query.isEmpty()){
                             httpExchange.sendResponseHeaders(200, 0);
@@ -232,6 +179,7 @@ public class HttpTaskServer {
                                 os.write(gson.toJson(manager.getEpic(taskID)).getBytes());
                             }
                         }
+
                         break;
                     case "POST":
                         InputStreamReader streamReader = new InputStreamReader(httpExchange.getRequestBody());
@@ -243,8 +191,8 @@ public class HttpTaskServer {
                             os.write("Эпик создан".getBytes());
                         }
                         manager.createNewEpic(epic);
-
                         break;
+
                     case "DELETE":
                         if (query == null || query.isEmpty()){
                             httpExchange.sendResponseHeaders(200, 0);
@@ -298,6 +246,7 @@ public class HttpTaskServer {
                             }
                         }
                         break;
+
                     case "POST":
                         InputStreamReader streamReader = new InputStreamReader(httpExchange.getRequestBody());
                         BufferedReader bufferedReader = new BufferedReader(streamReader);
@@ -308,8 +257,8 @@ public class HttpTaskServer {
                             os.write("Подзадача создана".getBytes());
                         }
                         manager.createNewSubTask(subtask);
-
                         break;
+
                     case "DELETE":
                         if (query == null || query.isEmpty()){
                             httpExchange.sendResponseHeaders(200, 0);

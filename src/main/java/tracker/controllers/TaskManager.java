@@ -4,7 +4,6 @@ import main.java.tracker.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public interface TaskManager {
     /**
@@ -154,7 +153,7 @@ public interface TaskManager {
      *
      * @return
      */
-    TreeSet<Task> getPrioritizedTasks();
+    ArrayList<Task> getPrioritizedTasks();
 
     /**
      * получение истории просмотров задач, добавляется по методу GetЗАДАЧА

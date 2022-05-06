@@ -59,7 +59,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager.getSubtask(idSubtask2);
 
         System.out.println("По порядку старта:");
-        TreeSet<Task> setList = manager.getPrioritizedTasks();
+        ArrayList<Task> setList = manager.getPrioritizedTasks();
         for (Task taskSet : setList) {
             System.out.print(taskSet);
         }
@@ -334,7 +334,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     /**
      * Метод создания задачи из строки
      */
-    private Task fromString(String value) {
+    protected Task fromString(String value) {
         String[] arrayList = value.split(",");
         Task task = null;
 
@@ -399,7 +399,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * @param manager
      * @return
      */
-    private static String toStringHistory(HistoryManager manager) {
+    protected static String toStringHistory(HistoryManager manager) {
         StringBuilder stringBuilder = new StringBuilder();
         List<Task> list = manager.getHistory();
         for (int i = 0; i < list.size(); i++) {
@@ -418,7 +418,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
      * @param value
      * @return
      */
-    private static List<Integer> fromStringHistory(String value) {
+    protected static List<Integer> fromStringHistory(String value) {
         String[] array = value.split(",");
         List<Integer> listTaskHistory = new ArrayList<>();
         for (int i = 0; i < array.length; i++) {
@@ -428,7 +428,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     //метод для восстановления subtask у Epic
-    private void addSubtaskInListEpic() {
+    protected void addSubtaskInListEpic() {
         for (Subtask value : mapSubtasks.values()) {                             //пробегаемся по всему списку подзадач
             int tempIdOfEpic = value.getIdEpic();                                //находим id эпика
             if (tempIdOfEpic != -1){
