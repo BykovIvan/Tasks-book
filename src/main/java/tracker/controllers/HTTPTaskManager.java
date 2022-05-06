@@ -67,4 +67,12 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         kvClient.put(key, builder.toString());
         //TODO своя реализия
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }
