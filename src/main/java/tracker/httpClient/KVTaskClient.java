@@ -6,10 +6,19 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * Класс для работы с KVserver
+ *
+ */
 public class KVTaskClient {
     private String url;
     private String API_KEY;
 
+    /**
+     * В конструкторе получаем АПИКЛЮЧ для авторизации, необходимо что бы можно было иметь несколько клинтов
+     *
+     * @param url
+     */
     public KVTaskClient(String url) {
         this.url = url;
         URI uri = URI.create(url + "/register");
@@ -29,6 +38,13 @@ public class KVTaskClient {
         // TODO Получение апи через сервер
     }
 
+    /**
+     * Метод для того что бы сохранить состояние менеджера по ключу
+     * ключ придумаеваем сами
+     *
+     * @param key
+     * @param json
+     */
     public void put(String key, String json){
 
         URI uri = URI.create(url + "/save/" + key + "/?API_KEY=" + API_KEY);
@@ -50,6 +66,12 @@ public class KVTaskClient {
         //  через POST /save/<ключ>?API_KEY=
     }
 
+    /**
+     * метод восстановления состояния менеджера по ключу
+     *
+     * @param key
+     * @return
+     */
     public String load(String key){
         String line = null;
         URI uri = URI.create(url + "/load/" + key + "/?API_KEY=" + API_KEY);
