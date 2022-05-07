@@ -42,9 +42,6 @@ public class InMemoryTaskManager implements TaskManager {
                 historyList.remove(integer);             //проверка и удаление задачи из листа истории
             }
         }
-//        for (Epic epic : mapEpics.values()) {
-//            epic.getSubtasksOfEpic().clear();
-//        }
         mapSubtasks.clear();
         updateStatusEpic();
     }
@@ -53,8 +50,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubtask(int id) {
         if (mapSubtasks.containsKey(id)) {
             int idEpicTemp = mapSubtasks.get(id).getIdEpic();              //Получили ид эпика в котором лежит это саб
-            ArrayList<Subtask> tempSubtasksOfEpic = mapEpics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
-            tempSubtasksOfEpic.remove(mapSubtasks.get(id));                                       //удаляем из списка пр объекту
+            if  (mapEpics.containsKey(idEpicTemp)){
+                ArrayList<Subtask> tempSubtasksOfEpic = mapEpics.get(idEpicTemp).getSubtasksOfEpic(); //Получаем список сабов в ID эпика
+                tempSubtasksOfEpic.remove(mapSubtasks.get(id));                                       //удаляем из списка пр объекту
+            }
             updateStatusEpic();
             mapSubtasks.remove(id);
             if (historyList.contains(id)) {
@@ -113,20 +112,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask oldSubtask, Subtask newSubtask) {
-        if (newSubtask.getStartTime() == null){
-            if (mapSubtasks.containsKey(oldSubtask.getIdTask())){
-                int idTemp = oldSubtask.getIdTask();
-                mapSubtasks.put(idTemp, newSubtask);
-                taskPrioritizedList.remove(oldSubtask);
+    public void updateSubtask(Subtask newSubtask) {
+        if (newSubtask.getStartTime().equals("null")){
+            if (mapSubtasks.containsKey(newSubtask.getIdTask())){
+                Subtask subtask = mapSubtasks.get(newSubtask.getIdTask());
+                mapSubtasks.put(newSubtask.getIdTask(), newSubtask);
+                taskPrioritizedList.remove(subtask);
                 taskPrioritizedList.add(newSubtask);
             }
-
         }else if (intersectionTask(newSubtask)){
-            if (mapSubtasks.containsKey(oldSubtask.getIdTask())){
-                int idTemp = oldSubtask.getIdTask();
-                mapSubtasks.put(idTemp, newSubtask);
-                taskPrioritizedList.remove(oldSubtask);
+            if (mapSubtasks.containsKey(newSubtask.getIdTask())){
+                Subtask subtask = mapSubtasks.get(newSubtask.getIdTask());
+                mapSubtasks.put(newSubtask.getIdTask(), newSubtask);
+                taskPrioritizedList.remove(subtask);
                 taskPrioritizedList.add(newSubtask);
             }
             updateStatusEpic();
@@ -204,10 +202,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic oldEpic, Epic newEpic) {
-        if (mapEpics.containsKey(oldEpic.getIdTask())) {
-            int idTemp = oldEpic.getIdTask();
-            mapEpics.put(idTemp, newEpic);
+    public void updateEpic(Epic newEpic) {
+        if (mapEpics.containsKey(newEpic.getIdTask())) {
+            mapEpics.put(newEpic.getIdTask(), newEpic);
         }
         updateStatusEpic();
     }
@@ -265,19 +262,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task oldTask, Task newTask) {
-        if (newTask.getStartTime().equals("Null")){
-            if (mapTasks.containsKey(oldTask.getIdTask())) {
-                int idTemp = oldTask.getIdTask();
-                mapTasks.put(idTemp, newTask);
-                taskPrioritizedList.remove(oldTask);
+    public void updateTask(Task newTask) {
+        if (newTask.getStartTime().equals("null")){
+            if (mapTasks.containsKey(newTask.getIdTask())) {
+                Task task = mapTasks.get(newTask.getIdTask());
+                mapTasks.put(newTask.getIdTask(), newTask);
+                taskPrioritizedList.remove(task);
                 taskPrioritizedList.add(newTask);
             }
         }else if (intersectionTask(newTask)) {
-            if (mapTasks.containsKey(oldTask.getIdTask())) {
-                int idTemp = oldTask.getIdTask();
-                mapTasks.put(idTemp, newTask);
-                taskPrioritizedList.remove(oldTask);
+            if (mapTasks.containsKey(newTask.getIdTask())) {
+                Task task = mapTasks.get(newTask.getIdTask());
+                mapTasks.put(newTask.getIdTask(), newTask);
+                taskPrioritizedList.remove(task);
                 taskPrioritizedList.add(newTask);
             }
         }else{

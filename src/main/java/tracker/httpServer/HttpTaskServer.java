@@ -7,7 +7,9 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import main.java.tracker.controllers.Managers;
 import main.java.tracker.controllers.TaskManager;
-import main.java.tracker.gson.*;
+import main.java.tracker.gson.EpicSerializer;
+import main.java.tracker.gson.SubtaskSerializer;
+import main.java.tracker.gson.TaskSerializer;
 import main.java.tracker.model.Epic;
 import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
@@ -17,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
@@ -34,7 +35,7 @@ public class HttpTaskServer {
             .serializeNulls()
             .create();
 
-    public HttpTaskServer(){
+    public HttpTaskServer() {
         try {
             httpServer = HttpServer.create();
             httpServer.bind(new InetSocketAddress(PORT), 0);
@@ -55,9 +56,13 @@ public class HttpTaskServer {
         httpServer.start();
     }
 
+    public void stop() {
+        System.out.println("HttpСервер остановлен");
+        httpServer.stop(0);
+    }
+
     /**
      * Энпоинты для всех задач
-     *
      */
     static class TasksHandler implements HttpHandler {
 
@@ -66,26 +71,20 @@ public class HttpTaskServer {
 
             String method = httpExchange.getRequestMethod();
             try {
-                if (method.equals("GET")){
-                    ArrayList<Task> tasksList = new ArrayList<>();
-                    tasksList.addAll(manager.getEpics());
-                    tasksList.addAll(manager.getTasks());
-                    tasksList.addAll(manager.getSubtasks());
+                if (method.equals("GET")) {
                     httpExchange.sendResponseHeaders(200, 0);
                     try (OutputStream os = httpExchange.getResponseBody()) {
-                        os.write(gson.toJson(tasksList).getBytes());
+                        os.write(gson.toJson(manager.getPrioritizedTasks()).getBytes());
                     }
                 }
-            }finally {
+            } finally {
                 httpExchange.close();
             }
-
         }
     }
 
     /**
      * Энпоинты для тасков
-     *
      */
     static class TaskHandler implements HttpHandler {
 
@@ -96,19 +95,18 @@ public class HttpTaskServer {
             String query = httpExchange.getRequestURI().getRawQuery();
 
             try {
-                switch (method){
+                switch (method) {
                     case "GET":
-                        if (query == null || query.isEmpty()){
+                        if (query == null || query.isEmpty()) {
                             httpExchange.sendResponseHeaders(200, 0);
                             try (OutputStream os = httpExchange.getResponseBody()) {
                                 os.write(gson.toJson(manager.getTasks()).getBytes());
                             }
-                        }else{
+                        } else {
                             int taskID = Integer.parseInt(query.split("=")[1]);
                             httpExchange.sendResponseHeaders(200, 0);
                             try (OutputStream os = httpExchange.getResponseBody()) {
                                 Task task = manager.getTask(taskID);
-                                System.out.println(task);
                                 os.write(gson.toJson(task).getBytes());
                             }
                         }
@@ -119,6 +117,17 @@ public class HttpTaskServer {
                         BufferedReader bufferedReader = new BufferedReader(streamReader);
                         String body = bufferedReader.lines().collect(Collectors.joining("\n"));
                         Task task = gson.fromJson(body, Task.class);
+
+                        for (Task managerTask : manager.getTasks()) {
+                            if (managerTask.getIdTask() == task.getIdTask()) {
+                                httpExchange.sendResponseHeaders(200, 0);
+                                try (OutputStream os = httpExchange.getResponseBody()) {
+                                    os.write("Задача обновлена".getBytes());
+                                }
+                                manager.updateTask(task);
+                                break;
+                            }
+                        }
                         httpExchange.sendResponseHeaders(201, 0);
                         try (OutputStream os = httpExchange.getResponseBody()) {
                             os.write("Задача создана".getBytes());
@@ -127,13 +136,13 @@ public class HttpTaskServer {
                         break;
 
                     case "DELETE":
-                        if (query == null || query.isEmpty()){
+                        if (query == null || query.isEmpty()) {
                             httpExchange.sendResponseHeaders(200, 0);
                             manager.deleteAllTasks();
                             try (OutputStream os = httpExchange.getResponseBody()) {
                                 os.write("Удалены все задачи".getBytes());
                             }
-                        }else{
+                        } else {
                             int taskID = Integer.parseInt(query.split("=")[1]);
                             httpExchange.sendResponseHeaders(200, 0);
                             manager.deleteTask(taskID);
@@ -152,7 +161,6 @@ public class HttpTaskServer {
 
     /**
      * Энпоинты для эпиков
-     *
      */
     static class EpicHandler implements HttpHandler {
 
@@ -163,16 +171,16 @@ public class HttpTaskServer {
             String query = httpExchange.getRequestURI().getRawQuery();
 
             try {
-                switch (method){
+                switch (method) {
                     case "GET":
-                        if (query == null || query.isEmpty()){
+                        if (query == null || query.isEmpty()) {
                             httpExchange.sendResponseHeaders(200, 0);
                             try (OutputStream os = httpExchange.getResponseBody()) {
                                 os.write(gson.toJson(manager.getEpics()).getBytes());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             int taskID = Integer.parseInt(query.split("=")[1]);
                             httpExchange.sendResponseHeaders(200, 0);
                             try (OutputStream os = httpExchange.getResponseBody()) {
@@ -194,13 +202,13 @@ public class HttpTaskServer {
                         break;
 
                     case "DELETE":
-                        if (query == null || query.isEmpty()){
+                        if (query == null || query.isEmpty()) {
                             httpExchange.sendResponseHeaders(200, 0);
                             manager.deleteAllEpics();
                             try (OutputStream os = httpExchange.getResponseBody()) {
                                 os.write("Удалены все эпики".getBytes());
                             }
-                        }else{
+                        } else {
                             int taskID = Integer.parseInt(query.split("=")[1]);
                             httpExchange.sendResponseHeaders(200, 0);
                             manager.deleteEpic(taskID);
@@ -210,7 +218,7 @@ public class HttpTaskServer {
                         }
                         break;
                 }
-            }finally {
+            } finally {
                 httpExchange.close();
             }
 
@@ -220,7 +228,6 @@ public class HttpTaskServer {
 
     /**
      * Энпоинты для сабтасков
-     *
      */
     static class SubtaskHandler implements HttpHandler {
 
@@ -231,14 +238,14 @@ public class HttpTaskServer {
             String query = httpExchange.getRequestURI().getRawQuery();
 
             try {
-                switch (method){
+                switch (method) {
                     case "GET":
-                        if (query == null || query.isEmpty()){
+                        if (query == null || query.isEmpty()) {
                             httpExchange.sendResponseHeaders(200, 0);
                             try (OutputStream os = httpExchange.getResponseBody()) {
                                 os.write(gson.toJson(manager.getSubtasks()).getBytes());
                             }
-                        }else{
+                        } else {
                             int taskID = Integer.parseInt(query.split("=")[1]);
                             httpExchange.sendResponseHeaders(200, 0);
                             try (OutputStream os = httpExchange.getResponseBody()) {
@@ -260,13 +267,13 @@ public class HttpTaskServer {
                         break;
 
                     case "DELETE":
-                        if (query == null || query.isEmpty()){
+                        if (query == null || query.isEmpty()) {
                             httpExchange.sendResponseHeaders(200, 0);
                             manager.deleteAllSubtasks();
                             try (OutputStream os = httpExchange.getResponseBody()) {
                                 os.write("Удалены все подзадачи".getBytes());
                             }
-                        }else{
+                        } else {
                             int taskID = Integer.parseInt(query.split("=")[1]);
                             httpExchange.sendResponseHeaders(200, 0);
                             manager.deleteSubtask(taskID);
@@ -276,7 +283,7 @@ public class HttpTaskServer {
                         }
                         break;
                 }
-            }finally {
+            } finally {
                 httpExchange.close();
             }
 
@@ -285,7 +292,6 @@ public class HttpTaskServer {
 
     /**
      * Энпоинты для истории
-     *
      */
     static class HistoryHandler implements HttpHandler {
 
@@ -295,13 +301,13 @@ public class HttpTaskServer {
             String method = httpExchange.getRequestMethod();
 
             try {
-                if (method.equals("GET")){
+                if (method.equals("GET")) {
                     httpExchange.sendResponseHeaders(200, 0);
                     try (OutputStream os = httpExchange.getResponseBody()) {
                         os.write(gson.toJson(manager.history()).getBytes());
                     }
                 }
-            }finally {
+            } finally {
                 httpExchange.close();
             }
 
@@ -310,7 +316,6 @@ public class HttpTaskServer {
 
     /**
      * Энпоинты для получения сабтасков по ид эпика
-     *
      */
     static class SubtaskOfEpicHandler implements HttpHandler {
         @Override
@@ -321,13 +326,13 @@ public class HttpTaskServer {
 
             try {
                 int epicID = Integer.parseInt(query.split("=")[1]);
-                if (method.equals("GET")){
+                if (method.equals("GET")) {
                     httpExchange.sendResponseHeaders(200, 0);
                     try (OutputStream os = httpExchange.getResponseBody()) {
                         os.write(gson.toJson(manager.getEpic(epicID).getSubtasksOfEpic()).getBytes());
                     }
                 }
-            }finally {
+            } finally {
                 httpExchange.close();
             }
 

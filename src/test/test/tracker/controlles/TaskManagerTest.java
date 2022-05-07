@@ -43,10 +43,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Task task2 = new Task("Test2 addNewTask", "Test2 addNewTask description", NEW);
         task.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         task.setDuration(34);
+        task2.setIdTask(0);
         task2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
         task2.setDuration(334);
         final int taskId = manager.createNewTask(task);
-        manager.updateTask(task, task2);
+        manager.updateTask(task2);
 
         final Task savedTask2 = manager.getTask(taskId);
         final List<Task> tasksUpdate = manager.getTasks();
@@ -201,13 +202,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test addNewSubtask2", "Test addNewSubtask2 description", NEW);
         subtask.setIdEpic(epicId);
         subtask2.setIdEpic(epicId);
+        subtask2.setIdTask(1);
         subtask.setStartTime(LocalDateTime.parse("15.11.2022-12:21", formatter));
         subtask.setDuration(34);
-        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:21", formatter));
-        subtask2.setDuration(34);
+        subtask2.setStartTime(LocalDateTime.parse("16.11.2022-12:33", formatter));
+        subtask2.setDuration(4);
         final int subtaskId = manager.createNewSubTask(subtask);
 
-        manager.updateSubtask(subtask, subtask2);
+        manager.updateSubtask(subtask2);
 
         final Subtask savedSubtask2 = manager.getSubtask(subtaskId);
         final List<Subtask> subtasksUpdate = manager.getSubtasks();
@@ -413,8 +415,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.createNewSubTask(subtask2);
 
         Epic epic2 = new Epic("Test addNewEpic2", "Test addNewEpic2 description", NEW);
+        epic2.setIdTask(0);
 
-        manager.updateEpic(epic, epic2);
+        manager.updateEpic(epic2);
 
         final Epic savedEpic = manager.getEpic(epicId);
         final List<Epic> epicsUpdate = manager.getEpics();

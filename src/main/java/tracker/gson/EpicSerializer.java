@@ -10,6 +10,7 @@ import main.java.tracker.util.TypeOfTasks;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class EpicSerializer implements JsonSerializer<Epic>, JsonDeserializer<Epic> {
     @Override
@@ -46,6 +47,13 @@ public class EpicSerializer implements JsonSerializer<Epic>, JsonDeserializer<Ep
         epic.setDiscription(jsonObject.get("discription").getAsString());
         epic.setIdTask(jsonObject.get("idTask").getAsInt());
         epic.setStatus(Status.valueOf(jsonObject.get("status").getAsString()));
+        ArrayList<Subtask> listSub = new ArrayList<>();
+        JsonArray jsonArray = jsonObject.getAsJsonArray("subtasksOfEpic");
+        for (int i = 0; i < jsonArray.size(); i++) {
+            Subtask subtask = jsonDeserializationContext.deserialize(jsonArray.get(i), Subtask.class);
+            listSub.add(subtask);
+        }
+        epic.setSubtasksOfEpic(listSub);
         return epic;
     }
 }

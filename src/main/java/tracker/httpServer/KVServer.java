@@ -100,6 +100,7 @@ public class KVServer {
         System.out.println("API_KEY: " + API_KEY);
         server.start();
     }
+
     public void stop() {
         System.out.println("Сервер остановлен");
         server.stop(0);

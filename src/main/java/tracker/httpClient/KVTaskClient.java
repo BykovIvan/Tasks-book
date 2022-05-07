@@ -8,7 +8,6 @@ import java.net.http.HttpResponse;
 
 /**
  * Класс для работы с KVserver
- *
  */
 public class KVTaskClient {
     private String url;
@@ -43,8 +42,9 @@ public class KVTaskClient {
      * @param key
      * @param json
      */
-    public void put(String key, String json){
-        URI uri = URI.create(url + "/save/" + key + "/?API_KEY=" + API_KEY);
+    public void put(String key, String json) {
+        URI uri = URI.create(url + "/save/" + key + "/?API_KEY=DEBUG");
+//        URI uri = URI.create(url + "/save/" + key + "/?API_KEY=" + API_KEY);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(body)
@@ -66,7 +66,7 @@ public class KVTaskClient {
      * @param key
      * @return
      */
-    public String load(String key){
+    public String load(String key) {
         String line = null;
         URI uri = URI.create(url + "/load/" + key + "/?API_KEY=" + API_KEY);
         HttpRequest request = HttpRequest.newBuilder()

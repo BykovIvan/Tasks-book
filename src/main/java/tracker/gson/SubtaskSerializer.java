@@ -21,7 +21,7 @@ public class SubtaskSerializer implements JsonSerializer<Subtask>, JsonDeseriali
         result.addProperty("discription", subtask.getDiscription());
         result.addProperty("idTask", subtask.getIdTask());
         result.addProperty("status", String.valueOf(subtask.getStatus()));
-        result.addProperty("ipEpic", subtask.getIdEpic());
+        result.addProperty("idEpic", subtask.getIdEpic());
         if (!subtask.getStartTime().equals("null")){
             result.addProperty("startTime", subtask.getStartTime());
         }
@@ -41,7 +41,7 @@ public class SubtaskSerializer implements JsonSerializer<Subtask>, JsonDeseriali
         subtask.setDiscription(jsonObject.get("discription").getAsString());
         subtask.setIdTask(jsonObject.get("idTask").getAsInt());
         subtask.setStatus(Status.valueOf(jsonObject.get("status").getAsString()));
-        subtask.setIdEpic(jsonObject.get("ipEpic").getAsInt());
+        subtask.setIdEpic(jsonObject.get("idEpic").getAsInt());
         if (jsonObject.has("startTime")){
             subtask.setStartTime(LocalDateTime.parse(jsonObject.get("startTime").getAsString(), formatter));
         }

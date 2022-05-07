@@ -111,8 +111,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task oldTask, Task newTask) {
-        super.updateTask(oldTask, newTask);
+    public void updateTask(Task newTask) {
+        super.updateTask(newTask);
         save();
     }
 
@@ -147,8 +147,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask oldSubtask, Subtask newSubtask) {
-        super.updateSubtask(oldSubtask, newSubtask);
+    public void updateSubtask(Subtask newSubtask) {
+        super.updateSubtask(newSubtask);
         save();
     }
 
@@ -183,8 +183,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateEpic(Epic oldEpic, Epic newEpic) {
-        super.updateEpic(oldEpic, newEpic);
+    public void updateEpic(Epic newEpic) {
+        super.updateEpic(newEpic);
         save();
     }
 
@@ -309,7 +309,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + task.getStatus() +
                     "," + task.getDiscription() +
                     "," + task.getStartTime() +
-                    "," + task.getDuration();
+                    "," + task.getDuration().toMinutes();
         } else if (typeOfTask.equals(EPIC)) {
             Epic epic = (Epic) task;
             fullTaskName = epic.getIdTask() +
@@ -326,7 +326,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     "," + subtask.getDiscription() +
                     "," + subtask.getIdEpic() +
                     "," + subtask.getStartTime() +
-                    "," + subtask.getDuration();
+                    "," + subtask.getDuration().toMinutes();
         }
         return fullTaskName;
     }

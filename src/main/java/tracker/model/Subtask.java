@@ -43,6 +43,7 @@ public class Subtask extends Task {
                     "name='" + getName() + '\'' +
                     ", discription='" + getDiscription() + '\'' +
                     ", idTask=" + getIdTask() +
+                    ", idEpic=" + idEpic +
                     ", status=" + getStatus() +
                     ", startTime=" + getStartTime() +
                     ", duraction=" + getDuration().toMinutes() +
@@ -52,6 +53,7 @@ public class Subtask extends Task {
                 "name='" + getName() + '\'' +
                 ", discription='" + getDiscription() + '\'' +
                 ", idTask=" + getIdTask() +
+                ", idEpic=" + idEpic +
                 ", status=" + getStatus() +
                 '}' + "\n ";
 
