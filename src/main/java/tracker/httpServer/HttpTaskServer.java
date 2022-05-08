@@ -197,6 +197,8 @@ public class HttpTaskServer {
                         httpExchange.sendResponseHeaders(201, 0);
                         try (OutputStream os = httpExchange.getResponseBody()) {
                             os.write("Эпик создан".getBytes());
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
                         manager.createNewEpic(epic);
                         break;

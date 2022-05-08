@@ -42,18 +42,26 @@ public class EpicSerializer implements JsonSerializer<Epic>, JsonDeserializer<Ep
     public Epic deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         Epic epic = new Epic();
+        ArrayList<Subtask> listSub = new ArrayList<>();
         epic.setTypeOfTask(TypeOfTasks.valueOf(jsonObject.get("typeOfTask").getAsString()));
         epic.setName(jsonObject.get("name").getAsString());
         epic.setDiscription(jsonObject.get("discription").getAsString());
         epic.setIdTask(jsonObject.get("idTask").getAsInt());
         epic.setStatus(Status.valueOf(jsonObject.get("status").getAsString()));
-        ArrayList<Subtask> listSub = new ArrayList<>();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("subtasksOfEpic");
-        for (int i = 0; i < jsonArray.size(); i++) {
-            Subtask subtask = jsonDeserializationContext.deserialize(jsonArray.get(i), Subtask.class);
-            listSub.add(subtask);
+
+        if (jsonObject.has("subtasksOfEpic")){
+            JsonArray jsonArray = jsonObject.getAsJsonArray("subtasksOfEpic");
+            if (jsonArray.size() != 0){
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    Subtask subtask = jsonDeserializationContext.deserialize(jsonArray.get(i), Subtask.class);
+                    listSub.add(subtask);
+                }
+                epic.setSubtasksOfEpic(listSub);
+
+            }
         }
-        epic.setSubtasksOfEpic(listSub);
+
+
         return epic;
     }
 }
