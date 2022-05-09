@@ -134,7 +134,6 @@ public interface TaskManager {
     /**
      * Обновление задачи (Замена существующей)
      *
-     * @param oldTask
      * @param newTask
      */
     void updateTask(Task newTask);
