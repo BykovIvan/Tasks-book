@@ -9,8 +9,6 @@ import main.java.tracker.model.Epic;
 import main.java.tracker.model.Subtask;
 import main.java.tracker.model.Task;
 
-import java.util.ArrayList;
-
 /**
  * Класс менеджера для работы c httpServers
  */
