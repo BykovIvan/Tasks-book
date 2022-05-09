@@ -151,7 +151,7 @@ public interface TaskManager {
      *
      * @return
      */
-    ArrayList<Task> getPrioritizedTasks();
+    List<Task> getPrioritizedTasks();
 
     /**
      * получение истории просмотров задач, добавляется по методу GetЗАДАЧА

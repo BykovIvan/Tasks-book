@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * Класс менеджера для работы c httpServers
  */
 public class HTTPTaskManager extends FileBackedTasksManager {
-    KVTaskClient kvClient;
-    String key = "manager";
+    private KVTaskClient kvClient;
+    private String key = "manager";
 
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Task.class, new TaskSerializer())
@@ -96,6 +96,14 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             }
         }
 
+    }
+
+    public KVTaskClient getKvClient() {
+        return kvClient;
+    }
+
+    public void setKvClient(KVTaskClient kvClient) {
+        this.kvClient = kvClient;
     }
 
     public String getKey() {

@@ -59,7 +59,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager.getSubtask(idSubtask2);
 
         System.out.println("По порядку старта:");
-        ArrayList<Task> setList = manager.getPrioritizedTasks();
+        List<Task> setList = manager.getPrioritizedTasks();
         for (Task taskSet : setList) {
             System.out.print(taskSet);
         }
